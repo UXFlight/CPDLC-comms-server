@@ -1,8 +1,9 @@
 from flask import Flask # type: ignore
-from flask_socketio import SocketIO # type: ignore
-from app.gateway.socket_gateway import SocketGateway
 from app.classes import Socket
+from flask_socketio import SocketIO # type: ignore
 from app.controllers.routes import general_bp
+from app.gateway.socket_gateway import SocketGateway
+from app.managers.pilot_manager import PilotManager
 #! from app.classes.ingsvc.agent import Echo
 
 def create_app():
@@ -16,8 +17,9 @@ if __name__ == '__main__':
     #! Echo.start_ingescape_agent()
 
     socket_service = Socket(socketio)
-    socket_manager = SocketGateway(socket_service, )
+    pilot_manager = PilotManager() # keep tracks of connected pilots
+    socket_manager = SocketGateway(socket_service, pilot_manager) # gateway for sockets
 
-    socket_manager.init_events()
+    socket_manager.init_events() # inits socket events
 
     socketio.run(app, host="0.0.0.0", port=5321)

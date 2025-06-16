@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.database import downlinks # type: ignore
+from app.database.downlinks import downlinks # type: ignore
 
 general_bp = Blueprint('general', __name__)
 
@@ -16,7 +16,7 @@ def formatMessage():
     body = request.get_json()
     return {"status": "success", "message": formatted_message(body)}, 200
     
-def formatted_message(self, request_data: dict) -> str:
+def formatted_message(request_data: dict) -> str:
     message_ref = request_data.get("messageRef")
     arguments = request_data.get("arguments", [])
 

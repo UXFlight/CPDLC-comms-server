@@ -1,5 +1,6 @@
 from flask import Blueprint, request
-from app.database.downlinks import downlinks # type: ignore
+from app.classes.log_entry.log_entry import LogEntry
+from app.managers.logs_manager.logs_manager import LogsManager
 
 general_bp = Blueprint('general', __name__)
 
@@ -14,32 +15,12 @@ def logs():
 @general_bp.route('/formattedMessage', methods=['POST'])
 def formatMessage():
     body = request.get_json()
-    return {"status": "success", "message": formatted_message(body)}, 200
+    formatted = LogEntry.formatted_message(body)
+    return {"status": "success", "message": formatted}, 200
     
-def formatted_message(request_data: dict) -> str:
-    message_ref = request_data.get("messageRef")
-    arguments = request_data.get("arguments", [])
 
-    d_message = next(
-        (msg for msg in downlinks if msg.get("Ref_Num", "").replace(" ", "") == message_ref),
-        None
-    )
-
-    if not d_message:
-        return ""
-
-    result = d_message.get("Message_Element", "")
-    arg_index = 0
-
-    import re
-    def replacer(match):
-        nonlocal arg_index
-        if arg_index < len(arguments):
-            value = arguments[arg_index]
-            arg_index += 1
-            return value
-        return "[missing]"
-
-    formatted = re.sub(r"\[.*?\]", replacer, result)
-
-    return formatted.strip()    
+# @general_bp.route('/filterLogsArray', methods=['POST'])
+# def formatMessage():
+#     body = request.get_json()
+#     formatted = LogsManager.filter_by(body)
+#     return {"status": "success", "message": formatted}, 200

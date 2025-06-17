@@ -1,17 +1,77 @@
+from app.database.uplinks import uplinks
+from app.database.downlinks import downlinks
+
 class LogEntry:
-    def __init__(self, content, direction, status, timestamp, sender):
+    def __init__(self, ref, content, direction, status, timestamp, intent=None, position=None):
+        self.ref = ref
         self.content = content
-        self.direction = direction  # "UPLINK" or "DOWNLINK"
-        self.status = status        # "SENT", "RECEIVED", etc.
+        self.direction = direction
+        self.status = status
         self.timestamp = timestamp
-        self.sender = sender
+        self.intent = intent
+        self.position = position
 
     def to_dict(self):
         return {
-            "content": self.content,
+            "id": str(int(self.timestamp.timestamp() * 1000)),  # ou UUID si tu préfères
+            "ref": self.ref,
             "direction": self.direction,
+            "element": self.content,
             "status": self.status,
-            "timestamp": self.timestamp,
-            "sender": self.sender
+            "intent": self.intent,
+            "timeStamp": self.timestamp.isoformat()
         }
 
+    @staticmethod
+    def find_DM_by_ref(ref):
+        return next(
+            (msg for msg in downlinks if msg.get("Ref_Num", "").replace(" ", "") == ref),
+            None
+        )
+    
+    @staticmethod
+    def find_UM_by_ref(ref):
+        return next(
+            (msg for msg in uplinks if msg.get("Ref_Num", "").replace(" ", "") == ref),
+            None
+        )
+        
+
+    @staticmethod
+    def formatted_message(request_data: dict) -> str:
+        import re
+
+        message_ref = request_data.get("messageRef")
+        arguments = request_data.get("arguments", [])
+        position_arg = request_data.get("positionSelected", None)
+        time_arg = request_data.get("timeSelected", None)
+
+        if isinstance(time_arg, dict):
+            hh = time_arg.get("hh", "").zfill(2)
+            mm = time_arg.get("mm", "").zfill(2)
+            time_arg = f"{hh}:{mm}"
+
+        d_message = LogEntry.find_DM_by_ref(message_ref)
+
+        if not d_message:
+            return ""
+
+        result = d_message.get("Message_Element", "")
+        arg_index = 0
+
+        def replacer(match):
+            nonlocal arg_index
+            keyword = match.group(0).lower()
+
+            if "[position]" in keyword and position_arg:
+                return position_arg
+            elif "[time]" in keyword and time_arg:
+                return time_arg
+            elif arg_index < len(arguments):
+                value = arguments[arg_index]
+                arg_index += 1
+                return value
+            return "[missing]"
+
+        formatted = re.sub(r"\[.*?\]", replacer, result)
+        return formatted.strip()

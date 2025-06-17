@@ -35,7 +35,7 @@ class SocketGateway:
         )
         print(f"Flight session created for {flight.pilot.name} with ATC {flight.atc.name}")
         self.socket_service.send("flight_details", flight.to_dict())
-
+        self.socket_service.send("new_log", flight.logs.get_logs())
 
     # === DISCONNECT EVENTS === #
     # def on_disconnect(self, sid: str):

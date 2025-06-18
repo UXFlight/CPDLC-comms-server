@@ -30,6 +30,19 @@ class FlightSession:
             "CDA": self.current_data_authority,
             "NDA": "ATC2",
         }
+    
+    def load_route(self, waypoint):
+        if not self.route:
+            return []
+
+        for i, point in enumerate(self.route):
+            if point.get("fix") == waypoint:
+                self.route = self.route[i:]  # garde du point trouvé jusqu'à la fin
+                return self.route
+
+        # Si aucun point ne correspond
+        print(f"Waypoint '{waypoint}' non trouvé dans la route.")
+        return []
 
     def print_test(self):
         print(f"Flight ID: {self.flight_id}")

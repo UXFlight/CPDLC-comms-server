@@ -1,9 +1,6 @@
-from datetime import datetime, timezone
-
-# def get_current_timestamp():
-#     return datetime.now(timezone.utc).isoformat()
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 def get_current_timestamp():
-    now = datetime.now(timezone.utc)
-    hh_mm_ss = now.strftime("%H:%M:%S")
-    return f"{hh_mm_ss}"
+    now = datetime.now(ZoneInfo("America/Toronto"))
+    return now.strftime("%H:%M:%S")

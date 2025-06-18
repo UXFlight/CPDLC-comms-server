@@ -1,3 +1,4 @@
+import re
 import uuid
 from app.database.uplinks import uplinks
 from app.database.downlinks import downlinks
@@ -24,6 +25,35 @@ class LogEntry:
             "intent": self.intent,
             "timeStamp": self.timestamp
         }
+
+    def is_loadable(self):
+        um_ref = LogEntry.find_UM_by_ref(self.ref)
+        print(f"Checking if UM exists for ref {self.ref}: {um_ref}")
+        if not um_ref:
+            print(f"No UM found for ref {self.ref}")
+            return False
+
+        category = um_ref.get("Category", "")
+        return "Route Modifications" in category
+
+        # return self.status in ["opened", "new"]
+
+
+    def get_waypoint(self):
+        um_ref = LogEntry.find_UM_by_ref(self.ref)
+        if not um_ref:
+            return None
+
+        template = um_ref.get("Message_Element")  # ex: "PROCEED DIRECT TO [position]"
+        message = self.content           # ex: "PROCEED DIRECT TO OAKLE"
+
+        regex_pattern = re.escape(template)
+        regex_pattern = regex_pattern.replace(r'\[position\]', r'(?P<position>\w+)')
+
+        match = re.match(regex_pattern, message)
+        if match:
+            return match.group("position")
+        return None
 
     @staticmethod
     def find_DM_by_ref(ref):

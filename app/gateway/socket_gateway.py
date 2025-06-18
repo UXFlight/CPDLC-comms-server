@@ -14,6 +14,8 @@ class SocketGateway:
         self.socket_service.listen('sucessfull_connection', self.sucessfull_connection)
         self.socket_service.listen('add_log', self.on_add_log)
         self.socket_service.listen('change_status', self.on_change_status)
+        self.socket_service.listen('load_message', self.on_load_message)
+        self.socket_service.listen('fms_loaded', self.on_fms_loaded)
         self.socket_service.listen('disconnect', self.on_disconnect)
 
     def on_connect(self, auth=None):
@@ -51,6 +53,33 @@ class SocketGateway:
         if flight:
             log_id = data.get("logId")
             flight.logs.change_status(log_id, data.get("status"))
+
+    def on_load_message(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session_by_pilot(sid)
+        if flight:
+            log_id = data.get("logId")
+            log = flight.logs.get_log_by_id(log_id)
+            if log:
+                is_lodable = log.is_loadable()
+                if is_lodable :
+                    self.socket_service.send("message_loadable", is_lodable ,room=sid)
+            else:
+                print(f"Log with ID {log_id} not found for sid {sid}")
+
+    def on_fms_loaded(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session_by_pilot(sid)
+        if flight:
+            log_id = data.get("logId")
+            log = flight.logs.get_log_by_id(log_id)
+            waypoint = log.get_waypoint()
+            if waypoint:
+                new_route = flight.load_route(waypoint)
+                self.socket_service.send("route_loaded", new_route, room=sid)
+            else:
+                print(f"Waypoint not found in log with ID {log_id} for sid {sid}")
+            
 
     def on_disconnect(self, sid: str):
         sid = request.sid

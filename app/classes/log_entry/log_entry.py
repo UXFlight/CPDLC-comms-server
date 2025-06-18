@@ -44,8 +44,8 @@ class LogEntry:
         if not um_ref:
             return None
 
-        template = um_ref.get("Message_Element")  # ex: "PROCEED DIRECT TO [position]"
-        message = self.content           # ex: "PROCEED DIRECT TO OAKLE"
+        template = um_ref.get("Message_Element")
+        message = self.content
 
         regex_pattern = re.escape(template)
         regex_pattern = regex_pattern.replace(r'\[position\]', r'(?P<position>\w+)')

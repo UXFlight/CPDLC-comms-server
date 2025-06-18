@@ -1,6 +1,6 @@
 class Pilot:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, id):
+        self.id = id
         self.is_connected = False
 
     def connect(self):
@@ -11,6 +11,6 @@ class Pilot:
 
     def to_dict(self):
         return {
-            "name": self.name,
+            "id": self.id,
             "connected": self.is_connected
         }

@@ -1,25 +1,28 @@
+import uuid
 from app.database.uplinks import uplinks
 from app.database.downlinks import downlinks
+from app.utils.time_utils import get_current_timestamp
 
 class LogEntry:
-    def __init__(self, ref, content, direction, status, timestamp, intent=None, position=None):
+    def __init__(self, ref, content, direction, status, intent=None, position=None):
+        self.id = str(uuid.uuid4())  
         self.ref = ref
         self.content = content
         self.direction = direction
         self.status = status
-        self.timestamp = timestamp
+        self.timestamp = get_current_timestamp()
         self.intent = intent
         self.position = position
 
     def to_dict(self):
         return {
-            "id": str(int(self.timestamp.timestamp() * 1000)),  # ou UUID si tu préfères
+            "id": self.id,
             "ref": self.ref,
             "direction": self.direction,
             "element": self.content,
             "status": self.status,
             "intent": self.intent,
-            "timeStamp": self.timestamp.isoformat()
+            "timeStamp": self.timestamp
         }
 
     @staticmethod

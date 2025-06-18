@@ -1,3 +1,4 @@
+from copy import deepcopy
 from flask import request # type: ignore
 from app.classes import Socket # type: ignore
 from app.managers.flight_manager.flight_manager import FlightManager
@@ -11,36 +12,48 @@ class SocketGateway:
     def init_events(self):
         self.socket_service.listen('connect', self.on_connect)
         self.socket_service.listen('sucessfull_connection', self.sucessfull_connection)
-        #self.socket_service.listen('disconnect', self.on_disconnect)
+        self.socket_service.listen('add_log', self.on_add_log)
+        self.socket_service.listen('change_status', self.on_change_status)
+        self.socket_service.listen('disconnect', self.on_disconnect)
 
-    # === CONNECT EVENTS === #
     def on_connect(self, auth=None):
         sid = request.sid
         print("Client connected", sid)
-        #self.socket_service.send("connected_ack", {"sid": sid})
-    
-    # def on_connect(self, auth=None):
-    #     sid = request.sid
-    #     name = request.name
-    #     self.pilot_manager.create_pilot(sid, name)
-    #     # more stuff later
 
     def sucessfull_connection(self, atc_id: str):
-        flight = self.flight_manager.create_session(   
-            flight_id=flight_plan["flight_id"],
-            departure=flight_plan["departure"],
-            arrival=flight_plan["arrival"],
-            pilot_id=request.sid,
+        sid = request.sid
+        plan = deepcopy(flight_plan)
+
+        plan["flight_id"] = f"{plan['flight_id']}"
+        flight = self.flight_manager.create_session(
+            flight_id=plan["flight_id"],
+            departure=plan["departure"],
+            arrival=plan["arrival"],
+            pilot_id=sid,
+            route=plan["route"],
             atc_id=atc_id
         )
-        print(f"Flight session created for {flight.pilot.name} with ATC {flight.atc.name}")
-        self.socket_service.send("flight_details", flight.to_dict())
-        self.socket_service.send("new_log", flight.logs.get_logs())
+        self.socket_service.send("flight_details", flight.to_dict(),  room=sid)
+        self.socket_service.send("load_logs", flight.logs.get_logs(), room=sid)
 
-    # === DISCONNECT EVENTS === #
-    # def on_disconnect(self, sid: str):
-    #     sid = request.sid
-    #     self.pilot_manager.remove_pilot(sid)
-    #     # more stuff later
+    def on_add_log(self, entry: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session_by_pilot(sid)
+        if flight:
+            new_log = flight.logs.add_log(entry.get("request"))
+            self.socket_service.send("log_added", new_log.to_dict(), room=sid)
+        else:
+            print(f"Flight session not found for sid {sid}")
+
+    def on_change_status(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session_by_pilot(sid)
+        if flight:
+            log_id = data.get("logId")
+            flight.logs.change_status(log_id, data.get("status"))
+
+    def on_disconnect(self, sid: str):
+        sid = request.sid
+        self.flight_manager.remove_session_by_pilot(sid)
 
     

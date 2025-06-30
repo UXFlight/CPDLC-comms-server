@@ -35,7 +35,7 @@ class LogsManager:
             ref=d_message.get("Ref_Num") if d_message else u_message.get("Ref_Num"),
             content=entry.get("formattedMessage"),
             direction="downlink" if d_message else "uplink",
-            status="opened" if d_message else "new",
+            status="pending" if d_message else "new",
             intent=d_message.get("Message_Intent") if d_message else u_message.get ("Message_Intent"),
         )
         self.logs.append(new_log)

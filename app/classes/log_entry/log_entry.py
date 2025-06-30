@@ -36,7 +36,7 @@ class LogEntry:
         category = um_ref.get("Category", "")
         return "Route Modifications" in category
 
-        # return self.status in ["opened", "new"]
+        # return self.status in ["open", "new"]
 
 
     def get_waypoint(self):

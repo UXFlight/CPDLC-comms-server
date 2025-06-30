@@ -6,7 +6,7 @@ default_logs = [
     LogEntry(
         ref="UM74",
         content="PROCEED DIRECT TO OAKLE",
-        direction="UPLINK",
+        direction="uplink",
         status="NEW",
         intent="Instruction to proceed directly from its present position to the specified position."
     )

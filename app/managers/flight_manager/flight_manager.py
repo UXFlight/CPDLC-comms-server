@@ -5,7 +5,7 @@ class FlightManager:
     def __init__(self):
         self.sessions = {}
 
-    def create_session(self, flight_id, departure, arrival, pilot_id, route, atc_id):
+    def create_session(self, flight_id, departure, arrival, pilot_id, route, atc_id= None):
         if flight_id not in self.sessions:
             session = FlightSession(flight_id, departure, arrival, pilot_id, route, atc_id)
             self.sessions[flight_id] = session

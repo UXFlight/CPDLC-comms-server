@@ -5,7 +5,7 @@ from app.database.downlinks import downlinks
 from app.utils.time_utils import get_current_timestamp
 
 class LogEntry:
-    def __init__(self, ref, content, direction, status, intent=None, position=None):
+    def __init__(self, ref, content, direction, status, intent=None, position=None, additional=[]):
         self.id = str(uuid.uuid4())  
         self.ref = ref
         self.content = content
@@ -14,6 +14,7 @@ class LogEntry:
         self.timestamp = get_current_timestamp()
         self.intent = intent
         self.position = position
+        self.additional = additional
 
     def to_dict(self):
         return {
@@ -23,7 +24,8 @@ class LogEntry:
             "element": self.content,
             "status": self.status,
             "intent": self.intent,
-            "timeStamp": self.timestamp
+            "timeStamp": self.timestamp,
+            "additional": self.additional
         }
 
     def is_loadable(self):

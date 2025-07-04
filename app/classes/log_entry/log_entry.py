@@ -87,11 +87,12 @@ class LogEntry:
             time_arg = f"{hh}:{mm}"
 
         d_message = LogEntry.find_DM_by_ref(message_ref)
-
+        print(f"Looking for DM with ref {message_ref}: {d_message}")
         if not d_message:
             return ""
 
         result = d_message.get("Message_Element", "")
+        print(f"Message Element found: {result}")
         arg_index = 0
 
         def replacer(match):

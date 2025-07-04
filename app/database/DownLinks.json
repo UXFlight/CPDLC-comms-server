@@ -740,5 +740,12 @@
     "Message_Element": "WE CANNOT ACCEPT [specified distance] [direction]",
     "Response": "N",
     "Category": "Negotiation Responses (downlink)"
+  },
+   {
+    "Ref_Num": "DM 67",
+    "Message_Intent": "We cannot accept a parallel track offset the specified distance in the specified direction. FANS 1/A.— Uses preformatted free text DM 67g.",
+    "Message_Element": "[free text]",
+    "Response": "N",
+    "Category": "Negotiation Responses (downlink)"
   }
 ]

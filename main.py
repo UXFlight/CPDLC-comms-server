@@ -1,11 +1,11 @@
-from flask import Flask # type: ignore
+from flask import Flask  # type: ignore
 from app.classes import Socket
-from flask_socketio import SocketIO # type: ignore
+from flask_socketio import SocketIO  # type: ignore
 from app.controllers.routes import general_bp
 from app.gateway.socket_gateway import SocketGateway
-from flask_cors import CORS
+from flask_cors import CORS # type: ignore
 from app.managers.flight_manager.flight_manager import FlightManager
-#! from app.classes.ingsvc.agent import Echo
+# from app.classes.ingsvc.agent import Echo
 
 def create_app():
     app = Flask(__name__)
@@ -16,12 +16,11 @@ def create_app():
 
 if __name__ == '__main__':
     app, socketio = create_app()
-    #! Echo.start_ingescape_agent()
+    # Echo.start_ingescape_agent()
 
     socket_service = Socket(socketio)
-    flight_manager = FlightManager() # keep tracks of connected pilots
-    socket_manager = SocketGateway(socket_service, flight_manager) # gateway for sockets
-
-    socket_manager.init_events() # inits socket events
+    flight_manager = FlightManager()
+    socket_manager = SocketGateway(socket_service, flight_manager)
+    socket_manager.init_events()
 
     socketio.run(app, host="0.0.0.0", port=5321)

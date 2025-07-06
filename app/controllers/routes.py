@@ -1,6 +1,6 @@
-from flask import Blueprint, request
+from flask import Blueprint, jsonify, request
 from app.classes.log_entry.log_entry import LogEntry
-from app.managers.logs_manager.logs_manager import LogsManager
+from supabase_client import supabase
 
 general_bp = Blueprint('general', __name__)
 
@@ -16,6 +16,8 @@ def logs():
 def formatMessage():
     body = request.get_json()
     formatted = LogEntry.formatted_message(body)
+    result = supabase.table("datalinks").select("*").execute()
+    print(result.data)
     return {"status": "success", "message": formatted}, 200
     
 

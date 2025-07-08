@@ -1,751 +1,1284 @@
 [
   {
-    "Ref_Num": "DM 0",
+    "Ref_Num": "DM0",
     "Message_Intent": "The instruction is understood and will be complied with.",
     "Message_Element": "WILCO",
-    "Response": "N",
-    "Category": "(downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Response_requireds/Acknowledgements (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 1",
+    "Ref_Num": "DM1",
     "Message_Intent": "The instruction cannot be complied with.",
     "Message_Element": "UNABLE",
-    "Response": "N",
-    "Category": "Responses/Acknowledgements (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Response_requireds/Acknowledgements (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 2",
+    "Ref_Num": "DM2",
     "Message_Intent": "Wait for a reply. Note.— The controller is informed that the request is being assessed and there will be a short-term delay (within 10 minutes). The exchange is not closed and the request will be responded to when conditions allow.",
     "Message_Element": "STANDBY",
-    "Response": "N",
-    "Category": "Responses/Acknowledgements (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Response_requireds/Acknowledgements (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 3",
-    "Message_Intent": "Message received and understood. Note.— ROGER is the only correct response to an uplink free text message. Under no circumstances will ROGER be used instead of AFFIRM.",
+    "Ref_Num": "DM3",
+    "Message_Intent": "Message received and understood. Note.— ROGER is the only correct Response_required to an uplink free text message. Under no circumstances will ROGER be used instead of AFFIRM.",
     "Message_Element": "ROGER",
-    "Response": "N",
-    "Category": "Responses/Acknowledgements (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Response_requireds/Acknowledgements (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 4",
-    "Message_Intent": "Yes. Note.— AFFIRM is an appropriate response to an uplinked negotiation request message (e.g. UM 150 CAN YOU ACCEPT [level] at [time]).",
+    "Ref_Num": "DM4",
+    "Message_Intent": "Yes. Note.— AFFIRM is an appropriate Response_required to an uplinked negotiation request message (e.g. UM 150 CAN YOU ACCEPT [level] at [time]).",
     "Message_Element": "AFFIRM",
-    "Response": "N",
-    "Category": "Responses/Acknowledgements (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Response_requireds/Acknowledgements (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 5",
-    "Message_Intent": "No. Note.— NEGATIVE is an appropriate response to an uplinked negotiation request message (e.g. UM 150 CAN YOU ACCEPT [level] at [time]).",
+    "Ref_Num": "DM5",
+    "Message_Intent": "No. Note.— NEGATIVE is an appropriate Response_required to an uplinked negotiation request message (e.g. UM 150 CAN YOU ACCEPT [level] at [time]).",
     "Message_Element": "NEGATIVE",
-    "Response": "N",
-    "Category": "Responses/Acknowledgements (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Response_requireds/Acknowledgements (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 6",
+    "Ref_Num": "DM6",
     "Message_Intent": "Request to fly at the specified level.",
     "Message_Element": "REQUEST [level]",
-    "Response": "Y UM 0 UM 1 UM 19 UM 20 UM 23 UM 26 UM 27 UM 28 UM 29 UM 46 UM 47 UM 48 UM 159 + UM 183 UM 162 UM 211",
-    "Category": "Vertical Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Acceptable_responses": [
+      "UM0",
+      "UM1",
+      "UM19",
+      "UM20",
+      "UM23",
+      "UM26",
+      "UM27",
+      "UM28",
+      "UM29",
+      "UM46",
+      "UM47",
+      "UM48",
+      "UM159",
+      "UM183",
+      "UM162",
+      "UM211"
+    ],
+    "Category": "Vertical Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 7",
+    "Ref_Num": "DM7",
     "Message_Intent": "Request to fly at a level within the specified vertical range. FANS 1/A-ATN B1.— FANS 1/A aircraft only. ATN B1 aircraft uses DM 6 REQUEST [level], where [level] is a vertical range.",
     "Message_Element": "REQUEST BLOCK [level] TO [level]",
-    "Response": "Y",
-    "Category": "Vertical Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Vertical Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 8",
+    "Ref_Num": "DM8",
     "Message_Intent": "Request to cruise climb to the specified level. Note.— Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "REQUEST CRUISE CLIMB TO [level]",
-    "Response": "Y",
-    "Category": "Vertical Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Vertical Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 9",
+    "Ref_Num": "DM9",
     "Message_Intent": "Request to climb to the specified level.",
     "Message_Element": "REQUEST CLIMB TO [level]",
-    "Response": "Y UM 0 UM 1 UM 19 UM 20 UM 23 UM 26 UM 27 UM 28 UM 29 UM 46 UM 47 UM 48 UM 159 + UM 183 UM 162 UM 211",
-    "Category": "Vertical Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Acceptable_responses": [
+      "UM0",
+      "UM1",
+      "UM19",
+      "UM20",
+      "UM23",
+      "UM26",
+      "UM27",
+      "UM28",
+      "UM29",
+      "UM46",
+      "UM47",
+      "UM48",
+      "UM159",
+      "UM183",
+      "UM162",
+      "UM211"
+    ],
+    "Category": "Vertical Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 10",
+    "Ref_Num": "DM10",
     "Message_Intent": "Request to descend to the specified level.",
     "Message_Element": "REQUEST DESCENT TO [level]",
-    "Response": "Y UM 0 UM 1 UM 19 UM 20 UM 23 UM 26 UM 27 UM 28 UM 29 UM 46 UM 47 UM 48 UM 159 + UM 183 UM 162 UM 211",
-    "Category": "Vertical Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Acceptable_responses": [
+      "UM0",
+      "UM1",
+      "UM19",
+      "UM20",
+      "UM23",
+      "UM26",
+      "UM27",
+      "UM28",
+      "UM29",
+      "UM46",
+      "UM47",
+      "UM48",
+      "UM159",
+      "UM183",
+      "UM162",
+      "UM211"
+    ],
+    "Category": "Vertical Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 11",
+    "Ref_Num": "DM11",
     "Message_Intent": "Request that at the specified position a climb to the specified level be approved.",
     "Message_Element": "AT [position] REQUEST CLIMB TO [level]",
-    "Response": "Y",
-    "Category": "Vertical Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Vertical Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 12",
+    "Ref_Num": "DM12",
     "Message_Intent": "Request that at the specified position a descent to the specified level be approved.",
     "Message_Element": "AT [position] REQUEST DESCENT TO [level]",
-    "Response": "Y",
-    "Category": "Vertical Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Vertical Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 13",
+    "Ref_Num": "DM13",
     "Message_Intent": "Request that at the specified time a climb to the specified level be approved.",
     "Message_Element": "AT [time] REQUEST CLIMB TO [level]",
-    "Response": "Y",
-    "Category": "Vertical Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Vertical Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 14",
+    "Ref_Num": "DM14",
     "Message_Intent": "Request that at the specified time a descent to the specified level be approved.",
     "Message_Element": "AT [time] REQUEST DESCENT TO [level]",
-    "Response": "Y",
-    "Category": "Vertical Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Vertical Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 69",
-    "Message_Intent": "Request that a descent be approved on a see-and-avoid basis. Note.— Avoid use of this message element due to potential misinterpretation.",
-    "Message_Element": "REQUEST VMC DESCENT",
-    "Response": "Y",
-    "Category": "Vertical Requests (downlink)"
-  },
-  {
-    "Ref_Num": "DM 15",
+    "Ref_Num": "DM15",
     "Message_Intent": "Request that a parallel track, offset from the cleared track by the specified distance in the specified direction, be approved.",
     "Message_Element": "REQUEST OFFSET [specified distance] [direction] OF ROUTE",
-    "Response": "Y",
-    "Category": "Lateral Off-Set Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Lateral Off-Set Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 16",
+    "Ref_Num": "DM16",
     "Message_Intent": "Request that a parallel track, offset from the cleared track by the specified distance in the specified direction, be approved from the specified position.",
     "Message_Element": "AT [position] REQUEST OFFSET [specified distance] [direction] OF ROUTE",
-    "Response": "Y",
-    "Category": "Lateral Off-Set Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Lateral Off-Set Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 17",
+    "Ref_Num": "DM17",
     "Message_Intent": "Request that a parallel track, offset from the cleared track by the specified distance in the specified direction, be approved from the specified time.",
     "Message_Element": "AT [time] REQUEST OFFSET [specified distance] [direction] OF ROUTE",
-    "Response": "Y",
-    "Category": "Lateral Off-Set Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Lateral Off-Set Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 18",
+    "Ref_Num": "DM18",
     "Message_Intent": "Request to fly at the specified speed.",
     "Message_Element": "REQUEST [speed]",
-    "Response": "Y UM 0 UM 1 UM 162 UM 211 UM 55 UM 61 UM 106 UM 107 UM 108 UM 109 UM 116 UM 222 UM 159 + UM 183",
-    "Category": "Speed Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Acceptable_responses": [
+      "UM0",
+      "UM1",
+      "UM162",
+      "UM211",
+      "UM55",
+      "UM61",
+      "UM106",
+      "UM107",
+      "UM108",
+      "UM109",
+      "UM116",
+      "UM222",
+      "UM159",
+      "UM183"
+    ],
+    "Category": "Speed Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 19",
+    "Ref_Num": "DM19",
     "Message_Intent": "Request to fly within the specified speed range.",
     "Message_Element": "REQUEST [speed] TO [speed]",
-    "Response": "Y",
-    "Category": "Speed Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Speed Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 20",
+    "Ref_Num": "DM20",
     "Message_Intent": "Request for voice contact.",
     "Message_Element": "REQUEST VOICE CONTACT",
-    "Response": "Y",
-    "Category": "Voice Contact Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Voice Contact Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 21",
+    "Ref_Num": "DM21",
     "Message_Intent": "Request for voice contact on the specified frequency.",
     "Message_Element": "REQUEST VOICE CONTACT [frequency]",
-    "Response": "Y",
-    "Category": "Voice Contact Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Voice Contact Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 22",
+    "Ref_Num": "DM22",
     "Message_Intent": "Request to track from the present position direct to the specified position.",
     "Message_Element": "REQUEST DIRECT TO [position]",
-    "Response": "Y UM 0 UM 162 UM 211 UM 74 UM 96 UM 190 UM 159 + UM 183",
-    "Category": "Route Modification Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Acceptable_responses": [
+      "UM0",
+      "UM162",
+      "UM211",
+      "UM74",
+      "UM96",
+      "UM190",
+      "UM159",
+      "UM183"
+    ],
+    "Category": "Route Modification Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 23",
+    "Ref_Num": "DM23",
     "Message_Intent": "Request for the specified procedure clearance.",
     "Message_Element": "REQUEST [procedure name]",
-    "Response": "Y",
-    "Category": "Route Modification Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Route Modification Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 24",
+    "Ref_Num": "DM24",
     "Message_Intent": "Request for a route clearance.",
     "Message_Element": "REQUEST CLEARANCE [route clearance] or REQUEST [route clearance]",
-    "Response": "Y",
-    "Category": "Route Modification Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Route Modification Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 25",
+    "Ref_Num": "DM25",
     "Message_Intent": "Request for a clearance. Note.— Either pre-departure or route.",
     "Message_Element": "REQUEST [clearance type] CLEARANCE or REQUEST CLEARANCE",
-    "Response": "Y",
-    "Category": "Route Modification Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Route Modification Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 26",
+    "Ref_Num": "DM26",
     "Message_Intent": "Request for a weather deviation to the specified position via the specified route.",
     "Message_Element": "REQUEST WEATHER DEVIATION TO [position] VIA [route clearance]",
-    "Response": "Y",
-    "Category": "Route Modification Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Route Modification Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 27",
+    "Ref_Num": "DM27",
     "Message_Intent": "Request for a weather deviation up to the specified distance off track in the specified direction.",
     "Message_Element": "REQUEST WEATHER DEVIATION UP TO [specified distance] [direction] OF ROUTE",
-    "Response": "Y UM 0 UM 162 UM 211 UM 64 UM 74 UM 82 UM 96 UM 190 UM 159 + UM 183",
-    "Category": "Route Modification Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Acceptable_responses": [
+      "UM0",
+      "UM162",
+      "UM211",
+      "UM64",
+      "UM74",
+      "UM82",
+      "UM96",
+      "UM190",
+      "UM159",
+      "UM183"
+    ],
+    "Category": "Route Modification Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 70",
-    "Message_Intent": "Request a clearance to adopt the specified heading.",
-    "Message_Element": "REQUEST HEADING [degrees]",
-    "Response": "Y",
-    "Category": "Route Modification Requests (downlink)"
-  },
-  {
-    "Ref_Num": "DM 71",
-    "Message_Intent": "Request a clearance to adopt the specified ground track.",
-    "Message_Element": "REQUEST GROUND TRACK [degrees]",
-    "Response": "Y",
-    "Category": "Route Modification Requests (downlink)"
-  },
-  {
-    "Ref_Num": "DM 28",
+    "Ref_Num": "DM28",
     "Message_Intent": "Notification of leaving the specified level.",
     "Message_Element": "LEAVING [level]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 29",
+    "Ref_Num": "DM29",
     "Message_Intent": "Notification of climbing to the specified level.",
     "Message_Element": "CLIMBING TO [level]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 30",
+    "Ref_Num": "DM30",
     "Message_Intent": "Notification of descending to the specified level.",
     "Message_Element": "DESCENDING TO [level]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 31",
+    "Ref_Num": "DM31",
     "Message_Intent": "Notification of passing the specified position.",
     "Message_Element": "PASSING [position]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 78",
-    "Message_Intent": "Notification that at the specified time, the aircraft’s position was as specified.",
-    "Message_Element": "AT [time] [distance] [to/from] [position]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 32",
+    "Ref_Num": "DM32",
     "Message_Intent": "Notification of the present level.",
     "Message_Element": "PRESENT LEVEL [level] or PRESENT ALTITUDE [altitude]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 33",
+    "Ref_Num": "DM33",
     "Message_Intent": "Notification of the present position.",
     "Message_Element": "PRESENT POSITION [position]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 34",
+    "Ref_Num": "DM34",
     "Message_Intent": "Notification of the present speed.",
     "Message_Element": "PRESENT SPEED [speed]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 113",
-    "Message_Intent": "Notification of the requested speed. FANS 1/A.— Uses DM 67l free text for partial intent. The flight crew notifies the controller of present ground speed, in response to UM 169b, REPORT GROUND SPEED.",
-    "Message_Element": "[speed type] [speed type] [speed type] SPEED [speed]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 35",
+    "Ref_Num": "DM35",
     "Message_Intent": "Notification of the present heading in degrees.",
     "Message_Element": "PRESENT HEADING [degrees]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 36",
+    "Ref_Num": "DM36",
     "Message_Intent": "Notification of the present ground track in degrees.",
     "Message_Element": "PRESENT GROUND TRACK [degrees]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 37",
+    "Ref_Num": "DM37",
     "Message_Intent": "Notification that the aircraft is maintaining the specified level.",
     "Message_Element": "MAINTAINING [level] or LEVEL [altitude]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 76",
-    "Message_Intent": "Notification that the aircraft has reached a level within the specified vertical range.",
-    "Message_Element": "REACHING BLOCK [level] TO [level]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 38",
+    "Ref_Num": "DM38",
     "Message_Intent": "Read-back of the assigned level.",
     "Message_Element": "ASSIGNED LEVEL [level] or ASSIGNED ALTITUDE [altitude]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 77",
-    "Message_Intent": "Read-back of the assigned vertical range. FANS 1/A-ATN B1.— FANS 1/A aircraft only. ATN B1 aircraft uses DM 38 ASSIGNED LEVEL [level], where [level] is a vertical range.",
-    "Message_Element": "ASSIGNED BLOCK [level] TO [level]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 39",
+    "Ref_Num": "DM39",
     "Message_Intent": "Read-back of the assigned speed.",
     "Message_Element": "ASSIGNED SPEED [speed]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 40",
+    "Ref_Num": "DM40",
     "Message_Intent": "Read-back of the assigned route.",
     "Message_Element": "ASSIGNED ROUTE [route clearance]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 41",
+    "Ref_Num": "DM41",
     "Message_Intent": "The aircraft has regained the cleared route.",
     "Message_Element": "BACK ON ROUTE",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 114",
-    "Message_Intent": "Notification that the aircraft is clear of weather and is able to accept a clearance to regain cleared flight route.",
-    "Message_Element": "CLEAR OF WEATHER",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 42",
+    "Ref_Num": "DM42",
     "Message_Intent": "The next waypoint is the specified position.",
     "Message_Element": "NEXT WAYPOINT [position]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 43",
+    "Ref_Num": "DM43",
     "Message_Intent": "The ETA at the next waypoint is as specified.",
     "Message_Element": "NEXT WAYPOINT ETA [time]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 44",
+    "Ref_Num": "DM44",
     "Message_Intent": "The next plus one waypoint is the specified position.",
     "Message_Element": "ENSUING WAYPOINT [position]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 45",
+    "Ref_Num": "DM45",
     "Message_Intent": "Clarification of previously reported waypoint passage.",
     "Message_Element": "REPORTED WAYPOINT [position]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 46",
+    "Ref_Num": "DM46",
     "Message_Intent": "Clarification of time over previously reported waypoint.",
     "Message_Element": "REPORTED WAYPOINT [time]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 47",
+    "Ref_Num": "DM47",
     "Message_Intent": "The specified (SSR) code has been selected.",
     "Message_Element": "SQUAWKING [code]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 48",
+    "Ref_Num": "DM48",
     "Message_Intent": "Position report. Note.— Reports the current position of the aircraft when the flight crew presses the button to send this message. ATC expects position reports based on this downlink message.",
     "Message_Element": "POSITION REPORT [position report]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 79",
-    "Message_Intent": "The code of the latest ATIS received is as specified.",
-    "Message_Element": "ATIS [atis code]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 89",
-    "Message_Intent": "The specified ATS unit is being monitored on the specified frequency. FANS 1/A-ATN B1.— FANS 1/A aircraft uses DM 67aa free text. May require to be preformatted.",
-    "Message_Element": "MONITORING [unit name] [frequency]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 102",
-    "Message_Intent": "Used to report that an aircraft has landed.",
-    "Message_Element": "LANDING REPORT",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 104",
-    "Message_Intent": "Notification of estimated time of arrival at the specified position. FANS 1/A.— Uses free text DM 67n. Response to free text UM 169d REPORT ETA [position]",
-    "Message_Element": "ETA [position] [time] or [position] [time]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 105",
-    "Message_Intent": "Notification of the alternative aerodrome for landing.",
-    "Message_Element": "ALTERNATE AERODROME [airport]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 106",
-    "Message_Intent": "Notification of the preferred level. FANS 1/A.— Uses DM 67m. Response to free text UM 169c STATE PREFERRED LEVEL. FANS 1/A – ATN B1.— FANS 1/A aircraft response to UM 231 STATE PREFERRED LEVEL.",
-    "Message_Element": "PREFERRED LEVEL [level] or FL[altitude]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 109",
-    "Message_Intent": "Notification of the preferred time to commence descent for approach. FANS 1/A.— Uses DM 67v. Response to free text UM 169aa STATE TOP OF DESCENT. FANS 1/A – ATN B1.— FANS 1/A aircraft response to UM 232 STATE TOP OF DESCENT.",
-    "Message_Element": "TOP OF DESCENT [time] or TOD [time]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 110",
-    "Message_Intent": "Notification of the preferred position to commence descent for approach.",
-    "Message_Element": "TOP OF DESCENT [position]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 111",
-    "Message_Intent": "Notification of the preferred time and position to commence descent for approach.",
-    "Message_Element": "TOP OF DESCENT [time] [position]",
-    "Response": "N",
-    "Category": "Reports (downlink)"
-  },
-  {
-    "Ref_Num": "DM 49",
+    "Ref_Num": "DM49",
     "Message_Intent": "Request for the earliest time at which a clearance to the specified speed can be expected.",
     "Message_Element": "WHEN CAN WE EXPECT [speed]",
-    "Response": "Y",
-    "Category": "Negotiation Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Negotiation Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 50",
-    "Message_Intent": "Request for the earliest time at which a clearance to a speed within the specified range can be expected. Note.— This message should not be used as it is not supported by the appropriate uplink message response: UM 103, UM 104 or UM 105.",
+    "Ref_Num": "DM50",
+    "Message_Intent": "Request for the earliest time at which a clearance to a speed within the specified range can be expected. Note.— This message should not be used as it is not supported by the appropriate uplink message Response_required: UM 103, UM 104 or UM 105.",
     "Message_Element": "WHEN CAN WE EXPECT [speed] TO [speed]",
-    "Response": "Y",
-    "Category": "Negotiation Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Acceptable_responses": [
+      "UM103",
+      "UM104",
+      "UM105"
+    ],
+    "Category": "Negotiation Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 51",
+    "Ref_Num": "DM51",
     "Message_Intent": "Request for the earliest time at which a clearance to regain the planned route can be expected.",
     "Message_Element": "WHEN CAN WE EXPECT BACK ON ROUTE",
-    "Response": "Y",
-    "Category": "Negotiation Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Negotiation Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 52",
+    "Ref_Num": "DM52",
     "Message_Intent": "Request for the earliest time at which a clearance to descend can be expected.",
     "Message_Element": "WHEN CAN WE EXPECT LOWER LEVEL or WHEN CAN WE EXPECT LOWER ALTITUDE",
-    "Response": "Y",
-    "Category": "Negotiation Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Negotiation Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 53",
+    "Ref_Num": "DM53",
     "Message_Intent": "Request for the earliest time at which a clearance to climb can be expected.",
     "Message_Element": "WHEN CAN WE EXPECT HIGHER LEVEL or WHEN CAN WE EXPECT HIGHER ALTITUDE",
-    "Response": "Y",
-    "Category": "Negotiation Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Negotiation Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 54",
-    "Message_Intent": "Request for the earliest time at which a clearance to cruise climb to the specified level can be expected. Note.— This message should not be used as it is not supported by the appropriate uplink message response: UM 11, UM 12, UM 17, or UM 18.",
+    "Ref_Num": "DM54",
+    "Message_Intent": "Request for the earliest time at which a clearance to cruise climb to the specified level can be expected. Note.— This message should not be used as it is not supported by the appropriate uplink message Response_required: UM 11, UM 12, UM 17, or UM 18.",
     "Message_Element": "WHEN CAN WE EXPECT CRUISE CLIMB TO [level]",
-    "Response": "Y",
-    "Category": "Negotiation Requests (downlink)"
+    "Response_required": [
+      "Y"
+    ],
+    "Acceptable_responses": [
+      "UM11",
+      "UM12",
+      "UM17",
+      "UM18"
+    ],
+    "Category": "Negotiation Requests (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 87",
-    "Message_Intent": "Request for the earliest time at which a clearance to climb to the specified level can be expected. FANS 1/A.— Uses preformatted free text DM 67h.",
-    "Message_Element": "WHEN CAN WE EXPECT CLIMB TO [level]",
-    "Response": "Y",
-    "Category": "Negotiation Requests (downlink)"
-  },
-  {
-    "Ref_Num": "DM 88",
-    "Message_Intent": "Request for the earliest time at which a clearance to descend to the specified level can be expected. FANS 1/A.— Uses preformatted free text DM 67i.",
-    "Message_Element": "WHEN CAN WE EXPECT DESCENT TO [level]",
-    "Response": "Y",
-    "Category": "Negotiation Requests (downlink)"
-  },
-  {
-    "Ref_Num": "DM 55",
+    "Ref_Num": "DM55",
     "Message_Intent": "Urgency prefix. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "PAN PAN PAN",
-    "Response": "Y or N",
-    "Category": "Emergency Messages (downlink)"
+    "Response_required": [
+      "Y",
+      "N"
+    ],
+    "Category": "Emergency Messages (downlink)",
+    "Urgency": "urgent"
   },
   {
-    "Ref_Num": "DM 56",
+    "Ref_Num": "DM56",
     "Message_Intent": "Distress prefix. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "MAYDAY MAYDAY MAYDAY",
-    "Response": "Y or N",
-    "Category": "Emergency Messages (downlink)"
+    "Response_required": [
+      "Y",
+      "N"
+    ],
+    "Category": "Emergency Messages (downlink)",
+    "Urgency": "distress"
   },
   {
-    "Ref_Num": "DM 112",
-    "Message_Intent": "Indicates specifically that the aircraft is being subjected to unlawful interference.",
-    "Message_Element": "SQUAWKING 7500",
-    "Response": "N",
-    "Category": "Emergency Messages (downlink)"
-  },
-  {
-    "Ref_Num": "DM 57",
+    "Ref_Num": "DM57",
     "Message_Intent": "Notification of fuel remaining and number of persons on board. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "[remaining fuel] OF FUEL REMAINING AND [persons on board] PERSONS ON BOARD or [remaining fuel] OF FUEL REMAINING AND [remaining souls] SOULS ON BOARD",
-    "Response": "Y or N",
-    "Category": "Emergency Messages (downlink)"
+    "Response_required": [
+      "Y",
+      "N"
+    ],
+    "Category": "Emergency Messages (downlink)",
+    "Urgency": "urgent"
   },
   {
-    "Ref_Num": "DM 58",
+    "Ref_Num": "DM58",
     "Message_Intent": "Notification that the pilot wishes to cancel the emergency condition. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "CANCEL EMERGENCY",
-    "Response": "Y or N",
-    "Category": "Emergency Messages (downlink)"
+    "Response_required": [
+      "Y",
+      "N"
+    ],
+    "Category": "Emergency Messages (downlink)",
+    "Urgency": "urgent"
   },
   {
-    "Ref_Num": "DM 59",
+    "Ref_Num": "DM59",
     "Message_Intent": "Notification that the aircraft is diverting to the specified position via the specified route due to an urgent need. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "DIVERTING TO [position] VIA [route clearance]",
-    "Response": "Y or N",
-    "Category": "Emergency Messages (downlink)"
+    "Response_required": [
+      "Y",
+      "N"
+    ],
+    "Category": "Emergency Messages (downlink)",
+    "Urgency": "urgent"
   },
   {
-    "Ref_Num": "DM 60",
+    "Ref_Num": "DM60",
     "Message_Intent": "Notification that the aircraft is deviating the specified distance in the specified direction off the cleared route and maintaining a parallel track due to an urgent need. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "OFFSETTING [specified distance] [direction] OF ROUTE",
-    "Response": "Y or N",
-    "Category": "Emergency Messages (downlink)"
+    "Response_required": [
+      "Y",
+      "N"
+    ],
+    "Category": "Emergency Messages (downlink)",
+    "Urgency": "urgent"
   },
   {
-    "Ref_Num": "DM 61",
+    "Ref_Num": "DM61",
     "Message_Intent": "Notification that the aircraft is descending to the specified level due to an urgent need. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "DESCENDING TO [level]",
-    "Response": "Y or N",
-    "Category": "Emergency Messages (downlink)"
+    "Response_required": [
+      "Y",
+      "N"
+    ],
+    "Category": "Emergency Messages (downlink)",
+    "Urgency": "urgent"
   },
   {
-    "Ref_Num": "DM 80",
-    "Message_Intent": "Notification that the aircraft is deviating up to the deviating distance from the cleared route in the specified direction due to an urgent need. FANS 1/A.— Notification that the aircraft is operating on an offset. The urgency attribute for this message element is not defined.",
-    "Message_Element": "DEVIATING UP TO [specified distance] [direction] OF ROUTE or DEVIATING [distanceoffset] [direction] OF ROUTE",
-    "Response": "Y or N",
-    "Category": "Emergency Messages (downlink)"
-  },
-  {
-    "Ref_Num": "DM 62",
+    "Ref_Num": "DM62",
     "Message_Intent": "A system-generated message that the avionics has detected an error.",
     "Message_Element": "ERROR [error information]",
-    "Response": "N",
-    "Category": "System Management Messages (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "System Management Messages (downlink)",
+    "Urgency": "urgent"
   },
   {
-    "Ref_Num": "DM 63",
+    "Ref_Num": "DM63",
     "Message_Intent": "A system-generated denial to any CPDLC application message sent from a ground facility that is not the current data authority.",
     "Message_Element": "NOT CURRENT DATA AUTHORITY",
-    "Response": "N",
-    "Category": "System Management Messages (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "System Management Messages (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 99",
-    "Message_Intent": "A system-generated message to inform a ground facility that it is now the current data authority.",
-    "Message_Element": "CURRENT DATA AUTHORITY",
-    "Response": "N",
-    "Category": "System Management Messages (downlink)"
-  },
-  {
-    "Ref_Num": "DM 64",
+    "Ref_Num": "DM64",
     "Message_Intent": "Notification to the ground system that the specified ATSU is the current data authority. FANS 1/A – ATN B1.— FANS 1/A aircraft uses this message.",
     "Message_Element": "[facility designation]",
-    "Response": "N",
-    "Category": "System Management Messages (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "System Management Messages (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 107",
-    "Message_Intent": "A system-generated message sent to a ground system that tries to connect to an aircraft when a current data authority has not designated the ground system as the NDA. FANS 1/A – ATN B1.— ATN B1 aircraft uses this message.",
-    "Message_Element": "NOT AUTHORIZED NEXT DATA AUTHORITY",
-    "Response": "N",
-    "Category": "System Management Messages (downlink)"
-  },
-  {
-    "Ref_Num": "DM 73",
-    "Message_Intent": "A system-generated message indicating the software version number. FANS 1/A – ATN B1.— FANS 1/A aircraft uses this message.",
-    "Message_Element": "[version number]",
-    "Response": "N",
-    "Category": "System Management Messages (downlink)"
-  },
-  {
-    "Ref_Num": "DM 100",
-    "Message_Intent": "Confirmation to the ground system that the aircraft system has received the message to which the logical acknowledgement refers and found it acceptable for display to the responsible person. FANS 1/A – ATN B1.— ATN B1 ground systems uses alternate means, such as MAS message assurance received from FANS 1/A aircraft, to mimic LOGICAL ACKNOWLEDGEMENT.",
-    "Message_Element": "LOGICAL ACKNOWLEDGEMENT",
-    "Response": "N",
-    "Category": "System Management Messages (downlink)"
-  },
-  {
-    "Ref_Num": "DM 65",
+    "Ref_Num": "DM65",
     "Message_Intent": "Used to explain reasons for pilot’s message.",
     "Message_Element": "DUE TO WEATHER",
-    "Response": "N",
-    "Category": "Additional Messages (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Additional Messages (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 66",
+    "Ref_Num": "DM66",
     "Message_Intent": "Used to explain reasons for pilot’s message.",
     "Message_Element": "DUE TO AIRCRAFT PERFORMANCE",
-    "Response": "N",
-    "Category": "Additional Messages (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Additional Messages (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 74",
+    "Ref_Num": "DM67",
+    "Message_Intent": "Normal urgency, low alert",
+    "Message_Element": "[free text]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Free Text - Normal (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM68",
+    "Message_Intent": "Distress urgency, high alert",
+    "Message_Element": "[free text]",
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Free Text - Distress (downlink)",
+    "Urgency": "distress"
+  },
+  {
+    "Ref_Num": "DM69",
+    "Message_Intent": "Request that a descent be approved on a see-and-avoid basis. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Element": "REQUEST VMC DESCENT",
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Vertical Requests (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM70",
+    "Message_Intent": "Request a clearance to adopt the specified heading.",
+    "Message_Element": "REQUEST HEADING [degrees]",
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Route Modification Requests (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM71",
+    "Message_Intent": "Request a clearance to adopt the specified ground track.",
+    "Message_Element": "REQUEST GROUND TRACK [degrees]",
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Route Modification Requests (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM73",
+    "Message_Intent": "A system-generated message indicating the software version number. FANS 1/A – ATN B1.— FANS 1/A aircraft uses this message.",
+    "Message_Element": "[version number]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "System Management Messages (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM74",
     "Message_Intent": "States a desire by the pilot to provide his/her own separation and remain in VMC.",
     "Message_Element": "REQUEST TO MAINTAIN OWN SEPARATION AND VMC or MAINTAIN OWN SEPARATION AND VMC",
-    "Response": "Y or N",
-    "Category": "Additional Messages (downlink)"
+    "Response_required": [
+      "Y",
+      "N"
+    ],
+    "Category": "Additional Messages (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 75",
+    "Ref_Num": "DM75",
     "Message_Intent": "Used in conjunction with another message to indicate that the pilot wishes to execute request when the pilot is prepared to do so.",
     "Message_Element": "AT PILOTS DISCRETION",
-    "Response": "N",
-    "Category": "Additional Messages (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Additional Messages (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 101",
-    "Message_Intent": "Allows the pilot to indicate a desire for termination of CPDLC application with the current data authority.",
-    "Message_Element": "REQUEST END OF SERVICE",
-    "Response": "Y",
-    "Category": "Additional Messages (downlink)"
+    "Ref_Num": "DM76",
+    "Message_Intent": "Notification that the aircraft has reached a level within the specified vertical range.",
+    "Message_Element": "REACHING BLOCK [level] TO [level]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 103",
-    "Message_Intent": "Allows the pilot to indicate that he/she has cancelled IFR flight plan.",
-    "Message_Element": "CANCELLING IFR",
-    "Response": "Y",
-    "Category": "Additional Messages (downlink)"
+    "Ref_Num": "DM77",
+    "Message_Intent": "Read-back of the assigned vertical range. FANS 1/A-ATN B1.— FANS 1/A aircraft only. ATN B1 aircraft uses DM 38 ASSIGNED LEVEL [level], where [level] is a vertical range.",
+    "Message_Element": "ASSIGNED BLOCK [level] TO [level]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 108",
-    "Message_Intent": "Notification that de-icing action has been completed.",
-    "Message_Element": "DE-ICING COMPLETE",
-    "Response": "N",
-    "Category": "Additional Messages (downlink)"
+    "Ref_Num": "DM78",
+    "Message_Intent": "Notification that at the specified time, the aircraft’s position was as specified.",
+    "Message_Element": "AT [time] [distance] [to/from] [position]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 81",
+    "Ref_Num": "DM79",
+    "Message_Intent": "The code of the latest ATIS received is as specified.",
+    "Message_Element": "ATIS [atis code]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM80",
+    "Message_Intent": "Notification that the aircraft is deviating up to the deviating distance from the cleared route in the specified direction due to an urgent need. FANS 1/A.— Notification that the aircraft is operating on an offset. The Urgency attribute for this message element is not defined.",
+    "Message_Element": "DEVIATING UP TO [specified distance] [direction] OF ROUTE or DEVIATING [distanceoffset] [direction] OF ROUTE",
+    "Response_required": [
+      "Y",
+      "N"
+    ],
+    "Category": "Emergency Messages (downlink)",
+    "Urgency": "urgent"
+  },
+  {
+    "Ref_Num": "DM81",
     "Message_Intent": "We can accept the specified level at the specified time. FANS 1/A.— Uses preformatted free text DM 67b.",
     "Message_Element": "WE CAN ACCEPT [level] AT [time]",
-    "Response": "N",
-    "Category": "Negotiation Responses (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Negotiation Response_requireds (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 115",
-    "Message_Intent": "We can accept the specified level at the specified position.",
-    "Message_Element": "WE CAN ACCEPT [level] AT [position]",
-    "Response": "N",
-    "Category": "Negotiation Responses (downlink)"
-  },
-  {
-    "Ref_Num": "DM 82",
+    "Ref_Num": "DM82",
     "Message_Intent": "We cannot accept the specified level. FANS 1/A.— Uses preformatted free text DM 67e.",
     "Message_Element": "WE CANNOT ACCEPT [level]",
-    "Response": "N",
-    "Category": "Negotiation Responses (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Negotiation Response_requireds (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 83",
+    "Ref_Num": "DM83",
     "Message_Intent": "We can accept the specified speed at the specified time. FANS 1/A.— Uses preformatted free text DM 67c.",
     "Message_Element": "WE CAN ACCEPT [speed] AT [time]",
-    "Response": "N",
-    "Category": "Negotiation Responses (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Negotiation Response_requireds (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 116",
-    "Message_Intent": "We can accept the specified speed at the specified position.",
-    "Message_Element": "WE CAN ACCEPT [speed] AT [position]",
-    "Response": "N",
-    "Category": "Negotiation Responses (downlink)"
-  },
-  {
-    "Ref_Num": "DM 84",
+    "Ref_Num": "DM84",
     "Message_Intent": "We cannot accept the specified speed. FANS 1/A.— Uses preformatted free text DM 67f.",
     "Message_Element": "WE CANNOT ACCEPT [speed]",
-    "Response": "N",
-    "Category": "Negotiation Responses (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Negotiation Response_requireds (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 85",
+    "Ref_Num": "DM85",
     "Message_Intent": "We can accept a parallel track offset the specified distance in the specified direction at the specified time. FANS 1/A.— Uses preformatted free text DM 67d.",
     "Message_Element": "WE CAN ACCEPT [specified distance] [direction] AT [time]",
-    "Response": "N",
-    "Category": "Negotiation Responses (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Negotiation Response_requireds (downlink)",
+    "Urgency": "normal"
   },
   {
-    "Ref_Num": "DM 117",
-    "Message_Intent": "We can accept a parallel track offset the specified distance in the specified direction at the specified position.",
-    "Message_Element": "WE CAN ACCEPT [specified distance] [direction] AT [position]",
-    "Response": "N",
-    "Category": "Negotiation Responses (downlink)"
-  },
-  {
-    "Ref_Num": "DM 86",
+    "Ref_Num": "DM86",
     "Message_Intent": "We cannot accept a parallel track offset the specified distance in the specified direction. FANS 1/A.— Uses preformatted free text DM 67g.",
     "Message_Element": "WE CANNOT ACCEPT [specified distance] [direction]",
-    "Response": "N",
-    "Category": "Negotiation Responses (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Negotiation Response_requireds (downlink)",
+    "Urgency": "normal"
   },
-   {
-    "Ref_Num": "DM 67",
-    "Message_Intent": "We cannot accept a parallel track offset the specified distance in the specified direction. FANS 1/A.— Uses preformatted free text DM 67g.",
+  {
+    "Ref_Num": "DM87",
+    "Message_Intent": "Request for the earliest time at which a clearance to climb to the specified level can be expected. FANS 1/A.— Uses preformatted free text DM 67h.",
+    "Message_Element": "WHEN CAN WE EXPECT CLIMB TO [level]",
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Negotiation Requests (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM88",
+    "Message_Intent": "Request for the earliest time at which a clearance to descend to the specified level can be expected. FANS 1/A.— Uses preformatted free text DM 67i.",
+    "Message_Element": "WHEN CAN WE EXPECT DESCENT TO [level]",
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Negotiation Requests (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM89",
+    "Message_Intent": "The specified ATS unit is being monitored on the specified frequency. FANS 1/A-ATN B1.— FANS 1/A aircraft uses DM 67aa free text. May require to be preformatted.",
+    "Message_Element": "MONITORING [unit name] [frequency]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM90",
+    "Message_Intent": "Normal urgency, medium alert",
     "Message_Element": "[free text]",
-    "Response": "N",
-    "Category": "Negotiation Responses (downlink)"
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Free Text - Distress (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM91",
+    "Message_Intent": "Normal urgency, low alert",
+    "Message_Element": "[free text]",
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Free Text - Distress (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM92",
+    "Message_Intent": "Low urgency, low alert",
+    "Message_Element": "[free text]",
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Free Text - Distress (downlink)",
+    "Urgency": "low"
+  },
+  {
+    "Ref_Num": "DM93",
+    "Message_Intent": "Urgent urgency, high alert",
+    "Message_Element": "[free text]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Free Text - Distress (downlink)",
+    "Urgency": "urgent"
+  },
+  {
+    "Ref_Num": "DM94",
+    "Message_Intent": "Distress urgency, high alert",
+    "Message_Element": "[free text]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Free Text - Distress (downlink)",
+    "Urgency": "distress"
+  },
+  {
+    "Ref_Num": "DM95",
+    "Message_Intent": "Urgent urgency, medium alert",
+    "Message_Element": "[free text]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Free Text - Distress (downlink)",
+    "Urgency": "urgent"
+  },
+  {
+    "Ref_Num": "DM96",
+    "Message_Intent": "Urgent urgency, low alert",
+    "Message_Element": "[free text]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Free Text - Distress (downlink)",
+    "Urgency": "urgent"
+  },
+  {
+    "Ref_Num": "DM97",
+    "Message_Intent": "Low urgency, low alert",
+    "Message_Element": "[free text]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Free Text - Distress (downlink)",
+    "Urgency": "low"
+  },
+  {
+    "Ref_Num": "DM98",
+    "Message_Intent": "Normal urgency, normal alert. FANS 1/A – ATN B1.— ATN B1 aircraft only. FANS 1/A aircraft uses DM 67.",
+    "Message_Element": "[free text]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Free Text - Distress (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM99",
+    "Message_Intent": "A system-generated message to inform a ground facility that it is now the current data authority.",
+    "Message_Element": "CURRENT DATA AUTHORITY",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "System Management Messages (downlink)",
+    "Urgency": "urgent"
+  },
+  {
+    "Ref_Num": "DM100",
+    "Message_Intent": "Confirmation to the ground system that the aircraft system has received the message to which the logical acknowledgement refers and found it acceptable for display to the responsible person. FANS 1/A – ATN B1.— ATN B1 ground systems uses alternate means, such as MAS message assurance received from FANS 1/A aircraft, to mimic LOGICAL ACKNOWLEDGEMENT.",
+    "Message_Element": "LOGICAL ACKNOWLEDGEMENT",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "System Management Messages (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM101",
+    "Message_Intent": "Allows the pilot to indicate a desire for termination of CPDLC application with the current data authority.",
+    "Message_Element": "REQUEST END OF SERVICE",
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Additional Messages (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM102",
+    "Message_Intent": "Used to report that an aircraft has landed.",
+    "Message_Element": "LANDING REPORT",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM103",
+    "Message_Intent": "Allows the pilot to indicate that he/she has cancelled IFR flight plan.",
+    "Message_Element": "CANCELLING IFR",
+    "Response_required": [
+      "Y"
+    ],
+    "Category": "Additional Messages (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM104",
+    "Message_Intent": "Notification of estimated time of arrival at the specified position. FANS 1/A.— Uses free text DM 67n. Response_required to free text UM 169d REPORT ETA [position]",
+    "Message_Element": "ETA [position] [time] or [position] [time]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM105",
+    "Message_Intent": "Notification of the alternative aerodrome for landing.",
+    "Message_Element": "ALTERNATE AERODROME [airport]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM106",
+    "Message_Intent": "Notification of the preferred level. FANS 1/A.— Uses DM 67m. Response_required to free text UM 169c STATE PREFERRED LEVEL. FANS 1/A – ATN B1.— FANS 1/A aircraft Response_required to UM 231 STATE PREFERRED LEVEL.",
+    "Message_Element": "PREFERRED LEVEL [level] or FL[altitude]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM107",
+    "Message_Intent": "A system-generated message sent to a ground system that tries to connect to an aircraft when a current data authority has not designated the ground system as the NDA. FANS 1/A – ATN B1.— ATN B1 aircraft uses this message.",
+    "Message_Element": "NOT AUTHORIZED NEXT DATA AUTHORITY",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "System Management Messages (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM108",
+    "Message_Intent": "Notification that de-icing action has been completed.",
+    "Message_Element": "DE-ICING COMPLETE",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Additional Messages (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM109",
+    "Message_Intent": "Notification of the preferred time to commence descent for approach. FANS 1/A.— Uses DM 67v. Response_required to free text UM 169aa STATE TOP OF DESCENT. FANS 1/A – ATN B1.— FANS 1/A aircraft Response_required to UM 232 STATE TOP OF DESCENT.",
+    "Message_Element": "TOP OF DESCENT [time] or TOD [time]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM110",
+    "Message_Intent": "Notification of the preferred position to commence descent for approach.",
+    "Message_Element": "TOP OF DESCENT [position]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM111",
+    "Message_Intent": "Notification of the preferred time and position to commence descent for approach.",
+    "Message_Element": "TOP OF DESCENT [time] [position]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM112",
+    "Message_Intent": "Indicates specifically that the aircraft is being subjected to unlawful interference.",
+    "Message_Element": "SQUAWKING 7500",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Emergency Messages (downlink)",
+    "Urgency": "urgent"
+  },
+  {
+    "Ref_Num": "DM113",
+    "Message_Intent": "Notification of the requested speed. FANS 1/A.— Uses DM 67l free text for partial intent. The flight crew notifies the controller of present ground speed, in Response_required to UM 169b, REPORT GROUND SPEED.",
+    "Message_Element": "[speed type] [speed type] [speed type] SPEED [speed]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM114",
+    "Message_Intent": "Notification that the aircraft is clear of weather and is able to accept a clearance to regain cleared flight route.",
+    "Message_Element": "CLEAR OF WEATHER",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Reports (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM115",
+    "Message_Intent": "We can accept the specified level at the specified position.",
+    "Message_Element": "WE CAN ACCEPT [level] AT [position]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Negotiation Response_requireds (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM116",
+    "Message_Intent": "We can accept the specified speed at the specified position.",
+    "Message_Element": "WE CAN ACCEPT [speed] AT [position]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Negotiation Response_requireds (downlink)",
+    "Urgency": "normal"
+  },
+  {
+    "Ref_Num": "DM117",
+    "Message_Intent": "We can accept a parallel track offset the specified distance in the specified direction at the specified position.",
+    "Message_Element": "WE CAN ACCEPT [specified distance] [direction] AT [position]",
+    "Response_required": [
+      "N"
+    ],
+    "Category": "Negotiation Response_requireds (downlink)",
+    "Urgency": "normal"
   }
 ]

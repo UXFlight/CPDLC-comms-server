@@ -30,7 +30,6 @@ class LogEntry:
 
     def is_loadable(self):
         um_ref = LogEntry.find_UM_by_ref(self.ref)
-        print(f"Checking if UM exists for ref {self.ref}: {um_ref}")
         if not um_ref:
             print(f"No UM found for ref {self.ref}")
             return False
@@ -60,7 +59,7 @@ class LogEntry:
     @staticmethod
     def find_DM_by_ref(ref):
         return next(
-            (msg for msg in downlinks if msg.get("Ref_Num", "").replace(" ", "") == ref),
+            (msg for msg in downlinks if msg.get("Ref_Num", "") == ref),
             None
         )
     
@@ -87,12 +86,10 @@ class LogEntry:
             time_arg = f"{hh}:{mm}"
 
         d_message = LogEntry.find_DM_by_ref(message_ref)
-        print(f"Looking for DM with ref {message_ref}: {d_message}")
         if not d_message:
             return ""
 
         result = d_message.get("Message_Element", "")
-        print(f"Message Element found: {result}")
         arg_index = 0
 
         def replacer(match):

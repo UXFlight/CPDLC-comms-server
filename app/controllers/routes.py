@@ -16,8 +16,6 @@ def logs():
 def formatMessage():
     body = request.get_json()
     formatted = LogEntry.formatted_message(body)
-    result = supabase.table("datalinks").select("*").execute()
-    print(result.data)
     return {"status": "success", "message": formatted}, 200
     
 

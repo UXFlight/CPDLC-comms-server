@@ -2,6 +2,7 @@ from flask import Flask  # type: ignore
 from app.classes import Socket
 from flask_socketio import SocketIO  # type: ignore
 from app.controllers.routes import general_bp
+from app.database.mongo_db import MongoDb
 from app.gateway.socket_gateway import SocketGateway
 from flask_cors import CORS # type: ignore
 from app.managers.flight_manager.flight_manager import FlightManager
@@ -20,7 +21,8 @@ if __name__ == '__main__':
 
     socket_service = Socket(socketio)
     flight_manager = FlightManager()
-    socket_manager = SocketGateway(socket_service, flight_manager)
+    mongodb = MongoDb()
+    socket_manager = SocketGateway(socket_service, flight_manager, mongodb)
     socket_manager.init_events()
 
     socketio.run(app, host="0.0.0.0", port=5321)

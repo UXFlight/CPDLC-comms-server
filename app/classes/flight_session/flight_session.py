@@ -7,15 +7,15 @@ from app.managers.logs_manager.logs_manager import LogsManager
 
 
 class FlightSession:
-    def __init__(self, flight_id, departure, arrival, pilot_id, route, atc_id):
+    def __init__(self, flight_id, departure, arrival, pilot_id, route, atc_id, mongodb):
         self.flight_id = flight_id
         self.departure = departure
         self.arrival = arrival
         self.pilot = Pilot(pilot_id)
         self.atc = Atc(atc_id)
         self.status = FlightStatus()
-        self.mongodb = MongoDb()
-        self.logs = LogsManager(self.mongodb)
+        self.mongodb = mongodb
+        self.logs = LogsManager(mongodb)
         self.route = route
         self.current_data_authority = atc_id
         self.next_data_authority = None

@@ -1,0 +1,122 @@
+[
+  {
+    "user_id": "atc_lfmm",
+    "role": "atc",
+    "atc_unit": "LFMM",
+    "callsign": "LFMM_CTR",
+    "region": "Europe (France)",
+    "available": false
+  },
+  {
+    "user_id": "atc_egtt",
+    "role": "atc",
+    "atc_unit": "EGTT",
+    "callsign": "LONDON_CTR",
+    "region": "Europe (UK)",
+    "available": false
+  },
+  {
+    "user_id": "atc_edmm",
+    "role": "atc",
+    "atc_unit": "EDMM",
+    "callsign": "MUNICH_CTR",
+    "region": "Europe (Germany)",
+    "available": false
+  },
+  {
+    "user_id": "atc_lhhh",
+    "role": "atc",
+    "atc_unit": "LHHH",
+    "callsign": "BUDAPEST_CTR",
+    "region": "Europe (Hungary)",
+    "available": false
+  },
+  {
+    "user_id": "atc_zny",
+    "role": "atc",
+    "atc_unit": "ZNY",
+    "callsign": "NEW_YORK_CTR",
+    "region": "North America (USA)",
+    "available": false
+  },
+  {
+    "user_id": "atc_zba",
+    "role": "atc",
+    "atc_unit": "ZBAA",
+    "callsign": "BEIJING_CTR",
+    "region": "Asia (China)",
+    "available": false
+  },
+  {
+    "user_id": "atc_ybbb",
+    "role": "atc",
+    "atc_unit": "YBBB",
+    "callsign": "BRISBANE_CTR",
+    "region": "Australia (Oceania)",
+    "available": false
+  },
+  {
+    "user_id": "atc_svmi",
+    "role": "atc",
+    "atc_unit": "SVMI",
+    "callsign": "MAIQUETIA_CTR",
+    "region": "South America (Venezuela)",
+    "available": false
+  },
+  {
+    "user_id": "atc_fhhh",
+    "role": "atc",
+    "atc_unit": "FHHH",
+    "callsign": "JOHANNESBURG_CTR",
+    "region": "Africa (South Africa)",
+    "available": false
+  },
+  {
+    "user_id": "atc_czyz",
+    "role": "atc",
+    "atc_unit": "CZYZ",
+    "callsign": "TORONTO_CTR",
+    "region": "North America (Canada - Toronto)",
+    "available": false
+  },
+  {
+    "user_id": "atc_czqm",
+    "role": "atc",
+    "atc_unit": "CZQM",
+    "callsign": "MONTREAL_CTR",
+    "region": "North America (Canada - Montreal)",
+    "available": true
+  },
+  {
+    "user_id": "atc_czwg",
+    "role": "atc",
+    "atc_unit": "CZWG",
+    "callsign": "WINNIPEG_CTR",
+    "region": "North America (Canada - Winnipeg)",
+    "available": false
+  },
+  {
+    "user_id": "atc_czvr",
+    "role": "atc",
+    "atc_unit": "CZVR",
+    "callsign": "VANCOUVER_CTR",
+    "region": "North America (Canada - Vancouver)",
+    "available": false
+  },
+  {
+    "user_id": "atc_czua",
+    "role": "atc",
+    "atc_unit": "CZUA",
+    "callsign": "EDMONTON_CTR",
+    "region": "North America (Canada - Edmonton)",
+    "available": false
+  },
+  {
+    "user_id": "atc_czca",
+    "role": "atc",
+    "atc_unit": "CZCA",
+    "callsign": "GANDER_CTR",
+    "region": "North Atlantic (Canada - Gander Oceanic)",
+    "available": false
+  }
+]

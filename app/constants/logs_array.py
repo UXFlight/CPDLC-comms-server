@@ -1,6 +1,4 @@
-from datetime import datetime
 from app.classes.log_entry.log_entry import LogEntry
-from app.utils.time_utils import get_current_timestamp
 
 default_logs = [
     LogEntry(

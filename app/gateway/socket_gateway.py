@@ -1,19 +1,22 @@
 from copy import deepcopy
 from flask import request  # type: ignore
 from app.classes import Socket  # type: ignore
+from app.database.mongo_db import MongoDb
 from app.managers.flight_manager.flight_manager import FlightManager
 from app.database.flight_plan.flight_plan import flight_plan
 from app.utils.error_handler import handle_errors
 
 
 class SocketGateway:
-    def __init__(self, socket_service: Socket, flight_manager: FlightManager):
+    def __init__(self, socket_service: Socket, flight_manager: FlightManager, mongodb: MongoDb):
         self.socket_service = socket_service
         self.flight_manager = flight_manager
+        self.mongodb = mongodb
 
     def init_events(self):
         self.socket_service.listen('connect', self.on_connect)
         self.socket_service.listen('sucessfull_connection', self.sucessfull_connection)
+        self.socket_service.listen('logon', self.on_logon)
         self.socket_service.listen('add_log', self.on_add_log)
         self.socket_service.listen('change_status', self.on_change_status)
         self.socket_service.listen('load_message', self.on_load_message)
@@ -31,6 +34,7 @@ class SocketGateway:
             arrival=plan["arrival"],
             pilot_id=sid,
             route=plan["route"],
+            mongodb = self.mongodb
         )
         self.socket_service.send("connected", flight.to_dict(), room=sid)
 
@@ -40,6 +44,18 @@ class SocketGateway:
         flight = self.flight_manager.get_session_by_pilot(sid)
         flight.atc_id = atc_id
         self.socket_service.send("load_logs", flight.logs.get_logs(), room=sid)
+
+    @handle_errors(event_name="error", message="Failed to logon atc")
+    def on_logon(self, data: dict):
+        sid = request.sid
+        atc_available = self.mongodb.find_available_atc(data.get("username"))
+        if atc_available:
+            flight = self.flight_manager.get_session_by_pilot(sid)
+            flight.atc_id = data.get("username")
+            self.socket_service.send("logon_success", data={}, room=sid)
+        else:
+            self.socket_service.send("logon_failure", data={}, room=sid)
+
 
     @handle_errors(event_name="error", message="Failed to add log")
     def on_add_log(self, entry: dict):

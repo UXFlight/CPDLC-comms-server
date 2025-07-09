@@ -6,8 +6,9 @@ from app.constants.logs_array import default_logs
 
 
 class LogsManager:
-    def __init__(self):
+    def __init__(self, mongodb):
         self.logs = default_logs
+        self.mongodb = mongodb
 
     def get_logs(self):
         return [log.to_dict() for log in self.logs]
@@ -25,19 +26,18 @@ class LogsManager:
         return sorted(self.logs, key=lambda log: log.timestamp, reverse=True)
 
     def add_log(self, entry):
-        d_message = LogEntry.find_DM_by_ref(entry.get("messageRef"))
-        u_message = None
-
-        if not d_message:
-            u_message = LogEntry.find_UM_by_ref(entry.get("messageRef"))
+        message = self.mongodb.find_datalink_by_ref(entry.get("messageRef"))
+        type = "downlink" if "DM" in message.get("Ref_Num") else "uplink"
 
         new_log = LogEntry(
-            ref=d_message.get("Ref_Num") if d_message else u_message.get("Ref_Num"),
+            ref=message.get("Ref_Num"),
             content=entry.get("formattedMessage"),
-            direction="downlink" if d_message else "uplink",
-            status="pending" if d_message else "new",
-            intent=d_message.get("Message_Intent") if d_message else u_message.get ("Message_Intent"),
+            direction=type,
+            status="pending" if type =="downlink" else "new",
+            intent=message.get("Message_Intent"),
             additional=entry.get("additional"), 
+            urgency=entry.get("urgency"),
+            mongodb=self.mongodb,
         )
         self.logs.append(new_log)
         return new_log

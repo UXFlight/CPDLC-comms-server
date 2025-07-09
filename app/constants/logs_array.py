@@ -8,6 +8,7 @@ default_logs = [
         content="PROCEED DIRECT TO OAKLE",
         direction="uplink",
         status="NEW",
+        urgency="Normal",
         intent="Instruction to proceed directly from its present position to the specified position."
     )
 ]

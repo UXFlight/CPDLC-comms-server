@@ -5,16 +5,18 @@ from app.database.data.downlinks import downlinks
 from app.utils.time_utils import get_current_timestamp
 
 class LogEntry:
-    def __init__(self, ref, content, direction, status, intent=None, position=None, additional=[]):
+    def __init__(self, ref, content, direction, status, urgency, intent=None, position=None, additional=[], mongodb=None):
         self.id = str(uuid.uuid4())  
         self.ref = ref
         self.content = content
         self.direction = direction
         self.status = status
+        self.urgency = urgency
         self.timestamp = get_current_timestamp()
         self.intent = intent
         self.position = position
         self.additional = additional
+        self.mongodb = mongodb
 
     def to_dict(self):
         return {
@@ -29,7 +31,7 @@ class LogEntry:
         }
 
     def is_loadable(self):
-        um_ref = LogEntry.find_UM_by_ref(self.ref)
+        um_ref = self.mongodb.find_datalink_by_ref(self.ref)
         if not um_ref:
             print(f"No UM found for ref {self.ref}")
             return False
@@ -41,7 +43,7 @@ class LogEntry:
 
 
     def get_waypoint(self):
-        um_ref = LogEntry.find_UM_by_ref(self.ref)
+        um_ref = self.mongodb.find_datalink_by_ref(self.ref)
         if not um_ref:
             return None
 
@@ -56,23 +58,23 @@ class LogEntry:
             return match.group("position")
         return None
 
-    @staticmethod
-    def find_DM_by_ref(ref):
-        return next(
-            (msg for msg in downlinks if msg.get("Ref_Num", "") == ref),
-            None
-        )
+    # @staticmethod
+    # def find_DM_by_ref(ref):
+    #     return next(
+    #         (msg for msg in downlinks if msg.get("Ref_Num", "") == ref),
+    #         None
+    #     )
     
-    @staticmethod
-    def find_UM_by_ref(ref):
-        return next(
-            (msg for msg in uplinks if msg.get("Ref_Num", "").replace(" ", "") == ref),
-            None
-        )
+    # @staticmethod
+    # def find_UM_by_ref(ref):
+    #     return next(
+    #         (msg for msg in uplinks if msg.get("Ref_Num", "").replace(" ", "") == ref),
+    #         None
+    #     )
         
 
     @staticmethod
-    def formatted_message(request_data: dict) -> str:
+    def formatted_message(request_data: dict, mongodb) -> str:
         import re
 
         message_ref = request_data.get("messageRef")
@@ -85,7 +87,7 @@ class LogEntry:
             mm = time_arg.get("mm", "").zfill(2)
             time_arg = f"{hh}:{mm}"
 
-        d_message = LogEntry.find_DM_by_ref(message_ref)
+        d_message = mongodb.find_datalink_by_ref(message_ref)
         if not d_message:
             return ""
 

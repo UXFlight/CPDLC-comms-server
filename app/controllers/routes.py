@@ -1,8 +1,9 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, request
 from app.classes.log_entry.log_entry import LogEntry
-from supabase_client import supabase
+from app.database.mongo_db import MongoDb
 
 general_bp = Blueprint('general', __name__)
+mongodb = MongoDb()
 
 @general_bp.route('/logs', methods=['POST'])
 def logs():
@@ -15,7 +16,7 @@ def logs():
 @general_bp.route('/formattedMessage', methods=['POST'])
 def formatMessage():
     body = request.get_json()
-    formatted = LogEntry.formatted_message(body)
+    formatted = LogEntry.formatted_message(body, mongodb)
     return {"status": "success", "message": formatted}, 200
     
 

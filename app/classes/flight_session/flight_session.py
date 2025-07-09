@@ -2,6 +2,7 @@ from app.classes.atc.atc import Atc
 from app.classes.flight_status.flight_status import FlightStatus
 from app.classes.pilot.pilot import Pilot
 from app.database.flight_plan import flight_plan
+from app.database.mongo_db import MongoDb
 from app.managers.logs_manager.logs_manager import LogsManager
 
 
@@ -13,7 +14,8 @@ class FlightSession:
         self.pilot = Pilot(pilot_id)
         self.atc = Atc(atc_id)
         self.status = FlightStatus()
-        self.logs = LogsManager()
+        self.mongodb = MongoDb()
+        self.logs = LogsManager(self.mongodb)
         self.route = route
         self.current_data_authority = atc_id
         self.next_data_authority = None

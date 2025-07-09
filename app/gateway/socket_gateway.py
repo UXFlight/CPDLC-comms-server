@@ -2,7 +2,7 @@ from copy import deepcopy
 from flask import request  # type: ignore
 from app.classes import Socket  # type: ignore
 from app.managers.flight_manager.flight_manager import FlightManager
-from app.database.flight_plan import flight_plan
+from app.database.flight_plan.flight_plan import flight_plan
 from app.utils.error_handler import handle_errors
 
 

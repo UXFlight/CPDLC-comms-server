@@ -1,6 +1,6 @@
 
 from app.classes.log_entry.log_entry import LogEntry
-from app.database.log_storage import load_logs, save_logs
+from app.database.log_storage.log_storage import load_logs, save_logs
 from app.utils.time_utils import get_current_timestamp
 from app.constants.logs_array import default_logs
 

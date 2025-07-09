@@ -1,7 +1,7 @@
 from app.classes.atc.atc import Atc
 from app.classes.flight_status.flight_status import FlightStatus
 from app.classes.pilot.pilot import Pilot
-from app.database import flight_plan
+from app.database.flight_plan import flight_plan
 from app.managers.logs_manager.logs_manager import LogsManager
 
 

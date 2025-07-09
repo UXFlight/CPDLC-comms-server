@@ -1,7 +1,7 @@
 import re
 import uuid
-from app.database.uplinks import uplinks
-from app.database.downlinks import downlinks
+from app.database.data.uplinks import uplinks
+from app.database.data.downlinks import downlinks
 from app.utils.time_utils import get_current_timestamp
 
 class LogEntry:

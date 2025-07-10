@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
@@ -5,9 +7,13 @@ from app.database.data.uplinks import uplinks
 from app.database.data.downlinks import downlinks
 from app.database.data.atc import atcs
 
-uri = "mongodb+srv://datalinksDb:datalinksDbPassword@cluster0.hx4d37v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+# Load environment variables from .env file
+load_dotenv()
 
-client = MongoClient(uri, server_api=ServerApi('1'))
+# Get the URI from environment variable
+URI = os.getenv('MONGODB_URI')
+
+client = MongoClient(URI, server_api=ServerApi('1'))
 
 try:
     client.admin.command('ping')
@@ -17,10 +23,10 @@ try:
     # uplinks_coll = db["uplinks"]
     # downlinks_coll = db["downlinks"]
 
-    db = client["users"]
-    atc_coll = db["atc"]
-    atc_coll.drop()
-    atc_coll.insert_many(atcs)
+    # db = client["users"]
+    # atc_coll = db["atc"]
+    # atc_coll.drop()
+    # atc_coll.insert_many(atcs)
     # populate the collections with data
     # uplinks_coll.insert_many(uplinks)
     # downlinks_coll.insert_many(downlinks)

@@ -1,11 +1,12 @@
 import re
 import uuid
-from app.database.data.uplinks import uplinks
-from app.database.data.downlinks import downlinks
 from app.utils.time_utils import get_current_timestamp
 
+ACTION_REQUIRED_UM = ["Y", "W/U", "A/N", "R"]
+NO_ACTION_REQUIRED_UM = ["N", "N/E"]
+
 class LogEntry:
-    def __init__(self, ref, content, direction, status, urgency, intent=None, position=None, additional=[], mongodb=None):
+    def __init__(self, ref, content, direction, status, urgency, intent=None, position=None, additional=[], mongodb=None, communication_thread=[]):
         self.id = str(uuid.uuid4())  
         self.ref = ref
         self.content = content
@@ -17,6 +18,7 @@ class LogEntry:
         self.position = position
         self.additional = additional
         self.mongodb = mongodb
+        self.communication_thread = communication_thread
 
     def to_dict(self):
         return {
@@ -25,9 +27,11 @@ class LogEntry:
             "direction": self.direction,
             "element": self.content,
             "status": self.status,
+            "urgency": self.urgency,
             "intent": self.intent,
             "timeStamp": self.timestamp,
-            "additional": self.additional
+            "additional": self.additional,
+            "communication_thread": [entry.to_dict() for entry in self.communication_thread],
         }
 
     def is_loadable(self):
@@ -57,21 +61,15 @@ class LogEntry:
         if match:
             return match.group("position")
         return None
-
-    # @staticmethod
-    # def find_DM_by_ref(ref):
-    #     return next(
-    #         (msg for msg in downlinks if msg.get("Ref_Num", "") == ref),
-    #         None
-    #     )
     
-    # @staticmethod
-    # def find_UM_by_ref(ref):
-    #     return next(
-    #         (msg for msg in uplinks if msg.get("Ref_Num", "").replace(" ", "") == ref),
-    #         None
-    #     )
-        
+    def change_status(self, new_status):
+        self.status = new_status
+        return self
+    
+    @staticmethod
+    def is_response_required(datalink) -> bool:
+        response_required = datalink.get("Response_required", "")
+        return response_required[0] in ACTION_REQUIRED_UM
 
     @staticmethod
     def formatted_message(request_data: dict, mongodb) -> str:

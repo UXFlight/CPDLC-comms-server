@@ -1,8 +1,7 @@
 import json
-from datetime import datetime
 from pathlib import Path
 
-LOG_FILE_PATH = Path("database/logs.json")
+LOG_FILE_PATH = Path("log_storage/logs.json")
 
 LOG_FILE_PATH.parent.mkdir(parents=True, exist_ok=True)
 

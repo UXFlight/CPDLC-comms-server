@@ -15,7 +15,6 @@ class SocketGateway:
 
     def init_events(self):
         self.socket_service.listen('connect', self.on_connect)
-        self.socket_service.listen('sucessfull_connection', self.sucessfull_connection)
         self.socket_service.listen('logon', self.on_logon)
         self.socket_service.listen('add_log', self.on_add_log)
         self.socket_service.listen('change_status', self.on_change_status)
@@ -38,13 +37,6 @@ class SocketGateway:
         )
         self.socket_service.send("connected", flight.to_dict(), room=sid)
 
-    @handle_errors(event_name="error", message="Failed to link ATC to pilot session")
-    def sucessfull_connection(self, atc_id: str):
-        sid = request.sid
-        flight = self.flight_manager.get_session_by_pilot(sid)
-        flight.atc_id = atc_id
-        self.socket_service.send("load_logs", flight.logs.get_logs(), room=sid)
-
     @handle_errors(event_name="error", message="Failed to logon atc")
     def on_logon(self, data: dict):
         sid = request.sid
@@ -53,6 +45,7 @@ class SocketGateway:
             flight = self.flight_manager.get_session_by_pilot(sid)
             flight.atc_id = data.get("username")
             self.socket_service.send("logon_success", data={}, room=sid)
+            self.socket_service.send("load_logs", flight.logs.get_logs(), room=sid)
         else:
             self.socket_service.send("logon_failure", data={}, room=sid)
 
@@ -73,7 +66,8 @@ class SocketGateway:
         flight = self.flight_manager.get_session_by_pilot(sid)
         if flight:
             log_id = data.get("logId")
-            flight.logs.change_status(log_id, data.get("status"))
+            log = flight.logs.get_log_by_id(log_id)
+            log.change_status(data.get("status"))
 
     @handle_errors(event_name="error", message="Failed to load message")
     def on_load_message(self, data: dict):

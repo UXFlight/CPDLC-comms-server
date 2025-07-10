@@ -1,13 +1,33 @@
 
 from app.classes.log_entry.log_entry import LogEntry
-from app.database.log_storage.log_storage import load_logs, save_logs
-from app.utils.time_utils import get_current_timestamp
 from app.constants.logs_array import default_logs
+from enum import Enum
+
+class DatalinkStatus(Enum):
+    NEW = "new"
+    PENDING = "pending"
+    REQUESTED = "requested"
+    CLOSED = "closed"
+    REJECTED = "rejected"
+    OPENED = "opened"
+    ACK = "ack"
+    INFO = "info"
+    EXPIRED = "expired"
 
 
 class LogsManager:
     def __init__(self, mongodb):
-        self.logs = default_logs
+        self.logs = [
+            LogEntry(
+                ref="UM74",
+                content="PROCEED DIRECT TO OAKLE",
+                direction="uplink",
+                status="NEW",
+                urgency="Normal",
+                intent="Instruction to proceed directly from its present position to the specified position.",
+                mongodb=mongodb
+            )
+        ]
         self.mongodb = mongodb
 
     def get_logs(self):
@@ -28,12 +48,12 @@ class LogsManager:
     def add_log(self, entry):
         message = self.mongodb.find_datalink_by_ref(entry.get("messageRef"))
         type = "downlink" if "DM" in message.get("Ref_Num") else "uplink"
-
+        
         new_log = LogEntry(
             ref=message.get("Ref_Num"),
             content=entry.get("formattedMessage"),
             direction=type,
-            status="pending" if type =="downlink" else "new",
+            status=self.set_new_log_status(message).value,
             intent=message.get("Message_Intent"),
             additional=entry.get("additional"), 
             urgency=entry.get("urgency"),
@@ -42,12 +62,9 @@ class LogsManager:
         self.logs.append(new_log)
         return new_log
     
-    def change_status(self, log_id, new_status):
-        log = self.get_log_by_id(log_id)
-        if log:
-            log.status = new_status
-            return log
-        return None
+    def set_new_log_status(self, datalink):
+        if "U" in datalink.get("Ref_Num", " "):
+            return DatalinkStatus.NEW if LogEntry.is_response_required(datalink) else DatalinkStatus.OPENED
+        else:
+            return DatalinkStatus.REQUESTED if LogEntry.is_response_required(datalink) else DatalinkStatus.OPENED
 
-    # def filter_by(self, criteria):
-    #     if criteria == "NEW"

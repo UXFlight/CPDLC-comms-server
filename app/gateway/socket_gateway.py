@@ -51,7 +51,6 @@ class SocketGateway:
             self.socket_service.send("logon_failure", data={}, room=sid)
 
 
-    @handle_errors(event_name="error", message="Failed to add log")
     def on_add_log(self, entry: dict):
         sid = request.sid
         flight = self.flight_manager.get_session_by_pilot(sid)

@@ -9,6 +9,7 @@ default_logs = [
         status="NEW",
         urgency="Normal",
         intent="Instruction to proceed directly from its present position to the specified position.",
-        mongodb=MongoDb()
+        mongodb=MongoDb(),
+        response_required=True
     )
 ]

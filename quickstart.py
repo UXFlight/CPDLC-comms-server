@@ -23,11 +23,16 @@ try:
     # uplinks_coll = db["uplinks"]
     # downlinks_coll = db["downlinks"]
 
-    # db = client["users"]
-    # atc_coll = db["atc"]
-    # atc_coll.drop()
-    # atc_coll.insert_many(atcs)
-    # populate the collections with data
+    # uplinks_coll.drop()
+    # downlinks_coll.drop()
+    
+
+
+    # # db = client["users"]
+    # # atc_coll = db["atc"]
+    # # atc_coll.drop()
+    # # atc_coll.insert_many(atcs)
+    # # populate the collections with data
     # uplinks_coll.insert_many(uplinks)
     # downlinks_coll.insert_many(downlinks)
 

@@ -6,7 +6,7 @@ ACTION_REQUIRED_UM = ["Y", "W/U", "A/N", "R"]
 NO_ACTION_REQUIRED_UM = ["N", "N/E"]
 
 class LogEntry:
-    def __init__(self, ref, content, direction, status, urgency, intent=None, position=None, additional=[], mongodb=None, communication_thread=[]):
+    def __init__(self, ref, content, direction, status, urgency, response_required, intent=None, position=None, additional=[], mongodb=None, communication_thread=[], acceptable_responses=[]):
         self.id = str(uuid.uuid4())  
         self.ref = ref
         self.content = content
@@ -19,6 +19,8 @@ class LogEntry:
         self.additional = additional
         self.mongodb = mongodb
         self.communication_thread = communication_thread
+        self.response_required = response_required
+        self.acceptable_responses = acceptable_responses
 
     def to_dict(self):
         return {
@@ -32,6 +34,8 @@ class LogEntry:
             "timeStamp": self.timestamp,
             "additional": self.additional,
             "communication_thread": [entry.to_dict() for entry in self.communication_thread],
+            "response_required": self.response_required,
+            "acceptable_responses": self.acceptable_responses
         }
 
     def is_loadable(self):
@@ -66,6 +70,10 @@ class LogEntry:
         self.status = new_status
         return self
     
+    def add_to_communication_thread(self, entry):
+        self.communication_thread.append(entry)
+        return self
+    
     @staticmethod
     def is_response_required(datalink) -> bool:
         response_required = datalink.get("Response_required", "")
@@ -73,8 +81,6 @@ class LogEntry:
 
     @staticmethod
     def formatted_message(request_data: dict, mongodb) -> str:
-        import re
-
         message_ref = request_data.get("messageRef")
         arguments = request_data.get("arguments", [])
         position_arg = request_data.get("positionSelected", None)

@@ -25,7 +25,8 @@ class LogsManager:
                 status="NEW",
                 urgency="Normal",
                 intent="Instruction to proceed directly from its present position to the specified position.",
-                mongodb=mongodb
+                mongodb=mongodb,
+                response_required=True
             )
         ]
         self.mongodb = mongodb
@@ -48,7 +49,7 @@ class LogsManager:
     def add_log(self, entry):
         message = self.mongodb.find_datalink_by_ref(entry.get("messageRef"))
         type = "downlink" if "DM" in message.get("Ref_Num") else "uplink"
-        
+
         new_log = LogEntry(
             ref=message.get("Ref_Num"),
             content=entry.get("formattedMessage"),
@@ -58,7 +59,10 @@ class LogsManager:
             additional=entry.get("additional"), 
             urgency=entry.get("urgency"),
             mongodb=self.mongodb,
+            response_required=LogEntry.is_response_required(message),
+            acceptable_responses=message.get("Acceptable_responses", [])
         )
+        print(f"is response required: {LogEntry.is_response_required(message)}")
         self.logs.append(new_log)
         return new_log
     
@@ -68,3 +72,9 @@ class LogsManager:
         else:
             return DatalinkStatus.REQUESTED if LogEntry.is_response_required(datalink) else DatalinkStatus.OPENED
 
+
+    def find_log_by_id(self, log_id):
+        for log in self.logs:
+            if log.id == log_id:
+                return log
+        return None

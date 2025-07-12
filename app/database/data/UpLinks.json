@@ -83,14 +83,38 @@
       "R"
     ],
     "Acceptable_responses": [
-      "DM49",
-      "DM50",
-      "DM51",
-      "DM52",
-      "DM53",
-      "DM54",
-      "DM87",
-      "DM88"
+      {
+        "ref": "DM49",
+        "text": "WHEN CAN WE EXPECT [speed]"
+      },
+      {
+        "ref": "DM50",
+        "text": "WHEN CAN WE EXPECT [speed] TO [speed]"
+      },
+      {
+        "ref": "DM51",
+        "text": "WHEN CAN WE EXPECT BACK ON ROUTE"
+      },
+      {
+        "ref": "DM52",
+        "text": "WHEN CAN WE EXPECT LOWER LEVEL"
+      },
+      {
+        "ref": "DM53",
+        "text": "WHEN CAN WE EXPECT HIGHER LEVEL"
+      },
+      {
+        "ref": "DM54",
+        "text": "WHEN CAN WE EXPECT CRUISE CLIMB TO [level]"
+      },
+      {
+        "ref": "DM87",
+        "text": "WHEN CAN WE EXPECT CLIMB TO [level]"
+      },
+      {
+        "ref": "DM88",
+        "text": "WHEN CAN WE EXPECT DESCENT TO [level]"
+      }
     ],
     "Category": "Vertical Clearances (uplink)",
     "urgency": "normal"
@@ -103,14 +127,38 @@
       "R"
     ],
     "Acceptable_responses": [
-      "DM49",
-      "DM50",
-      "DM51",
-      "DM52",
-      "DM53",
-      "DM54",
-      "DM87",
-      "DM88"
+      {
+        "ref": "DM49",
+        "text": "WHEN CAN WE EXPECT [speed]"
+      },
+      {
+        "ref": "DM50",
+        "text": "WHEN CAN WE EXPECT [speed] TO [speed]"
+      },
+      {
+        "ref": "DM51",
+        "text": "WHEN CAN WE EXPECT BACK ON ROUTE"
+      },
+      {
+        "ref": "DM52",
+        "text": "WHEN CAN WE EXPECT LOWER LEVEL"
+      },
+      {
+        "ref": "DM53",
+        "text": "WHEN CAN WE EXPECT HIGHER LEVEL"
+      },
+      {
+        "ref": "DM54",
+        "text": "WHEN CAN WE EXPECT CRUISE CLIMB TO [level]"
+      },
+      {
+        "ref": "DM87",
+        "text": "WHEN CAN WE EXPECT CLIMB TO [level]"
+      },
+      {
+        "ref": "DM88",
+        "text": "WHEN CAN WE EXPECT DESCENT TO [level]"
+      }
     ],
     "Category": "Vertical Clearances (uplink)",
     "urgency": "normal"
@@ -123,14 +171,38 @@
       "R"
     ],
     "Acceptable_responses": [
-      "DM49",
-      "DM50",
-      "DM51",
-      "DM52",
-      "DM53",
-      "DM54",
-      "DM87",
-      "DM88"
+      {
+        "ref": "DM49",
+        "text": "WHEN CAN WE EXPECT [speed]"
+      },
+      {
+        "ref": "DM50",
+        "text": "WHEN CAN WE EXPECT [speed] TO [speed]"
+      },
+      {
+        "ref": "DM51",
+        "text": "WHEN CAN WE EXPECT BACK ON ROUTE"
+      },
+      {
+        "ref": "DM52",
+        "text": "WHEN CAN WE EXPECT LOWER LEVEL"
+      },
+      {
+        "ref": "DM53",
+        "text": "WHEN CAN WE EXPECT HIGHER LEVEL"
+      },
+      {
+        "ref": "DM54",
+        "text": "WHEN CAN WE EXPECT CRUISE CLIMB TO [level]"
+      },
+      {
+        "ref": "DM87",
+        "text": "WHEN CAN WE EXPECT CLIMB TO [level]"
+      },
+      {
+        "ref": "DM88",
+        "text": "WHEN CAN WE EXPECT DESCENT TO [level]"
+      }
     ],
     "Category": "Vertical Clearances (uplink)",
     "urgency": "normal"
@@ -143,14 +215,38 @@
       "R"
     ],
     "Acceptable_responses": [
-      "DM49",
-      "DM50",
-      "DM51",
-      "DM52",
-      "DM53",
-      "DM54",
-      "DM87",
-      "DM88"
+      {
+        "ref": "DM49",
+        "text": "WHEN CAN WE EXPECT [speed]"
+      },
+      {
+        "ref": "DM50",
+        "text": "WHEN CAN WE EXPECT [speed] TO [speed]"
+      },
+      {
+        "ref": "DM51",
+        "text": "WHEN CAN WE EXPECT BACK ON ROUTE"
+      },
+      {
+        "ref": "DM52",
+        "text": "WHEN CAN WE EXPECT LOWER LEVEL"
+      },
+      {
+        "ref": "DM53",
+        "text": "WHEN CAN WE EXPECT HIGHER LEVEL"
+      },
+      {
+        "ref": "DM54",
+        "text": "WHEN CAN WE EXPECT CRUISE CLIMB TO [level]"
+      },
+      {
+        "ref": "DM87",
+        "text": "WHEN CAN WE EXPECT CLIMB TO [level]"
+      },
+      {
+        "ref": "DM88",
+        "text": "WHEN CAN WE EXPECT DESCENT TO [level]"
+      }
     ],
     "Category": "Vertical Clearances (uplink)",
     "urgency": "normal"
@@ -1260,7 +1356,10 @@
       "NE"
     ],
     "Acceptable_responses": [
-      "DM32"
+      {
+        "ref": "DM32",
+        "text": "PRESENT LEVEL [level]"
+      }
     ],
     "Category": "Report/Confirmation Requests (uplink)",
     "urgency": "normal"
@@ -1275,7 +1374,10 @@
       "R"
     ],
     "Acceptable_responses": [
-      "DM113"
+      {
+        "ref": "DM113",
+        "text": "[speed type] SPEED [speed]"
+      }
     ],
     "Category": "Report/Confirmation Requests (uplink)",
     "urgency": "normal"
@@ -1289,8 +1391,14 @@
       "NE"
     ],
     "Acceptable_responses": [
-      "DM38",
-      "DM77"
+      {
+        "ref": "DM38",
+        "text": "ASSIGNED LEVEL [level]"
+      },
+      {
+        "ref": "DM77",
+        "text": "ASSIGNED BLOCK [level] TO [level]"
+      }
     ],
     "Category": "Report/Confirmation Requests (uplink)",
     "urgency": "normal"
@@ -1436,8 +1544,14 @@
       "NE"
     ],
     "Acceptable_responses": [
-      "DM81",
-      "DM82"
+      {
+        "ref": "DM81",
+        "text": "WE CAN ACCEPT [level] AT [time]"
+      },
+      {
+        "ref": "DM82",
+        "text": "WE CANNOT ACCEPT [level]"
+      }
     ],
     "Category": "Negotiation Requests (uplink)",
     "urgency": "normal"
@@ -1471,8 +1585,14 @@
       "NE"
     ],
     "Acceptable_responses": [
-      "DM83",
-      "DM84"
+      {
+        "ref": "DM83",
+        "text": "WE CAN ACCEPT [speed] AT [time]"
+      },
+      {
+        "ref": "DM84",
+        "text": "WE CANNOT ACCEPT [speed]"
+      }
     ],
     "Category": "Negotiation Requests (uplink)",
     "urgency": "normal"
@@ -1486,8 +1606,14 @@
       "NE"
     ],
     "Acceptable_responses": [
-      "DM85",
-      "DM86"
+      {
+        "ref": "DM85",
+        "text": "WE CAN ACCEPT [specified distance] [direction] AT [time]"
+      },
+      {
+        "ref": "DM86",
+        "text": "WE CANNOT ACCEPT [specified distance] [direction]"
+      }
     ],
     "Category": "Negotiation Requests (uplink)",
     "urgency": "normal"
@@ -2043,7 +2169,10 @@
       "Y"
     ],
     "Acceptable_responses": [
-      "DM104"
+      {
+        "ref": "DM104",
+        "text": "ETA [position] [time]"
+      }
     ],
     "Category": "Report/Confirmation Requests (uplink)",
     "urgency": "normal"
@@ -2076,7 +2205,10 @@
       "Y"
     ],
     "Acceptable_responses": [
-      "DM106"
+      {
+        "ref": "DM106",
+        "text": "PREFERRED LEVEL [level]"
+      }
     ],
     "Category": "Report/Confirmation Requests (uplink)",
     "urgency": "normal"
@@ -2089,7 +2221,10 @@
       "Y"
     ],
     "Acceptable_responses": [
-      "DM109"
+      {
+        "ref": "DM109",
+        "text": "TOP OF DESCENT [time]"
+      }
     ],
     "Category": "Report/Confirmation Requests (uplink)",
     "urgency": "normal"

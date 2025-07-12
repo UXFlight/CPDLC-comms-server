@@ -36,6 +36,7 @@ class SocketGateway:
             mongodb = self.mongodb
         )
         self.socket_service.send("connected", flight.to_dict(), room=sid)
+        print(f"Flight session created for pilot {sid} with flight ID {flight.status.altitude}")
 
     @handle_errors(event_name="error", message="Failed to logon atc")
     def on_logon(self, data: dict):

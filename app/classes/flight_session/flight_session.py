@@ -13,7 +13,7 @@ class FlightSession:
         self.arrival = arrival
         self.pilot = Pilot(pilot_id)
         self.atc = Atc(atc_id)
-        self.status = FlightStatus()
+        self.status = FlightStatus(mongodb)
         self.mongodb = mongodb
         self.logs = LogsManager(mongodb)
         self.route = route

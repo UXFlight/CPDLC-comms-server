@@ -36,12 +36,12 @@ class SocketGateway:
             mongodb = self.mongodb
         )
         self.socket_service.send("connected", flight.to_dict(), room=sid)
-        print(f"Flight session created for pilot {sid} with flight ID {flight.status.altitude}")
 
     @handle_errors(event_name="error", message="Failed to logon atc")
     def on_logon(self, data: dict):
         sid = request.sid
         atc_available = self.mongodb.find_available_atc(data.get("username"))
+        print(f"ATC available: {atc_available}")
         if atc_available:
             flight = self.flight_manager.get_session_by_pilot(sid)
             flight.atc_id = data.get("username")
@@ -50,7 +50,7 @@ class SocketGateway:
         else:
             self.socket_service.send("logon_failure", data={}, room=sid)
 
-
+    @handle_errors(event_name="error", message="Failed to add log")
     def on_add_log(self, entry: dict):
         sid = request.sid
         flight = self.flight_manager.get_session_by_pilot(sid)
@@ -67,7 +67,8 @@ class SocketGateway:
         if flight:
             log_id = data.get("logId")
             log = flight.logs.get_log_by_id(log_id)
-            log.change_status(data.get("status"))
+            log.change_status_for_UM(data.get("status"))
+            self.socket_service.send("status_changed", log.to_dict(), room=sid)
 
     @handle_errors(event_name="error", message="Failed to load message")
     def on_load_message(self, data: dict):

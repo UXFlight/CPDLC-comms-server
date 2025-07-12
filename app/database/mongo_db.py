@@ -21,4 +21,6 @@ class MongoDb:
     
     def find_available_atc(self, atc_unit):
         atc = self.atcs.find_one({"atc_unit": atc_unit})
+        if not atc:
+            return None
         return atc if atc.get("available") else None

@@ -66,9 +66,32 @@ class LogEntry:
             return match.group("position")
         return None
     
-    def change_status(self, new_status):
+    def change_status_for_UM(self, new_status):
+        if new_status == "accepted":
+            self.format_simple_response("DM0")
         self.status = new_status
         return self
+    
+    def format_simple_response(self, ref):
+        message = self.mongodb.find_datalink_by_ref(ref)
+        if not message:
+            print(f"No message found for ref {ref}")
+            return
+
+        type = "downlink" if "DM" in message.get("Ref_Num") else "uplink"
+
+        response_entry = LogEntry(
+            ref=ref,
+            content=message.get("Message_Element"),
+            direction=type,
+            status= "OPENED",
+            urgency="Normal",
+            intent=message.get("Message_Intent"),
+            mongodb=self.mongodb,
+            response_required=LogEntry.is_response_required(message),
+        )
+        self.add_to_communication_thread(response_entry)
+
     
     def add_to_communication_thread(self, entry):
         self.communication_thread.append(entry)

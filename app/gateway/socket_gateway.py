@@ -60,7 +60,6 @@ class SocketGateway:
         else:
             print(f"Flight session not found for sid {sid}")
 
-    @handle_errors(event_name="error", message="Failed to change log status")
     def on_change_status(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session_by_pilot(sid)

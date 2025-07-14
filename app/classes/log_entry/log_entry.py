@@ -6,7 +6,7 @@ ACTION_REQUIRED_UM = ["Y", "W/U", "A/N", "R"]
 NO_ACTION_REQUIRED_UM = ["N", "N/E"]
 
 class LogEntry:
-    def __init__(self, ref, content, direction, status, urgency, response_required, intent=None, position=None, additional=[], mongodb=None, communication_thread=[], acceptable_responses=[]):
+    def __init__(self, ref, content, direction, status, urgency, response_required, intent=None, position=None, additional=None, mongodb=None, communication_thread=None, acceptable_responses=None):
         self.id = str(uuid.uuid4())  
         self.ref = ref
         self.content = content
@@ -16,13 +16,17 @@ class LogEntry:
         self.timestamp = get_current_timestamp()
         self.intent = intent
         self.position = position
-        self.additional = additional
+        self.additional = additional if additional is not None else []
         self.mongodb = mongodb
-        self.communication_thread = communication_thread
+        self.communication_thread = communication_thread if communication_thread is not None else []
         self.response_required = response_required
-        self.acceptable_responses = acceptable_responses
+        self.acceptable_responses = acceptable_responses if acceptable_responses is not None else []
 
-    def to_dict(self):
+
+    def to_dict(self, depth=0, max_depth=5):
+        if depth > max_depth:
+            return {"id": self.id, "ref": self.ref, "note": "Max depth reached"}
+
         return {
             "id": self.id,
             "ref": self.ref,
@@ -33,9 +37,12 @@ class LogEntry:
             "intent": self.intent,
             "timeStamp": self.timestamp,
             "additional": self.additional,
-            "communication_thread": [entry.to_dict() for entry in self.communication_thread],
+            "communication_thread": [
+                entry.to_dict(depth=depth+1, max_depth=max_depth)
+                for entry in self.communication_thread
+            ],
             "response_required": self.response_required,
-            "acceptable_responses": self.acceptable_responses
+            "acceptable_responses": self.acceptable_responses,
         }
 
     def is_loadable(self):
@@ -66,10 +73,17 @@ class LogEntry:
             return match.group("position")
         return None
     
-    def change_status_for_UM(self, new_status):
-        if new_status == "accepted":
-            self.format_simple_response("DM0")
-        self.status = new_status
+    def change_status_for_UM(self, ref):
+        if ref == "DM0":
+            self.status = "ACCEPTED"
+        elif ref == "DM1":
+            self.status = "REJECTED"
+        elif ref == "DM2":
+            self.status = "OPENED"
+        else :
+            self.status = "ACCEPTED"
+            return
+        self.format_simple_response(ref)    
         return self
     
     def format_simple_response(self, ref):
@@ -90,13 +104,17 @@ class LogEntry:
             mongodb=self.mongodb,
             response_required=LogEntry.is_response_required(message),
         )
-        self.add_to_communication_thread(response_entry)
+        self.communication_thread.append(response_entry)
+    
+    # def get_available_actions(self):
+    #     if self.response_required:
+    #         if len(self.acceptable_responses) > 0:
+    #             return "datalinks"
+    #         else:
+    #             return "basic"
+    #     else :
+    #         return "no_actions"
 
-    
-    def add_to_communication_thread(self, entry):
-        self.communication_thread.append(entry)
-        return self
-    
     @staticmethod
     def is_response_required(datalink) -> bool:
         response_required = datalink.get("Response_required", "")

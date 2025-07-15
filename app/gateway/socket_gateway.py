@@ -18,8 +18,9 @@ class SocketGateway:
         self.socket_service.listen('logon', self.on_logon)
         self.socket_service.listen('add_log', self.on_add_log)
         self.socket_service.listen('change_status', self.on_change_status)
-        self.socket_service.listen('load_message', self.on_load_message)
-        self.socket_service.listen('fms_loaded', self.on_fms_loaded)
+        self.socket_service.listen('is_loadable', self.on_is_loadable)
+        self.socket_service.listen('load_fms', self.on_load_fms)
+        self.socket_service.listen('execute_route', self.on_execute_route)
         self.socket_service.listen('disconnect', self.on_disconnect)
 
     @handle_errors(event_name="error", message="Failed to create flight session")
@@ -60,6 +61,7 @@ class SocketGateway:
         else:
             print(f"Flight session not found for sid {sid}")
 
+    @handle_errors(event_name="error", message="Failed to check if log is loadable")
     def on_change_status(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session_by_pilot(sid)
@@ -69,33 +71,36 @@ class SocketGateway:
             log.change_status_for_UM(data.get("status"))
             self.socket_service.send("status_changed", log.to_dict(), room=sid)
 
-    @handle_errors(event_name="error", message="Failed to load message")
-    def on_load_message(self, data: dict):
+    @handle_errors(event_name="error", message="Failed to check if log is loadable")
+    def on_is_loadable(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session_by_pilot(sid)
         if flight:
-            log_id = data.get("logId")
-            log = flight.logs.get_log_by_id(log_id)
+            log = flight.logs.get_log_by_id(data.get("logId"))
+            is_lodable = log.is_loadable()
+            self.socket_service.send("message_loadable", is_lodable, room=sid)
+        else:
+            print(f"Flight session not found for sid {sid}")
+
+    @handle_errors(event_name="error", message="Failed to load message")
+    def on_load_fms(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session_by_pilot(sid)
+        if flight:
+            log = flight.logs.get_log_by_id(data.get("logId"))
             if log:
-                is_lodable = log.is_loadable()
-                if is_lodable:
-                    self.socket_service.send("message_loadable", is_lodable, room=sid)
+                waypoint = log.get_waypoint()
+                new_route = flight.temp_route(waypoint)
+                self.socket_service.send("new_route", new_route, room=sid)
             else:
-                print(f"Log with ID {log_id} not found for sid {sid}")
+                print(f"Log not found for sid {sid}")
 
     @handle_errors(event_name="error", message="Failed to load FMS route")
-    def on_fms_loaded(self, data: dict):
+    def on_execute_route(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session_by_pilot(sid)
-        if flight:
-            log_id = data.get("logId")
-            log = flight.logs.get_log_by_id(log_id)
-            waypoint = log.get_waypoint()
-            if waypoint:
-                new_route = flight.load_route(waypoint)
-                self.socket_service.send("route_loaded", new_route, room=sid)
-            else:
-                print(f"Waypoint not found in log with ID {log_id} for sid {sid}")
+        new_route = flight.load_route(data.get("new_route", []))
+        self.socket_service.send("route_loaded", new_route, room=sid)
 
     @handle_errors(event_name="error", message="Failed to disconnect session")
     def on_disconnect(self, sid: str):

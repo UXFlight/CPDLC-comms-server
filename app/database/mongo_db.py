@@ -19,6 +19,12 @@ class MongoDb:
         type = self.uplinks if "UM" in ref else self.downlinks
         return type.find_one({"Ref_Num": ref})
     
+    def find_UM_by_ref(self, ref):
+        return self.uplinks.find_one({"Ref_Num": ref})
+    
+    def find_DM_by_ref(self, ref):
+        return self.downlinks.find_one({"Ref_Num": ref})
+    
     def find_available_atc(self, atc_unit):
         atc = self.atcs.find_one({"atc_unit": atc_unit})
         if not atc:

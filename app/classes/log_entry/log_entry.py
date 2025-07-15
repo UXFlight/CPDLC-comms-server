@@ -46,22 +46,16 @@ class LogEntry:
         }
 
     def is_loadable(self):
-        um_ref = self.mongodb.find_datalink_by_ref(self.ref)
-        if not um_ref:
+        ref = self.mongodb.find_UM_by_ref(self.ref)
+        if not ref:
             print(f"No UM found for ref {self.ref}")
             return False
 
-        category = um_ref.get("Category", "")
+        category = ref.get("Category", "")
         return "Route Modifications" in category
-
-        # return self.status in ["open", "new"]
-
 
     def get_waypoint(self):
         um_ref = self.mongodb.find_datalink_by_ref(self.ref)
-        if not um_ref:
-            return None
-
         template = um_ref.get("Message_Element")
         message = self.content
 
@@ -80,7 +74,7 @@ class LogEntry:
             self.status = "REJECTED"
         elif ref == "DM2":
             self.status = "OPENED"
-        else :
+        else : #revoir!!!!!
             self.status = "ACCEPTED"
             return
         self.format_simple_response(ref)    

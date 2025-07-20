@@ -5,9 +5,9 @@ class FlightManager:
     def __init__(self):
         self.sessions = {}
 
-    def create_session(self, flight_id, departure, arrival, pilot_id, route, mongodb, atc_id= None):
+    def create_session(self, flight_id, departure, arrival, pilot_id, route, mongodb, socket, room, atc_id=None):
         if flight_id not in self.sessions:
-            session = FlightSession(flight_id, departure, arrival, pilot_id, route, atc_id, mongodb)
+            session = FlightSession(flight_id, departure, arrival, pilot_id, route, atc_id, mongodb, socket, room)
             self.sessions[flight_id] = session
             return session
         return self.sessions[flight_id]

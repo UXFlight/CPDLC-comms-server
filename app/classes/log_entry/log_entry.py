@@ -17,7 +17,7 @@ class LogEntry:
         self.intent = intent
         self.position = position
         self.additional = additional if additional is not None else []
-        self.mongodb = mongodb
+        self._mongodb = mongodb
         self.communication_thread = communication_thread if communication_thread is not None else []
         self.response_required = response_required
         self.acceptable_responses = acceptable_responses if acceptable_responses is not None else []

@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from pymongo.mongo_client import MongoClient
+from pymongo.mongo_client import MongoClient 
 from pymongo.server_api import ServerApi
 
 from app.database.data.uplinks import uplinks
@@ -26,13 +26,11 @@ try:
     # uplinks_coll.drop()
     # downlinks_coll.drop()
     
-
-
-    # # db = client["users"]
-    # # atc_coll = db["atc"]
-    # # atc_coll.drop()
-    # # atc_coll.insert_many(atcs)
-    # # populate the collections with data
+    # db = client["users"]
+    # atc_coll = db["atc"]
+    # atc_coll.drop()
+    # atc_coll.insert_many(atcs)
+    # populate the collections with data
     # uplinks_coll.insert_many(uplinks)
     # downlinks_coll.insert_many(downlinks)
 

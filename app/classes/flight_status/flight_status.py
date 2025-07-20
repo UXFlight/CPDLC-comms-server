@@ -1,18 +1,21 @@
 from datetime import datetime, timezone
 
 from app.classes.log_entry.log_entry import LogEntry
+from app.database.flight_plan.routine import routine
 
 class FlightStatus:
     def __init__(self, mongodb):
-        self.mongodb = mongodb
-        self.altitude = 35000
+        self._mongodb = mongodb
+        self.altitude = routine[0].get("altitude_ft", 0)
         self.position = {"lat": None, "lon": None}
-        self.remaining_fuel = 7500
-        self.temperature = -52
-        self.wind = {"direction": 270, "speed": 85} 
-        self.turbulence = "MODERATE"
-        self.speed = 470  
-        self.icing = "NONE"
+        self.current_distance = 0
+        self.total_time_sec = 0
+        self.remaining_fuel = routine[0].get("fuel_kg", 000)
+        self.temperature = routine[0].get("temperature", 00)
+        self.wind = routine[0].get("wind", {"direction": 0, "speed_kmh": 0})
+        self.turbulence = routine[0].get("turbulence", "NONE")
+        self.speed = routine[0].get("speed_kmh", 470)
+        self.icing = routine[0].get("icing", "NONE")
         self.connections = {
             "CPDLC": "CONNECTED",
             "COMMUNICATION": "CONNECTED",
@@ -24,6 +27,8 @@ class FlightStatus:
     def update(self, data):
         self.altitude = data.get("altitude", self.altitude)
         self.position = data.get("position", self.position)
+        self.current_distance = data.get("distance", self.current_distance)
+        self.total_time_sec = data.get("elapsed_time_sec", self.total_time_sec)
         self.remaining_fuel = data.get("remaining_fuel", self.remaining_fuel)
         self.temperature = data.get("temperature", self.temperature)
         self.wind = data.get("wind", self.wind)
@@ -59,6 +64,6 @@ class FlightStatus:
     #         self.altitude = altitude
     #         self.updated_at = datetime.now(timezone.utc)
 
-
-            
+######################################### ROUTINE ##########################################################
+    
 

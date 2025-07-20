@@ -29,7 +29,7 @@ class LogsManager:
                 response_required=True
             )
         ]
-        self.mongodb = mongodb
+        self._mongodb = mongodb
 
     def get_logs(self):
         return [log.to_dict() for log in self.logs]

@@ -1,0 +1,339 @@
+[
+   {
+    "fix": "DEPARTURE",
+    "distance_km": 30.0,
+    "duration_sec": 300,
+    "fuel_kg": 11500,
+    "speed_samples_kmh": [
+      325.4,
+      350.3,
+      365.6
+    ],
+    "heading_deg": 230,
+    "altitude_ft": 5000,
+    "elapsed_time_sec": 300,
+    "total_distance": 30.0,
+    "speed_kmh": 347.1,
+    "temperature": -46,
+    "wind": {
+      "direction": 270,
+      "speed": 75
+    },
+    "turbulence": "SEVERE",
+    "icing": "LIGHT",
+    "atc_message": null
+  },
+  {
+    "fix": "PTD",
+    "distance_km": 127.79,
+    "duration_sec": 551,
+    "fuel_kg": 11113,
+    "speed_samples_kmh": [
+      762.9,
+      767.8,
+      908.0
+    ],
+    "heading_deg": 228,
+    "altitude_ft": 37000,
+    "elapsed_time_sec": 851,
+    "total_distance": 157.79,
+    "speed_kmh": 812.9,
+    "temperature": -50,
+    "wind": {
+      "direction": 270,
+      "speed": 60
+    },
+    "turbulence": "NONE",
+    "icing": "LIGHT",
+    "atc_message": null
+  },
+  {
+    "fix": "ART",
+    "distance_km": 88.9,
+    "heading_deg": 187,
+    "altitude_ft": 37000,
+    "duration_sec": 384,
+    "elapsed_time_sec": 935,
+    "total_distance": 246.69,
+    "fuel_kg": 10662,
+    "speed_samples_kmh": [
+      753.4,
+      759.1,
+      829.1
+    ],
+    "speed_kmh": 780.5,
+    "temperature": -52,
+    "wind": {
+      "direction": 225,
+      "speed": 75
+    },
+    "turbulence": "SEVERE",
+    "icing": "LIGHT",
+    "atc_message": null
+  },
+  {
+    "fix": "SYR",
+    "distance_km": 122.23,
+    "heading_deg": 211,
+    "altitude_ft": 38000,
+    "duration_sec": 528,
+    "elapsed_time_sec": 1463,
+    "total_distance": 368.92,
+    "fuel_kg": 10348,
+    "speed_samples_kmh": [
+      753.7,
+      766.9,
+      827.0
+    ],
+    "speed_kmh": 782.5,
+    "temperature": -54,
+    "wind": {
+      "direction": 250,
+      "speed": 75
+    },
+    "turbulence": "NONE",
+    "icing": "TRACE",
+    "atc_message": null
+  },
+  {
+    "fix": "CNTER",
+    "distance_km": 109.27,
+    "heading_deg": 211,
+    "altitude_ft": 37000,
+    "duration_sec": 473,
+    "elapsed_time_sec": 1936,
+    "total_distance": 478.19,
+    "fuel_kg": 9916,
+    "speed_samples_kmh": [
+      800.4,
+      874.1,
+      888.8
+    ],
+    "speed_kmh": 854.4,
+    "temperature": -52,
+    "wind": {
+      "direction": 250,
+      "speed": 95
+    },
+    "turbulence": "SEVERE",
+    "icing": "NONE",
+    "atc_message": null
+  },
+  {
+    "fix": "ZUCCS",
+    "distance_km": 59.26,
+    "heading_deg": 210,
+    "altitude_ft": 37000,
+    "duration_sec": 254,
+    "elapsed_time_sec": 2190,
+    "total_distance": 537.45,
+    "fuel_kg": 9529,
+    "speed_samples_kmh": [
+      770.5,
+      875.4,
+      890.0
+    ],
+    "speed_kmh": 845.3,
+    "temperature": -46,
+    "wind": {
+      "direction": 300,
+      "speed": 85
+    },
+    "turbulence": "LIGHT",
+    "icing": "NONE",
+    "atc_message": null
+  },
+  {
+    "fix": "PSB",
+    "distance_km": 124.08,
+    "heading_deg": 219,
+    "altitude_ft": 37000,
+    "duration_sec": 534,
+    "elapsed_time_sec": 2724,
+    "total_distance": 661.53,
+    "fuel_kg": 9321,
+    "speed_samples_kmh": [
+      788.0,
+      905.9,
+      910.1
+    ],
+    "speed_kmh": 868.0,
+    "temperature": -48,
+    "wind": {
+      "direction": 180,
+      "speed": 95
+    },
+    "turbulence": "SEVERE",
+    "icing": "TRACE",
+    "atc_message": null
+  },
+  {
+    "fix": "GARDN",
+    "distance_km": 229.65,
+    "heading_deg": 212,
+    "altitude_ft": 39000,
+    "duration_sec": 992,
+    "elapsed_time_sec": 3716,
+    "total_distance": 891.18,
+    "fuel_kg": 8884,
+    "speed_samples_kmh": [
+      756.1,
+      863.7,
+      871.0
+    ],
+    "speed_kmh": 830.3,
+    "temperature": -54,
+    "wind": {
+      "direction": 180,
+      "speed": 60
+    },
+    "turbulence": "NONE",
+    "icing": "MODERATE",
+    "atc_message": null
+  },
+  {
+    "fix": "PERRI",
+    "distance_km": 20.37,
+    "heading_deg": 195,
+    "altitude_ft": 37000,
+    "duration_sec": 88,
+    "elapsed_time_sec": 3804,
+    "total_distance": 911.55,
+    "fuel_kg": 8072,
+    "speed_samples_kmh": [
+      769.4,
+      858.6,
+      866.6
+    ],
+    "speed_kmh": 831.5,
+    "temperature": -52,
+    "wind": {
+      "direction": 225,
+      "speed": 85
+    },
+    "turbulence": "MODERATE",
+    "icing": "TRACE",
+    "atc_message": null
+  },
+  {
+    "fix": "OAKLE",
+    "distance_km": 33.34,
+    "heading_deg": 195,
+    "altitude_ft": 37000,
+    "duration_sec": 148,
+    "elapsed_time_sec": 3952,
+    "total_distance": 944.89,
+    "fuel_kg": 8000,
+    "speed_samples_kmh": [
+      731.9,
+      735.9,
+      885.0
+    ],
+    "speed_kmh": 784.3,
+    "temperature": -52,
+    "wind": {
+      "direction": 250,
+      "speed": 75
+    },
+    "turbulence": "LIGHT",
+    "icing": "MODERATE",
+    "atc_message": null
+  },
+  {
+    "fix": "ASBUR",
+    "distance_km": 188.9,
+    "heading_deg": 204,
+    "altitude_ft": 39000,
+    "duration_sec": 817,
+    "elapsed_time_sec": 4769,
+    "total_distance": 1133.79,
+    "fuel_kg": 7879,
+    "speed_samples_kmh": [
+      764.9,
+      808.0,
+      819.3
+    ],
+    "speed_kmh": 797.4,
+    "temperature": -50,
+    "wind": {
+      "direction": 180,
+      "speed": 85
+    },
+    "turbulence": "MODERATE",
+    "icing": "LIGHT",
+    "atc_message": null
+  },
+  {
+    "fix": "MULBE",
+    "distance_km": 179.64,
+    "heading_deg": 207,
+    "altitude_ft": 37000,
+    "duration_sec": 776,
+    "elapsed_time_sec": 5545,
+    "total_distance": 1313.43,
+    "fuel_kg": 7210,
+    "speed_samples_kmh": [
+      842.0,
+      869.1,
+      885.5
+    ],
+    "speed_kmh": 865.5,
+    "temperature": -46,
+    "wind": {
+      "direction": 270,
+      "speed": 60
+    },
+    "turbulence": "LIGHT",
+    "icing": "LIGHT",
+    "atc_message": null
+  },
+  {
+    "fix": "TIRCO",
+    "distance_km": 137.05,
+    "heading_deg": 156,
+    "altitude_ft": 38000,
+    "duration_sec": 595,
+    "elapsed_time_sec": 6140,
+    "total_distance": 1450.48,
+    "fuel_kg": 3538,
+    "speed_samples_kmh": [
+      881.8,
+      904.1,
+      908.8
+    ],
+    "speed_kmh": 898.2,
+    "temperature": -54,
+    "wind": {
+      "direction": 300,
+      "speed": 85
+    },
+    "turbulence": "LIGHT",
+    "icing": "TRACE",
+    "atc_message": null
+  },
+  {
+    "fix": "ARRIVAL",
+    "distance_km": 20.0,
+    "heading_deg": 170,
+    "altitude_ft": 3000,
+    "duration_sec": 240,
+    "elapsed_time_sec": 6380,
+    "total_distance": 1470.48,
+    "fuel_kg": 3200,
+    "speed_samples_kmh": [
+      304.0,
+      314.0,
+      325.8
+    ],
+    "speed_kmh": 314.6,
+    "temperature": -48,
+    "wind": {
+      "direction": 225,
+      "speed": 75
+    },
+    "turbulence": "MODERATE",
+    "icing": "NONE",
+    "atc_message": null
+  }
+]
+ 

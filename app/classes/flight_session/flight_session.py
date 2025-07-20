@@ -1,22 +1,23 @@
 from app.classes.atc.atc import Atc
 from app.classes.flight_status.flight_status import FlightStatus
 from app.classes.pilot.pilot import Pilot
+from app.classes.routine.routine import Routine
 from app.database.flight_plan import flight_plan
 from app.database.mongo_db import MongoDb
 from app.managers.logs_manager.logs_manager import LogsManager
 
 
 class FlightSession:
-    def __init__(self, flight_id, departure, arrival, pilot_id, route, atc_id, mongodb):
+    def __init__(self, flight_id, departure, arrival, pilot_id, route, atc_id, mongodb, socket, room):
         self.flight_id = flight_id
         self.departure = departure
         self.arrival = arrival
         self.pilot = Pilot(pilot_id)
         self.atc = Atc(atc_id)
         self.status = FlightStatus(mongodb)
-        self.mongodb = mongodb
         self.logs = LogsManager(mongodb)
         self.route = route
+        self.routine = Routine(socket, self.status, room)
         self.current_data_authority = atc_id
         self.next_data_authority = None
 

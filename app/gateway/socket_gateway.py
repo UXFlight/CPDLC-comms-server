@@ -23,7 +23,7 @@ class SocketGateway:
         self.socket_service.listen('execute_route', self.on_execute_route)
         self.socket_service.listen('disconnect', self.on_disconnect)
 
-    @handle_errors(event_name="error", message="Failed to create flight session")
+    #@handle_errors(event_name="error", message="Failed to create flight session")
     def on_connect(self, auth=None):
         sid = request.sid
         plan = deepcopy(flight_plan)
@@ -34,7 +34,9 @@ class SocketGateway:
             arrival=plan["arrival"],
             pilot_id=sid,
             route=plan["route"],
-            mongodb = self.mongodb
+            mongodb=self.mongodb,
+            socket=self.socket_service,
+            room=sid
         )
         self.socket_service.send("connected", flight.to_dict(), room=sid)
 

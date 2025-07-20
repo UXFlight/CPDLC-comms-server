@@ -82,40 +82,6 @@
     "Response_required": [
       "R"
     ],
-    "Acceptable_responses": [
-      {
-        "ref": "DM49",
-        "text": "WHEN CAN WE EXPECT [speed]"
-      },
-      {
-        "ref": "DM50",
-        "text": "WHEN CAN WE EXPECT [speed] TO [speed]"
-      },
-      {
-        "ref": "DM51",
-        "text": "WHEN CAN WE EXPECT BACK ON ROUTE"
-      },
-      {
-        "ref": "DM52",
-        "text": "WHEN CAN WE EXPECT LOWER LEVEL"
-      },
-      {
-        "ref": "DM53",
-        "text": "WHEN CAN WE EXPECT HIGHER LEVEL"
-      },
-      {
-        "ref": "DM54",
-        "text": "WHEN CAN WE EXPECT CRUISE CLIMB TO [level]"
-      },
-      {
-        "ref": "DM87",
-        "text": "WHEN CAN WE EXPECT CLIMB TO [level]"
-      },
-      {
-        "ref": "DM88",
-        "text": "WHEN CAN WE EXPECT DESCENT TO [level]"
-      }
-    ],
     "Category": "Vertical Clearances (uplink)",
     "urgency": "normal"
   },
@@ -125,40 +91,6 @@
     "Message_Element": "EXPECT CLIMB AT [position]",
     "Response_required": [
       "R"
-    ],
-    "Acceptable_responses": [
-      {
-        "ref": "DM49",
-        "text": "WHEN CAN WE EXPECT [speed]"
-      },
-      {
-        "ref": "DM50",
-        "text": "WHEN CAN WE EXPECT [speed] TO [speed]"
-      },
-      {
-        "ref": "DM51",
-        "text": "WHEN CAN WE EXPECT BACK ON ROUTE"
-      },
-      {
-        "ref": "DM52",
-        "text": "WHEN CAN WE EXPECT LOWER LEVEL"
-      },
-      {
-        "ref": "DM53",
-        "text": "WHEN CAN WE EXPECT HIGHER LEVEL"
-      },
-      {
-        "ref": "DM54",
-        "text": "WHEN CAN WE EXPECT CRUISE CLIMB TO [level]"
-      },
-      {
-        "ref": "DM87",
-        "text": "WHEN CAN WE EXPECT CLIMB TO [level]"
-      },
-      {
-        "ref": "DM88",
-        "text": "WHEN CAN WE EXPECT DESCENT TO [level]"
-      }
     ],
     "Category": "Vertical Clearances (uplink)",
     "urgency": "normal"
@@ -170,40 +102,6 @@
     "Response_required": [
       "R"
     ],
-    "Acceptable_responses": [
-      {
-        "ref": "DM49",
-        "text": "WHEN CAN WE EXPECT [speed]"
-      },
-      {
-        "ref": "DM50",
-        "text": "WHEN CAN WE EXPECT [speed] TO [speed]"
-      },
-      {
-        "ref": "DM51",
-        "text": "WHEN CAN WE EXPECT BACK ON ROUTE"
-      },
-      {
-        "ref": "DM52",
-        "text": "WHEN CAN WE EXPECT LOWER LEVEL"
-      },
-      {
-        "ref": "DM53",
-        "text": "WHEN CAN WE EXPECT HIGHER LEVEL"
-      },
-      {
-        "ref": "DM54",
-        "text": "WHEN CAN WE EXPECT CRUISE CLIMB TO [level]"
-      },
-      {
-        "ref": "DM87",
-        "text": "WHEN CAN WE EXPECT CLIMB TO [level]"
-      },
-      {
-        "ref": "DM88",
-        "text": "WHEN CAN WE EXPECT DESCENT TO [level]"
-      }
-    ],
     "Category": "Vertical Clearances (uplink)",
     "urgency": "normal"
   },
@@ -213,40 +111,6 @@
     "Message_Element": "EXPECT DESCENT AT [position]",
     "Response_required": [
       "R"
-    ],
-    "Acceptable_responses": [
-      {
-        "ref": "DM49",
-        "text": "WHEN CAN WE EXPECT [speed]"
-      },
-      {
-        "ref": "DM50",
-        "text": "WHEN CAN WE EXPECT [speed] TO [speed]"
-      },
-      {
-        "ref": "DM51",
-        "text": "WHEN CAN WE EXPECT BACK ON ROUTE"
-      },
-      {
-        "ref": "DM52",
-        "text": "WHEN CAN WE EXPECT LOWER LEVEL"
-      },
-      {
-        "ref": "DM53",
-        "text": "WHEN CAN WE EXPECT HIGHER LEVEL"
-      },
-      {
-        "ref": "DM54",
-        "text": "WHEN CAN WE EXPECT CRUISE CLIMB TO [level]"
-      },
-      {
-        "ref": "DM87",
-        "text": "WHEN CAN WE EXPECT CLIMB TO [level]"
-      },
-      {
-        "ref": "DM88",
-        "text": "WHEN CAN WE EXPECT DESCENT TO [level]"
-      }
     ],
     "Category": "Vertical Clearances (uplink)",
     "urgency": "normal"
@@ -1290,7 +1154,9 @@
       "R"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Automatic"
+
   },
   {
     "Ref_Num": "UM128",
@@ -1301,7 +1167,9 @@
       "R"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Automatic"
+
   },
   {
     "Ref_Num": "UM129",
@@ -1312,7 +1180,8 @@
       "R"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Automatic"
   },
   {
     "Ref_Num": "UM130",
@@ -1323,7 +1192,8 @@
       "R"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Automatic"
   },
   {
     "Ref_Num": "UM131",
@@ -1334,7 +1204,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM132",
@@ -1345,7 +1216,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM133",
@@ -1362,7 +1234,8 @@
       }
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM134",
@@ -1380,7 +1253,8 @@
       }
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Automatic"
   },
   {
     "Ref_Num": "UM135",
@@ -1401,7 +1275,8 @@
       }
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM136",
@@ -1412,7 +1287,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM137",
@@ -1423,7 +1299,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM138",
@@ -1434,7 +1311,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM139",
@@ -1445,7 +1323,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM140",
@@ -1456,7 +1335,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM141",
@@ -1467,7 +1347,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM142",
@@ -1478,7 +1359,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM143",
@@ -1489,7 +1371,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM144",
@@ -1500,7 +1383,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM145",
@@ -1511,7 +1395,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM146",
@@ -1522,7 +1407,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM147",
@@ -1533,7 +1419,8 @@
       "NE"
     ],
     "Category": "Report/Confirmation Requests (uplink)",
-    "urgency": "normal"
+    "urgency": "normal",
+    "Transmission_Type": "Manual or Semi-auto"
   },
   {
     "Ref_Num": "UM148",
@@ -2348,6 +2235,250 @@
       "R"
     ],
     "Category": "Air Traffic Advisories (uplink)",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169q",
+    "Message_Intent": "Acknowledgement of receipt of a CPDLC downlink MAYDAY message.",
+    "Message_Element": "ROGER MAYDAY",
+    "Response_required": ["R"],
+    "Category": "Emergency",
+    "urgency": "high"
+  },
+  {
+    "Ref_Num": "UM169r",
+    "Message_Intent": "Acknowledgement of receipt of a CPDLC downlinked PAN message.",
+    "Message_Element": "ROGER PAN",
+    "Response_required": ["R"],
+    "Category": "Emergency",
+    "urgency": "medium"
+  },
+  {
+    "Ref_Num": "UM169ak",
+    "Message_Intent": "Notification that an ADS-C emergency report has been received from the aircraft.",
+    "Message_Element": "CONFIRM ADS-C EMERGENCY",
+    "Response_required": [],
+    "Category": "ADS-C",
+    "urgency": "high"
+  },
+  {
+    "Ref_Num": "UM169s",
+    "Message_Intent": "Notification that the CPDLC downlink request was part of the approved message set and received by the controller. The aircraft will receive any further communication about the request via voice contact with the specified unit.",
+    "Message_Element": "REQUEST RECEIVED RESPONSE WILL BE VIA [unit_description]",
+    "Response_required": ["R"],
+    "Category": "Acknowledgement",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169x",
+    "Message_Intent": "Indication that the request has been received and has been forwarded on to the next ATSU.",
+    "Message_Element": "REQUEST FORWARDED",
+    "Response_required": ["R"],
+    "Category": "Acknowledgement",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169b",
+    "Message_Intent": "Instruction to report the ground speed of the aircraft.",
+    "Message_Element": "REPORT GROUND SPEED",
+    "Response_required": ["R"],
+    "Acceptable_responses": [
+      {
+        "ref": "DM67l",
+        "text": "REPORT GROUND SPEED"
+      }
+    ],
+    "Category": "Report/Confirmation Requests",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169c",
+    "Message_Intent": "Instruction to advise the preferred flight level for the flight.",
+    "Message_Element": "STATE PREFERRED LEVEL",
+    "Response_required": ["R"],
+    "Acceptable_responses": [
+      {
+        "ref": "DM67m",
+        "text": "PREFERRED LEVEL [level]"
+      }
+    ],
+    "Category": "Level Requests",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169d",
+    "Message_Intent": "Instruction to report the estimated time of arrival at the specified position.",
+    "Message_Element": "REPORT ETA [position]",
+    "Response_required": ["R"],
+    "Acceptable_responses": [
+      {
+        "ref": "DM67n",
+        "text": "ETA [time] AT [position]"
+      }
+    ],
+    "Category": "Position Reports",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169e",
+    "Message_Intent": "Instruction to notify when the specified traffic has been observed by visual contact to have passed.",
+    "Message_Element": "REPORT SIGHTING AND PASSING OPPOSITE DIRECTION [traffic description] ETP [time]",
+    "Response_required": ["R"],
+    "Acceptable_responses": [
+      {
+        "ref": "DM67o",
+        "text": "SIGHTING CONFIRMED"
+      },
+      {
+        "ref": "DM67p",
+        "text": "TRAFFIC PASSED"
+      }
+    ],
+    "Category": "Traffic Reports",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169f",
+    "Message_Intent": "Instruction to notify of receipt of any ADS-C report indicating a deviation from cleared route and to request the flight crew to advise intentions.",
+    "Message_Element": "ADS-C INDICATES OFF ROUTE. ADVISE INTENTIONS.",
+    "Response_required": ["R"],
+    "Acceptable_responses": [
+      {
+        "ref": "DM67",
+        "text": "INTENTIONS ARE [text]"
+      }
+    ],
+    "Category": "ADS-C Reports",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169t",
+    "Message_Intent": "Instruction to notify of receipt of any ADS-C report indicating a deviation from cleared level and to request the flight crew to advise intentions.",
+    "Message_Element": "ADS-C INDICATES LEVEL DEVIATION. ADVISE INTENTIONS.",
+    "Response_required": ["R"],
+    "Acceptable_responses": [
+      {
+        "ref": "DM67",
+        "text": "INTENTIONS ARE [text]"
+      }
+    ],
+    "Category": "ADS-C Reports",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169v",
+    "Message_Intent": "Instruction to notify of receipt of any ADS-C report indicating a deviation from cleared speed and to request the flight crew to advise intentions.",
+    "Message_Element": "ADS-C INDICATES SPEED DEVIATION. ADVISE INTENTIONS.",
+    "Response_required": ["R"],
+    "Acceptable_responses": [
+      {
+        "ref": "DM67",
+        "text": "INTENTIONS ARE [text]"
+      }
+    ],
+    "Category": "ADS-C Reports",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169j",
+    "Message_Intent": "Instruction to check the status of CPDLC messages and to respond to unanswered uplink messages.",
+    "Message_Element": "CHECK AND RESPOND TO OPEN CPDLC MESSAGES",
+    "Response_required": ["R"],
+    "Category": "System Management Messages",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169m",
+    "Message_Intent": "Instruction to set the message latency monitor to the specified value.",
+    "Message_Element": "SET MAX UPLINK DELAY VALUE TO [delay] SECONDS",
+    "Response_required": ["R"],
+    "Category": "System Management Messages",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169au",
+    "Message_Intent": "Instruction to check that the message latency monitor function is off.",
+    "Message_Element": "CONFIRM MAX UPLINK DELAY VALUE IS NOT SET",
+    "Response_required": ["R"],
+    "Category": "System Management Messages",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169u",
+    "Message_Intent": "Notification that an element contained in a CPDLC downlink message was not part of the approved CPDLC message set.",
+    "Message_Element": "MESSAGE NOT SUPPORTED BY THIS ATS UNIT",
+    "Response_required": ["R"],
+    "Category": "System Management Messages",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169q",
+    "Message_Intent": "Notification that an element contained in a CPDLC downlink message was not part of the approved message set and should be communicated by voice.",
+    "Message_Element": "MESSAGE NOT SUPPORTED BY THIS ATS UNIT, CONTACT RTF",
+    "Response_required": ["R"],
+    "Category": "System Management Messages",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169am or UM183am",
+    "Message_Intent": "Instruction to turn the CPDLC application off and to initiate a logon to a specified ATSU.",
+    "Message_Element": "AUTOMATIC TRANSFER OF CPDLC FAILED. WHEN ENTERING [unit name] AREA DISCONNECT CPDLC THEN LOGON TO [facility designation]",
+    "Response_required": ["R"],
+    "Category": "System Management Messages",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169an",
+    "Message_Intent": "Instruction for the flight crew to check that the ADS-C function is armed.",
+    "Message_Element": "CONFIRM ADS-C ARMED",
+    "Response_required": ["R"],
+    "Category": "ADS-C Management",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169ao",
+    "Message_Intent": "Instruction to transmit CPDLC position reports due to the failure of ADS-C.",
+    "Message_Element": "ADS-C SHUT DOWN AT [facility designation]. REVERT TO CPDLC POSITION REPORTS. LEAVE ADS-C ARMED.",
+    "Response_required": ["R"],
+    "Category": "ADS-C Management",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169at",
+    "Message_Intent": "Instruction to transmit voice position reports due to the failure of ADS-C.",
+    "Message_Element": "ADS-C SHUT DOWN AT [facility designation]. REVERT TO VOICE POSITION REPORTS. LEAVE ADS-C ARMED.",
+    "Response_required": ["R"],
+    "Category": "ADS-C Management",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169aw",
+    "Message_Intent": "Instruction to advise that CPDLC and voice position reports are not required due to ADS-C resuming operations.",
+    "Message_Element": "RESUME NORMAL ADS-C OPERATIONS. CPDLC AND VOICE POSITION REPORTS NOT REQUIRED",
+    "Response_required": ["R"],
+    "Category": "ADS-C Management",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169ax",
+    "Message_Intent": "Instruction to continue on voice due to failure of CPDLC.",
+    "Message_Element": "CPDLC WILL BE SHUT DOWN. DISCONNECT CPDLC. CONTINUE ON VOICE",
+    "Response_required": ["R"],
+    "Category": "CPDLC Management",
+    "urgency": "normal"
+  },
+  {
+    "Ref_Num": "UM169ap",
+    "Message_Intent": "Instruction for intermediary CPDLC-capable aircraft to relay message to aircraft not in communication with ATC.",
+    "Message_Element": "RELAY TO [call sign] [unit name] [text of message to be relayed]",
+    "Response_required": ["R"],
+    "Acceptable_responses": [
+      {
+        "ref": "DM67ae",
+        "text": "MESSAGE RELAYED TO [callsign]"
+      }
+    ],
+    "Category": "Standardized Free Text",
     "urgency": "normal"
   }
 ]

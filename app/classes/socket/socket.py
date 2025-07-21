@@ -7,3 +7,7 @@ class Socket:
 
     def send(self, event, data, room=None):
         self.socketio.emit(event, data, room=room)
+
+    def start_background_task(self, target, *args):
+        return self.socketio.start_background_task(target, *args)
+  

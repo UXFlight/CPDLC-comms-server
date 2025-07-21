@@ -13,31 +13,31 @@ class Routine:
         self.total_distance = 0
         self.current_fix = 0
 
+        distances = [fix["distance_km"] for fix in self.routine]
+        self.socket.send("routine_load", {"total_distance": self.routine[-1]["total_distance"], "distances": distances}, room=self.room)
+
     async def simulate_flight_progress(self):
         while self.elapsed_simulated < self.routine[-1]["elapsed_time_sec"]:
             await asyncio.sleep(self.tick_interval)
 
-            # Simule le temps (accéléré)
             self.elapsed_simulated += self.tick_interval * self.acceleration
+            distance_increment = self.calculate_distance()
+            self.total_distance += distance_increment   
 
-            # Si on change de waypoint
-            if self.current_fix < len(self.routine) - 1 and self.elapsed_simulated >= self.routine[self.current_fix + 1]["elapsed_time_sec"]:
+            if self.current_fix < len(self.routine) - 1 and self.elapsed_simulated >= self.routine[self.current_fix]["elapsed_time_sec"]:
                 self.current_fix += 1
                 self.update_flight_status()
-                await self.socket.send("plane_partial_progress", self.flight_status.to_dict(), room=self.room)
+                self.socket.send("waypoint_change", {"flight": self.flight_status.to_dict(), "waypoint": self.routine[self.current_fix]}, room=self.room)
+
             else:
-                # Distance intermédiaire dans le segment actuel
-                distance = self.calculate_distance()
-                self.total_distance = distance  # total distance = segment cumulative
                 self.flight_status.update({
                     "distance": round(self.total_distance, 2),
                     "elapsed_time_sec": int(self.elapsed_simulated),
                 })
-                await self.socket.send("plane_waypoint_progress", self.flight_status.to_dict(), room=self.room)
+                self.socket.send("plane_partial_progress", self.flight_status.to_dict(), room=self.room)
 
-        # Fin de vol
         self.update_flight_status(end=True)
-        await self.socket.send("plane_arrival", self.flight_status.to_dict(), room=self.room)
+        self.socket.send("plane_arrival", self.flight_status.to_dict(), room=self.room)
 
     def calculate_distance(self):
         current_speed = self.routine[self.current_fix]["speed_kmh"]
@@ -46,7 +46,6 @@ class Routine:
 
     def update_flight_status(self, end=False):
         if end:
-            # Dernier état (avion au sol)
             self.flight_status.update({
                 "altitude": 0,
                 "distance": self.routine[-1].get("total_distance", self.total_distance),

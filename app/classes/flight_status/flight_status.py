@@ -41,6 +41,8 @@ class FlightStatus:
         return {
             "altitude": self.altitude,
             "position": self.position,
+            "current_distance": self.current_distance,
+            "total_time_sec": self.total_time_sec,
             "remaining_fuel": self.remaining_fuel,
             "temperature": self.temperature,
             "wind": self.wind,

@@ -17,7 +17,7 @@ class FlightSession:
         self.status = FlightStatus(mongodb)
         self.logs = LogsManager(mongodb)
         self.route = route
-        self.routine = Routine(socket, self.status, room)
+        self.routine = Routine(socket, self.status, room, self.logs)
         self.current_data_authority = atc_id
         self.next_data_authority = None
 

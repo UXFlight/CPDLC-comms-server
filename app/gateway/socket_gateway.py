@@ -40,7 +40,6 @@ class SocketGateway:
             room=sid
         )
         self.socket_service.send("connected", flight.to_dict(), room=sid)
-        self.socket_service.start_background_task(asyncio.run, flight.routine.simulate_flight_progress())
 
     @handle_errors(event_name="error", message="Failed to logon atc")
     def on_logon(self, data: dict):
@@ -52,6 +51,7 @@ class SocketGateway:
             flight.atc_id = data.get("username")
             self.socket_service.send("logon_success", data={}, room=sid)
             self.socket_service.send("load_logs", flight.logs.get_logs(), room=sid)
+            self.socket_service.start_background_task(asyncio.run, flight.routine.simulate_flight_progress())
         else:
             self.socket_service.send("logon_failure", data={}, room=sid)
 
@@ -75,7 +75,6 @@ class SocketGateway:
             log.change_status_for_UM(data.get("status"))
             self.socket_service.send("status_changed", log.to_dict(), room=sid)
 
-    @handle_errors(event_name="error", message="Failed to check if log is loadable")
     def on_is_loadable(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session_by_pilot(sid)
@@ -104,6 +103,7 @@ class SocketGateway:
         sid = request.sid
         flight = self.flight_manager.get_session_by_pilot(sid)
         new_route = flight.load_route(data.get("new_route", []))
+        #flight.routine.update_routine(new_route)
         self.socket_service.send("route_loaded", new_route, room=sid)
 
     @handle_errors(event_name="error", message="Failed to disconnect session")

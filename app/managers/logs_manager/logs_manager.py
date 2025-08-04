@@ -17,18 +17,7 @@ class DatalinkStatus(Enum):
 
 class LogsManager:
     def __init__(self, mongodb):
-        self.logs = [
-            LogEntry(
-                ref="UM74",
-                content="PROCEED DIRECT TO OAKLE",
-                direction="uplink",
-                status="NEW",
-                urgency="Normal",
-                intent="Instruction to proceed directly from its present position to the specified position.",
-                mongodb=mongodb,
-                response_required=True
-            )
-        ]
+        self.logs = default_logs
         self._mongodb = mongodb
 
     def get_logs(self):

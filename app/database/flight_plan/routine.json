@@ -21,7 +21,15 @@
     },
     "turbulence": "SEVERE",
     "icing": "LIGHT",
-    "atc_message": null
+    "atc_messages": [{
+      "ref": "UM20",
+      "content": "CLIMB TO AND MAINTAIN FL370;",
+      "direction": "UPLINK",
+      "status": "NEW",
+      "timestamp": "2025-06-15T14:01:00Z",
+      "sender": "ATC1",
+      "intent": "Clearance to climb from current altitude to FL370 after departure."
+    }]
   },
   {
     "fix": "PTD",
@@ -45,7 +53,50 @@
     },
     "turbulence": "NONE",
     "icing": "LIGHT",
-    "atc_message": null
+    "atc_messages": [  
+      {
+        "ref": "UM129",
+        "content": "REPORT MAINTAINING FL370;",
+        "direction": "UPLINK",
+        "status": "NEW",
+        "timestamp": "2025-06-15T14:43:00Z",
+        "sender": "ATC3",
+        "intent": "Request for a position or level report once the aircraft reaches the cleared flight level."
+      },
+      {
+        "ref": "UM169",
+        "content": "ADS-C HAS FAILED;",
+        "direction": "UPLINK",
+        "status": "NEW",
+        "timestamp": "2025-06-15T14:45:00Z",
+        "sender": "ATC4",
+        "intent": "Notification that the ground system has detected an ADS-C failure."
+      }
+    ]
+  },
+  {
+    "fix": "BOS",
+    "distance_km": 118.9,
+    "heading_deg": 180,
+    "altitude_ft": 37000,
+    "duration_sec": 510,
+    "elapsed_time_sec": 1361,
+    "total_distance": 276.69,
+    "fuel_kg": 10950,
+    "speed_samples_kmh": [
+      750.2,
+      760.5,
+      820.0
+    ],
+    "speed_kmh": 777.6,
+    "temperature": -52,
+    "wind": {
+      "direction": 240,
+      "speed": 70
+    },
+    "turbulence": "MODERATE",
+    "icing": "TRACE",
+    "atc_messages": null
   },
   {
     "fix": "ART",
@@ -69,7 +120,16 @@
     },
     "turbulence": "SEVERE",
     "icing": "LIGHT",
-    "atc_message": null
+    "atc_messages": [{
+      "ref": "UM117",
+      "content": "CONTACT BOSTON CENTER 127.82;",
+      "direction": "UPLINK",
+      "status": "NEW",
+      "timestamp": "2025-06-15T14:37:00Z",
+      "sender": "ATC2",
+      "intent": "Instruction to change communication to a new frequency and contact a new ATC unit.",
+      "priority": 1
+    }]
   },
   {
     "fix": "SYR",
@@ -93,7 +153,7 @@
     },
     "turbulence": "NONE",
     "icing": "TRACE",
-    "atc_message": null
+    "atc_messages": null
   },
   {
     "fix": "CNTER",
@@ -117,7 +177,7 @@
     },
     "turbulence": "SEVERE",
     "icing": "NONE",
-    "atc_message": null
+    "atc_messages": null
   },
   {
     "fix": "ZUCCS",
@@ -141,7 +201,7 @@
     },
     "turbulence": "LIGHT",
     "icing": "NONE",
-    "atc_message": null
+    "atc_messages": null
   },
   {
     "fix": "PSB",
@@ -165,7 +225,7 @@
     },
     "turbulence": "SEVERE",
     "icing": "TRACE",
-    "atc_message": null
+    "atc_messages": null
   },
   {
     "fix": "GARDN",
@@ -189,7 +249,7 @@
     },
     "turbulence": "NONE",
     "icing": "MODERATE",
-    "atc_message": null
+    "atc_messages": null
   },
   {
     "fix": "PERRI",
@@ -213,7 +273,7 @@
     },
     "turbulence": "MODERATE",
     "icing": "TRACE",
-    "atc_message": null
+    "atc_messages": null
   },
   {
     "fix": "OAKLE",
@@ -237,7 +297,7 @@
     },
     "turbulence": "LIGHT",
     "icing": "MODERATE",
-    "atc_message": null
+    "atc_messages": null
   },
   {
     "fix": "ASBUR",
@@ -261,7 +321,7 @@
     },
     "turbulence": "MODERATE",
     "icing": "LIGHT",
-    "atc_message": null
+    "atc_messages": null
   },
   {
     "fix": "MULBE",
@@ -285,7 +345,7 @@
     },
     "turbulence": "LIGHT",
     "icing": "LIGHT",
-    "atc_message": null
+    "atc_messages": null
   },
   {
     "fix": "TIRCO",
@@ -309,13 +369,13 @@
     },
     "turbulence": "LIGHT",
     "icing": "TRACE",
-    "atc_message": null
+    "atc_messages": null
   },
   {
     "fix": "ARRIVAL",
-    "distance_km": 20.0,
+    "distance_km": 0,
     "heading_deg": 170,
-    "altitude_ft": 3000,
+    "altitude_ft": 0,
     "duration_sec": 240,
     "elapsed_time_sec": 6380,
     "total_distance": 1470.48,
@@ -325,15 +385,15 @@
       314.0,
       325.8
     ],
-    "speed_kmh": 314.6,
-    "temperature": -48,
+    "speed_kmh": 0,
+    "temperature": 15,
     "wind": {
-      "direction": 225,
-      "speed": 75
+      "direction": 0,
+      "speed": 0
     },
-    "turbulence": "MODERATE",
+    "turbulence": "NONE",
     "icing": "NONE",
-    "atc_message": null
+    "atc_messages": null
   }
 ]
  

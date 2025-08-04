@@ -17,7 +17,7 @@ class LogEntry:
         self.intent = intent
         self.position = position
         self.additional = additional if additional is not None else []
-        self._mongodb = mongodb
+        self.__mongodb = mongodb
         self.communication_thread = communication_thread if communication_thread is not None else []
         self.response_required = response_required
         self.acceptable_responses = acceptable_responses if acceptable_responses is not None else []
@@ -46,7 +46,7 @@ class LogEntry:
         }
 
     def is_loadable(self):
-        ref = self.mongodb.find_UM_by_ref(self.ref)
+        ref = self.__mongodb.find_UM_by_ref(self.ref)
         if not ref:
             print(f"No UM found for ref {self.ref}")
             return False
@@ -55,7 +55,7 @@ class LogEntry:
         return "Route Modifications" in category
 
     def get_waypoint(self):
-        um_ref = self.mongodb.find_datalink_by_ref(self.ref)
+        um_ref = self.__mongodb.find_datalink_by_ref(self.ref)
         template = um_ref.get("Message_Element")
         message = self.content
 
@@ -81,7 +81,7 @@ class LogEntry:
         return self
     
     def format_simple_response(self, ref):
-        message = self.mongodb.find_datalink_by_ref(ref)
+        message = self.__mongodb.find_datalink_by_ref(ref)
         if not message:
             print(f"No message found for ref {ref}")
             return
@@ -95,7 +95,7 @@ class LogEntry:
             status= "OPENED",
             urgency="Normal",
             intent=message.get("Message_Intent"),
-            mongodb=self.mongodb,
+            mongodb=self.__mongodb,
             response_required=LogEntry.is_response_required(message),
         )
         self.communication_thread.append(response_entry)

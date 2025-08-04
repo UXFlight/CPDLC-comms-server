@@ -9,6 +9,7 @@ class FlightStatus:
         self.altitude = routine[0].get("altitude_ft", 0)
         self.position = {"lat": None, "lon": None}
         self.current_distance = 0
+        self.fix_distance = 0
         self.total_time_sec = 0
         self.remaining_fuel = routine[0].get("fuel_kg", 000)
         self.temperature = routine[0].get("temperature", 00)
@@ -28,6 +29,7 @@ class FlightStatus:
         self.altitude = data.get("altitude", self.altitude)
         self.position = data.get("position", self.position)
         self.current_distance = data.get("distance", self.current_distance)
+        self.fix_distance = data.get("fix_distance", self.fix_distance)
         self.total_time_sec = data.get("elapsed_time_sec", self.total_time_sec)
         self.remaining_fuel = data.get("remaining_fuel", self.remaining_fuel)
         self.temperature = data.get("temperature", self.temperature)
@@ -42,6 +44,7 @@ class FlightStatus:
             "altitude": self.altitude,
             "position": self.position,
             "current_distance": self.current_distance,
+            "fix_distance": self.fix_distance,
             "total_time_sec": self.total_time_sec,
             "remaining_fuel": self.remaining_fuel,
             "temperature": self.temperature,

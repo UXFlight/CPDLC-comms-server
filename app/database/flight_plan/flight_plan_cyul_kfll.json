@@ -13,6 +13,15 @@
       "fuel": "11113kg"
     },
     {
+      "fix": "BOS",
+      "heading": "180°",
+      "distance": "64nm",
+      "altitude": "FL370",
+      "mach": "M0.78",
+      "duration": "8m30s",
+      "fuel": "10950kg"
+    },
+    {
       "fix": "ART",
       "heading": "187\u00b0",
       "distance": "48nm",

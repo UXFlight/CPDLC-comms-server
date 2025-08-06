@@ -9,7 +9,7 @@ class Routine:
         self.socket = socket
         self.room = room
         self.logs = logs
-        self.acceleration = 60
+        self.acceleration = 600
         self.tick_interval = 1
         self.elapsed_simulated = 0
         self.current_fix = 0
@@ -33,25 +33,18 @@ class Routine:
             fix_distance = current_fix_obj["distance_km"]
 
             if self.distance_in_segment >= fix_distance:
-                # self.flight_status.update({
-                #     "distance": current_fix_obj["total_distance"],
-                #     "elapsed_time_sec": int(self.elapsed_simulated),
-                # })
-
-                # self.socket.send("plane_partial_progress", self.flight_status.to_dict(), room=self.room)
-
-                
                 self.update_flight_status()
                 self.current_fix += 1
+                if self.current_fix >= len(self.routine) - 1:
+                    self.update_flight_status()
+                    self.socket.send("plane_arrival", self.flight_status.to_dict(), room=self.room)
+                    break
                 self.distance_in_segment = 0
                 self.socket.send("waypoint_change", {
                     "flight": self.flight_status.to_dict(),
                     "currentFixIndex": self.current_fix,
                 }, room=self.room)
-
-
             else:
-                # Progression partielle dans le segment courant
                 self.flight_status.update({
                     "distance": round(self.routine[self.current_fix]["total_distance"] - fix_distance + self.distance_in_segment, 2),
                     "fix_distance": int(self.distance_in_segment),
@@ -59,15 +52,12 @@ class Routine:
                 })
                 self.socket.send("plane_partial_progress", self.flight_status.to_dict(), room=self.room)
 
-        self.update_flight_status()
-        self.socket.send("plane_arrival", self.flight_status.to_dict(), room=self.room)
-
     def calculate_distance(self):
-        # Distance parcourue dans ce tick simulé
         current_speed = self.routine[self.current_fix]["speed_kmh"]
         return current_speed * self.acceleration / 3600  # km/h → km/sec * seconds
 
     def update_flight_status(self):
+        print("Updating flight status at fix index:", self.current_fix)
         fix = self.routine[self.current_fix]
         self.flight_status.update({
             "altitude": fix.get("altitude_ft", 0),

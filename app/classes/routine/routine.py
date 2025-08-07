@@ -1,15 +1,21 @@
 import asyncio
 from app.classes.flight_status.flight_status import FlightStatus
-from app.database.flight_plan.routine import routine
+from enum import Enum
+
+class Speed(Enum):
+    SLOW = 50
+    MEDIUM = 100
+    FAST = 150
+    EXTREME = 300
 
 class Routine:
-    def __init__(self, socket, flight_status: FlightStatus, room, logs):
-        self.routine = routine
+    def __init__(self, routine, socket, flight_status: FlightStatus, room, logs):
+        self.routine = routine["route"]
         self.flight_status = flight_status
         self.socket = socket
         self.room = room
         self.logs = logs
-        self.acceleration = 600
+        self.acceleration = 100
         self.tick_interval = 1
         self.elapsed_simulated = 0
         self.current_fix = 0
@@ -24,11 +30,14 @@ class Routine:
             "distances": distances
         }, room=self.room)
 
+    def simulation_speed(self, speed: Speed):
+        self.acceleration = speed.value
+
     async def simulate_flight_progress(self):
         self.running = True
         self._stop_signal = False
 
-        while self.current_fix < len(self.routine): # self.elapsed_simulated < self.routine[-1]["elapsed_time_sec"]:
+        while self.current_fix < len(self.routine)-1: # self.elapsed_simulated < self.routine[-1]["elapsed_time_sec"]:
             if self._stop_signal:
                 print("Simulation paused.")
                 break
@@ -43,10 +52,11 @@ class Routine:
             fix_distance = current_fix_obj["distance_km"]
 
             if self.distance_in_segment >= fix_distance:
-                self.update_flight_status()
-                self.current_fix += 1
-                if self.current_fix >= len(self.routine) - 1:
+                if self.current_fix < len(self.routine) - 1:
+                    self.current_fix += 1
                     self.update_flight_status()
+                else:
+                    self.update_flight_status(end=True)
                     self.socket.send("plane_arrival", self.flight_status.to_dict(), room=self.room)
                     break
                 self.distance_in_segment = 0
@@ -66,9 +76,11 @@ class Routine:
         current_speed = self.routine[self.current_fix]["speed_kmh"]
         return current_speed * self.acceleration / 3600  # km/h → km/sec * seconds
 
-    def update_flight_status(self):
-        print("Updating flight status at fix index:", self.current_fix)
-        fix = self.routine[self.current_fix]
+    def update_flight_status(self, end=False):
+        if not end: 
+            fix = self.routine[self.current_fix]
+        else:
+            fix = self.routine[-1]
         self.flight_status.update({
             "altitude": fix.get("altitude_ft", 0),
             "distance": fix.get("total_distance", 0),

@@ -1,16 +1,15 @@
 from app.classes.flight_session.flight_session import FlightSession
 
-
 class FlightManager:
     def __init__(self):
         self.sessions = {}
 
-    def create_session(self, flight_id, departure, arrival, pilot_id, route, mongodb, socket, room, atc_id=None):
-        if flight_id not in self.sessions:
-            session = FlightSession(flight_id, departure, arrival, pilot_id, route, atc_id, mongodb, socket, room)
-            self.sessions[flight_id] = session
+    def create_session(self, routine, pilot_id, mongodb, socket, atc_id=None):
+        if routine["flight_id"] not in self.sessions:
+            session = FlightSession(routine, pilot_id, atc_id, mongodb, socket)
+            self.sessions[routine["flight_id"]] = session
             return session
-        return self.sessions[flight_id]
+        return self.sessions[routine["flight_id"]]
 
     def get_session(self, flight_id):
         return self.sessions.get(flight_id)

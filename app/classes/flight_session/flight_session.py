@@ -2,22 +2,20 @@ from app.classes.atc.atc import Atc
 from app.classes.flight_status.flight_status import FlightStatus
 from app.classes.pilot.pilot import Pilot
 from app.classes.routine.routine import Routine
-from app.database.flight_plan import flight_plan
-from app.database.mongo_db import MongoDb
 from app.managers.logs_manager.logs_manager import LogsManager
 
 
 class FlightSession:
-    def __init__(self, flight_id, departure, arrival, pilot_id, route, atc_id, mongodb, socket, room):
-        self.flight_id = flight_id
-        self.departure = departure
-        self.arrival = arrival
+    def __init__(self, routine, pilot_id, atc_id, mongodb, socket):
+        self.flight_id = routine["flight_id"]
+        self.departure = routine["departure"]
+        self.arrival = routine["arrival"]
         self.pilot = Pilot(pilot_id)
         self.atc = Atc(atc_id)
-        self.status = FlightStatus(mongodb)
+        self.status = FlightStatus(routine["route"], mongodb)
         self.logs = LogsManager(mongodb)
-        self.route = route
-        self.routine = Routine(socket, self.status, room, self.logs)
+        self.routine = Routine(routine, socket, self.status, pilot_id, self.logs)
+        self.route = routine["route"]
         self.current_data_authority = atc_id
         self.next_data_authority = None
 
@@ -43,7 +41,10 @@ class FlightSession:
                 temp_route = self.route[i:] 
                 return temp_route
         return []
-    
+
+    def get_route(self) :
+        return [fix["fix"] for fix in self.routine.routine]
+
     def load_route(self, route):
         self.route = route
         return self.route

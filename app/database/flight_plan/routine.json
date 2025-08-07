@@ -1,6 +1,10 @@
-[
+{
+  "flight_id": "AF448",
+  "departure": "CYUL",
+  "arrival": "KFLL",
+  "route":[
    {
-    "fix": "DEPARTURE",
+    "fix": "CYUL",
     "distance_km": 30.0,
     "duration_sec": 300,
     "fuel_kg": 11500,
@@ -372,7 +376,7 @@
     "atc_messages": null
   },
   {
-    "fix": "ARRIVAL",
+    "fix": "KFLL",
     "distance_km": 0,
     "heading_deg": 170,
     "altitude_ft": 0,
@@ -395,5 +399,8 @@
     "icing": "NONE",
     "atc_messages": null
   }
-]
+],
+  "final_fuel": "3388kg",
+  "final_duration": "3:06:45"
+}
  

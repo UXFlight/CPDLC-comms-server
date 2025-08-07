@@ -1,10 +1,9 @@
 from datetime import datetime, timezone
 
 from app.classes.log_entry.log_entry import LogEntry
-from app.database.flight_plan.routine import routine
 
 class FlightStatus:
-    def __init__(self, mongodb):
+    def __init__(self, routine, mongodb):
         self._mongodb = mongodb
         self.altitude = routine[0].get("altitude_ft", 0)
         self.position = {"lat": None, "lon": None}

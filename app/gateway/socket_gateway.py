@@ -1,12 +1,19 @@
 import asyncio
 from copy import deepcopy
+from enum import Enum
 from flask import request  # type: ignore
 from app.classes import Socket  # type: ignore
 from app.database.mongo_db import MongoDb
 from app.managers.flight_manager.flight_manager import FlightManager
 from app.database.flight_plan.flight_plan import flight_plan
+from app.database.flight_plan.routine import routine
 from app.utils.error_handler import handle_errors
 
+class Speed(Enum):
+    SLOW = 50
+    MEDIUM = 100
+    FAST = 200
+    EXTREME = 600
 
 class SocketGateway:
     def __init__(self, socket_service: Socket, flight_manager: FlightManager, mongodb: MongoDb):
@@ -26,23 +33,12 @@ class SocketGateway:
         self.socket_service.listen('routine_pause', self.on_routine_pause)
         self.socket_service.listen('routine_step_back', self.on_routine_step_back)
         self.socket_service.listen('routine_step_forward', self.on_routine_step_forward)
+        self.socket_service.listen('routine_set_speed', self.on_routine_set_speed)
         self.socket_service.listen('disconnect', self.on_disconnect)
 
-    @handle_errors(event_name="error", message="Failed to create flight session")
     def on_connect(self, auth=None):
         sid = request.sid
-        plan = deepcopy(flight_plan)
-        plan["flight_id"] = f"{plan['flight_id']}"
-        flight = self.flight_manager.create_session(
-            flight_id=plan["flight_id"],
-            departure=plan["departure"],
-            arrival=plan["arrival"],
-            pilot_id=sid,
-            route=plan["route"],
-            mongodb=self.mongodb,
-            socket=self.socket_service,
-            room=sid
-        )
+        flight = self.flight_manager.create_session(routine, sid, self.mongodb, self.socket_service)
         self.socket_service.send("connected", flight.to_dict(), room=sid)
 
     @handle_errors(event_name="error", message="Failed to logon atc")
@@ -111,12 +107,14 @@ class SocketGateway:
         self.socket_service.send("route_loaded", new_route, room=sid)
 
     # START - actions for the routine 
+    @handle_errors(event_name="error", message="Failed to play routine")
     def on_routine_play(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session_by_pilot(sid)
         if flight:
             flight.routine.play()
 
+    @handle_errors(event_name="error", message="Failed to pause routine")
     def on_routine_pause(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session_by_pilot(sid)
@@ -136,7 +134,18 @@ class SocketGateway:
         flight = self.flight_manager.get_session_by_pilot(sid)
         if flight:
             flight.routine.step_forward()
-    # END - actions for the routine 
+
+    @handle_errors(event_name="error", message="Failed to set speed")
+    def on_routine_set_speed(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session_by_pilot(sid)
+        if flight:
+            speed_label = data.get("speed", "MEDIUM")
+            selected_speed = Speed[speed_label.upper()]
+            flight.routine.pause()
+            flight.routine.simulation_speed(selected_speed)
+            flight.routine.play()
+    # END - actions for the routine
 
     @handle_errors(event_name="error", message="Failed to disconnect session")
     def on_disconnect(self, sid: str):

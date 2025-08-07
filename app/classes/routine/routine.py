@@ -14,6 +14,9 @@ class Routine:
         self.elapsed_simulated = 0
         self.current_fix = 0
         self.distance_in_segment = 0 
+        self.running = False
+        self.stepping = False
+        self._stop_signal = False
 
         distances = [fix["distance_km"] for fix in self.routine]
         self.socket.send("routine_load", {
@@ -22,7 +25,14 @@ class Routine:
         }, room=self.room)
 
     async def simulate_flight_progress(self):
+        self.running = True
+        self._stop_signal = False
+
         while self.current_fix < len(self.routine): # self.elapsed_simulated < self.routine[-1]["elapsed_time_sec"]:
+            if self._stop_signal:
+                print("Simulation paused.")
+                break
+
             await asyncio.sleep(self.tick_interval)
 
             self.elapsed_simulated += self.tick_interval * self.acceleration
@@ -131,3 +141,29 @@ class Routine:
     #         return None
     #     else:
             
+    # ACTIONS
+    def pause(self):
+        self._stop_signal = True
+        self.running = False
+
+    def play(self):
+        if not self.running:
+            self.socket.start_background_task(asyncio.run, self.simulate_flight_progress())
+            
+    def step_forward(self):
+        if self.current_fix < len(self.routine) - 1:
+            self.current_fix += 1
+            self.update_flight_status()
+            self.socket.send("waypoint_change", {
+                "flight": self.flight_status.to_dict(),
+                "currentFixIndex": self.current_fix
+            }, room=self.room)
+
+    def step_back(self):
+        if self.current_fix > 0:
+            self.current_fix -= 1
+            self.update_flight_status()
+            self.socket.send("waypoint_change", {
+                "flight": self.flight_status.to_dict(),
+                "currentFixIndex": self.current_fix
+        }, room=self.room)

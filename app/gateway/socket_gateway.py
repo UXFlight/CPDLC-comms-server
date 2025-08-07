@@ -22,6 +22,10 @@ class SocketGateway:
         self.socket_service.listen('is_loadable', self.on_is_loadable)
         self.socket_service.listen('load_fms', self.on_load_fms)
         self.socket_service.listen('execute_route', self.on_execute_route)
+        self.socket_service.listen('routine_play', self.on_routine_play)
+        self.socket_service.listen('routine_pause', self.on_routine_pause)
+        self.socket_service.listen('routine_step_back', self.on_routine_step_back)
+        self.socket_service.listen('routine_step_forward', self.on_routine_step_forward)
         self.socket_service.listen('disconnect', self.on_disconnect)
 
     @handle_errors(event_name="error", message="Failed to create flight session")
@@ -105,6 +109,34 @@ class SocketGateway:
         new_route = flight.load_route(data.get("new_route", []))
         #flight.routine.update_routine(new_route)
         self.socket_service.send("route_loaded", new_route, room=sid)
+
+    # START - actions for the routine 
+    def on_routine_play(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session_by_pilot(sid)
+        if flight:
+            flight.routine.play()
+
+    def on_routine_pause(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session_by_pilot(sid)
+        if flight:
+            flight.routine.pause()
+
+    @handle_errors(event_name="error", message="Failed to step back")
+    def on_routine_step_back(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session_by_pilot(sid)
+        if flight:
+            flight.routine.step_back()
+
+    @handle_errors(event_name="error", message="Failed to step forward")
+    def on_routine_step_forward(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session_by_pilot(sid)
+        if flight:
+            flight.routine.step_forward()
+    # END - actions for the routine 
 
     @handle_errors(event_name="error", message="Failed to disconnect session")
     def on_disconnect(self, sid: str):

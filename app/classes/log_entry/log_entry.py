@@ -6,8 +6,8 @@ ACTION_REQUIRED_UM = ["Y", "W/U", "A/N", "R"]
 NO_ACTION_REQUIRED_UM = ["N", "N/E"]
 
 class LogEntry:
-    def __init__(self, ref, content, direction, status, urgency, response_required, intent=None, position=None, additional=None, mongodb=None, communication_thread=None, acceptable_responses=None):
-        self.id = str(uuid.uuid4())  
+    def __init__(self, ref, content, direction, status, urgency, response_required, intent=None, position=None, additional=None, mongodb=None, communication_thread=None, acceptable_responses=None, id=None):
+        self.id = str(uuid.uuid4()) if id is None else id
         self.ref = ref
         self.content = content
         self.direction = direction

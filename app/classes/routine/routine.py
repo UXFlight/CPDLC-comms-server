@@ -2,20 +2,22 @@ import asyncio
 from app.classes.flight_status.flight_status import FlightStatus
 from enum import Enum
 
+from app.managers.logs_manager.logs_manager import LogsManager
+
 class Speed(Enum):
-    SLOW = 50
-    MEDIUM = 100
-    FAST = 150
-    EXTREME = 300
+    SLOW = 10
+    MEDIUM = 30
+    FAST = 60
+    EXTREME = 100
 
 class Routine:
-    def __init__(self, routine, socket, flight_status: FlightStatus, room, logs):
+    def __init__(self, routine, socket, flight_status: FlightStatus, room, logs: LogsManager):
         self.routine = routine["route"]
         self.flight_status = flight_status
         self.socket = socket
         self.room = room
         self.logs = logs
-        self.acceleration = 100
+        self.acceleration = Speed.MEDIUM.value
         self.tick_interval = 1
         self.elapsed_simulated = 0
         self.current_fix = 0
@@ -23,6 +25,7 @@ class Routine:
         self.running = False
         self.stepping = False
         self._stop_signal = False
+        self.visited_messages = []
 
         distances = [fix["distance_km"] for fix in self.routine]
         self.socket.send("routine_load", {
@@ -50,6 +53,7 @@ class Routine:
 
             current_fix_obj = self.routine[self.current_fix]
             fix_distance = current_fix_obj["distance_km"]
+            await self.simulate_um_message()
 
             if self.distance_in_segment >= fix_distance:
                 if self.current_fix < len(self.routine) - 1:
@@ -140,19 +144,36 @@ class Routine:
         # }, room=self.room)
         # self.simulate_flight_progress()
     
-    # def available_messages(self):
-    #     return self.routine[self.current_fix].get("atc_messages", None)
-    
-    # def check_priority_message(self):
-    #     if self.available_messages:
-    #         self.available_messages enumerate
-            
+    def available_messages(self):
+        msgs = self.routine[self.current_fix].get("atc_messages") or []
+        return len(msgs) > 0
 
-    # def simulate_um_message(self):
-    #     if not self.available_messages():
-    #         return None
-    #     else:
-            
+    async def simulate_um_message(self):
+        if not self.available_messages():
+            return
+        else:
+            for message in self.routine[self.current_fix]["atc_messages"]:
+                if message['message']['id'] in self.visited_messages:
+                    #event only for debugging
+                    self.socket.send("message_visited", message["message"], room=self.room)
+                    continue
+                if (message["at_position"] <= self.distance_in_segment):
+                    new_log = self.logs.add_log(message["message"])
+                    print(f"Message {self.logs.get_logs()} added to logs.")
+                    self.visited_messages.append(f"{new_log.id}")
+                    self.socket.send("log_added", new_log.to_dict(), room=self.room)
+
+    def remove_um_message(self, fix):
+        print(f"Removing messages for fix: {fix}")
+        messages_to_be_removed = [msg for msg in self.visited_messages if msg.startswith(f"{fix}")]
+        print(f"Messages to be removed: {messages_to_be_removed}")
+        for log in self.logs.logs:
+            if log.id in messages_to_be_removed:
+                self.visited_messages.remove(f"{log.id}")
+                self.logs.remove_log_by_id(log.id)
+
+        self.socket.send("removed_logs", self.logs.get_logs(), room=self.room)
+
     # ACTIONS
     def pause(self):
         self._stop_signal = True
@@ -161,21 +182,29 @@ class Routine:
     def play(self):
         if not self.running:
             self.socket.start_background_task(asyncio.run, self.simulate_flight_progress())
-            
+
     def step_forward(self):
+        self.pause()
         if self.current_fix < len(self.routine) - 1:
             self.current_fix += 1
+            self.distance_in_segment = 0
             self.update_flight_status()
             self.socket.send("waypoint_change", {
                 "flight": self.flight_status.to_dict(),
                 "currentFixIndex": self.current_fix
             }, room=self.room)
+        self.play()
 
     def step_back(self):
+        self.pause()
         if self.current_fix > 0:
             self.current_fix -= 1
-            self.update_flight_status()
-            self.socket.send("waypoint_change", {
-                "flight": self.flight_status.to_dict(),
-                "currentFixIndex": self.current_fix
+
+        self.remove_um_message(self.routine[self.current_fix]["fix"])
+        self.distance_in_segment = 0
+        self.update_flight_status()
+        self.socket.send("waypoint_change", {
+            "flight": self.flight_status.to_dict(),
+            "currentFixIndex": self.current_fix
         }, room=self.room)
+        self.play()

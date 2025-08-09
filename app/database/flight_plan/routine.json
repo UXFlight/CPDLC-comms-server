@@ -25,15 +25,24 @@
     },
     "turbulence": "SEVERE",
     "icing": "LIGHT",
-    "atc_messages": [{
-      "ref": "UM20",
-      "content": "CLIMB TO AND MAINTAIN FL370;",
+    "atc_messages": [
+      {
+      "at_position": 5,
+      "message": {
+      "id": "CYUL_UM20",
+      "messageRef": "UM20",
+      "formattedMessage": "CLIMB TO AND MAINTAIN FL370",
       "direction": "UPLINK",
       "status": "NEW",
-      "timestamp": "2025-06-15T14:01:00Z",
       "sender": "ATC1",
       "intent": "Clearance to climb from current altitude to FL370 after departure."
-    }]
+    }}
+  ],
+  "nearby_airports": [
+    {"icao": "CYUL", "name": "Montréal–Trudeau", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 89 },
+    {"icao": "CYHU", "name": "St-Hubert", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 171 },
+    {"icao": "CYMX", "name": "Montréal–Mirabel", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 193 }
+  ]
   },
   {
     "fix": "PTD",
@@ -58,25 +67,22 @@
     "turbulence": "NONE",
     "icing": "LIGHT",
     "atc_messages": [  
-      {
-        "ref": "UM129",
-        "content": "REPORT MAINTAINING FL370;",
+      {"at_position": 0,
+      "message":{
+        "id": "PTD_UM129",
+        "messageRef": "UM129",
+        "formattedMessage": "REPORT MAINTAINING FL370",
         "direction": "UPLINK",
         "status": "NEW",
-        "timestamp": "2025-06-15T14:43:00Z",
         "sender": "ATC3",
         "intent": "Request for a position or level report once the aircraft reaches the cleared flight level."
-      },
-      {
-        "ref": "UM169",
-        "content": "ADS-C HAS FAILED;",
-        "direction": "UPLINK",
-        "status": "NEW",
-        "timestamp": "2025-06-15T14:45:00Z",
-        "sender": "ATC4",
-        "intent": "Notification that the ground system has detected an ADS-C failure."
-      }
-    ]
+      }}
+    ],
+    "nearby_airports":  [
+    {"icao": "KABE", "name": "Allentown–Bethlehem", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 67},
+    {"icao": "KMDT", "name": "Harrisburg Intl", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 152},
+    {"icao": "KAVP", "name": "Wilkes-Barre/Scranton", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 203}
+  ]
   },
   {
     "fix": "BOS",
@@ -100,7 +106,24 @@
     },
     "turbulence": "MODERATE",
     "icing": "TRACE",
-    "atc_messages": null
+    "atc_messages": [
+      {
+      "at_position": 0,
+      "message": {
+      "id": "BOS_UM28",
+      "messageRef": "UM28",
+      "formattedMessage": "TGGGGGGGGG",
+      "direction": "UPLINK",
+      "status": "NEW",
+      "sender": "ATC1",
+      "intent": "Clearance to climb from current altitude to FL370 after departure."
+    }}
+  ],
+  "nearby_airports":[
+    {"icao": "KBOS", "name": "Boston Logan", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 109},
+    {"icao": "KBED", "name": "Bedford Hanscom", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 69},
+    {"icao": "KBVY", "name": "Beverly", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 145}
+  ]
   },
   {
     "fix": "ART",
@@ -124,16 +147,24 @@
     },
     "turbulence": "SEVERE",
     "icing": "LIGHT",
-    "atc_messages": [{
-      "ref": "UM117",
-      "content": "CONTACT BOSTON CENTER 127.82;",
-      "direction": "UPLINK",
-      "status": "NEW",
-      "timestamp": "2025-06-15T14:37:00Z",
-      "sender": "ATC2",
-      "intent": "Instruction to change communication to a new frequency and contact a new ATC unit.",
-      "priority": 1
-    }]
+    "atc_messages": [
+      {
+      "at_position": 0,
+      "message": {
+        "id": "ART_UM117",
+        "messageRef": "UM117",
+        "formattedMessage": "CONTACT BOSTON CENTER 127.82",
+        "direction": "UPLINK",
+        "status": "NEW",
+        "sender": "ATC2",
+        "intent": "Instruction to change communication to a new frequency and contact a new ATC unit."
+    }}
+  ],
+  "nearby_airports":[
+    {"icao": "KART", "name": "Watertown Intl", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 50},
+    {"icao": "KGTB", "name": "Wheeler-Sack (Fort Drum)", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 60},
+    {"icao": "KRME", "name": "Griffiss (Rome, NY)", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 70}
+  ]
   },
   {
     "fix": "SYR",
@@ -157,13 +188,18 @@
     },
     "turbulence": "NONE",
     "icing": "TRACE",
-    "atc_messages": null
+    "atc_messages": null,
+    "nearby_airports":[
+    {"icao": "KSYR", "name": "Syracuse Hancock", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 80},
+    {"icao": "KRME", "name": "Griffiss (Rome, NY)", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 70},
+    {"icao": "KITH", "name": "Ithaca Tompkins", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 60}
+  ]
   },
   {
     "fix": "CNTER",
     "distance_km": 109.27,
     "heading_deg": 211,
-    "altitude_ft": 37000,
+    "altitude_ft": 39000,
     "duration_sec": 473,
     "elapsed_time_sec": 1936,
     "total_distance": 478.19,
@@ -181,7 +217,23 @@
     },
     "turbulence": "SEVERE",
     "icing": "NONE",
-    "atc_messages": null
+    "atc_messages": [{
+      "at_position": 100,
+      "message":{
+        "id": "CNTER_UM24",
+        "messageRef": "UM24",
+        "formattedMessage": "DESCEND TO AND MAINTAIN FL370",
+        "direction": "UPLINK",
+        "status": "NEW",
+        "sender": "ATC",
+        "intent": "Instruction to descend to a lower flight level."
+      }
+    }],
+    "nearby_airports": [
+    {"icao": "KELM", "name": "Elmira/Corning", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 88},
+    {"icao": "KBGM", "name": "Binghamton", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 69},
+    {"icao": "KAVP", "name": "Wilkes-Barre/Scranton", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 170}
+  ]
   },
   {
     "fix": "ZUCCS",
@@ -205,7 +257,12 @@
     },
     "turbulence": "LIGHT",
     "icing": "NONE",
-    "atc_messages": null
+    "atc_messages": null,
+    "nearby_airports":[
+    {"icao": "KUNV", "name": "University Park", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 150},
+    {"icao": "KIPT", "name": "Williamsport", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 120},
+    {"icao": "KSEG", "name": "Penn Valley (Selinsgrove)", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 75}
+  ]
   },
   {
     "fix": "PSB",
@@ -229,7 +286,14 @@
     },
     "turbulence": "SEVERE",
     "icing": "TRACE",
-    "atc_messages": null
+    "atc_messages": null,
+    "nearby_airports":[
+    {"icao": "KUNV", "name": "University Park", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 150},
+    {"icao": "KIPT", "name": "Williamsport", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 120},
+    {"icao": "KSEG", "name": "Penn Valley (Selinsgrove)", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 75},
+    {"icao": "KIPT", "name": "Williamsport", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 120},
+    {"icao": "KMDT", "name": "Harrisburg Intl", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 100}
+  ]
   },
   {
     "fix": "GARDN",
@@ -253,7 +317,23 @@
     },
     "turbulence": "NONE",
     "icing": "MODERATE",
-    "atc_messages": null
+    "atc_messages": [{
+      "at_position": 100,
+      "message": {
+        "id": "GARDN_UM74",
+        "messageRef": "UM74",
+        "formattedMessage": "PROCEED DIRECT TO OAKLE",
+        "direction": "UPLINK",
+        "status": "NEW",
+        "sender": "ATC",
+        "intent": "ATC instructs the aircraft to proceed directly to the specified waypoint, usually for sequencing or approach."
+      }
+    }],
+    "nearby_airports":[
+    {"icao": "KIAD", "name": "Washington Dulles", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 150},
+    {"icao": "KBWI", "name": "Baltimore/Washington", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 120},
+    {"icao": "KDCA", "name": "Washington National", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 100}
+  ]
   },
   {
     "fix": "PERRI",
@@ -277,7 +357,12 @@
     },
     "turbulence": "MODERATE",
     "icing": "TRACE",
-    "atc_messages": null
+    "atc_messages": null,
+    "nearby_airports": [
+    {"icao": "KRIC", "name": "Richmond Intl", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 150},
+    {"icao": "KPHF", "name": "Newport News/Williamsburg", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 120},
+    {"icao": "KORF", "name": "Norfolk", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 100}
+  ]
   },
   {
     "fix": "OAKLE",
@@ -301,7 +386,12 @@
     },
     "turbulence": "LIGHT",
     "icing": "MODERATE",
-    "atc_messages": null
+    "atc_messages": null,
+    "nearby_airports":[
+    {"icao": "KRDU", "name": "Raleigh–Durham", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 109},
+    {"icao": "KGSO", "name": "Greensboro/Piedmont Triad", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 166},
+    {"icao": "KRWI", "name": "Rocky Mount–Wilson", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 100}
+  ]
   },
   {
     "fix": "ASBUR",
@@ -325,7 +415,12 @@
     },
     "turbulence": "MODERATE",
     "icing": "LIGHT",
-    "atc_messages": null
+    "atc_messages": null,
+    "nearby_airports":[
+    {"icao": "KCLT", "name": "Charlotte Douglas", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 206},
+    {"icao": "KGSP", "name": "Greenville–Spartanburg", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 166},
+    {"icao": "KAVL", "name": "Asheville", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 94}
+  ]
   },
   {
     "fix": "MULBE",
@@ -349,7 +444,12 @@
     },
     "turbulence": "LIGHT",
     "icing": "LIGHT",
-    "atc_messages": null
+    "atc_messages": null,
+    "nearby_airports":[
+    {"icao": "KCAE", "name": "Columbia Metro", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 85},
+    {"icao": "KAGS", "name": "Augusta", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 49},
+    {"icao": "KAHN", "name": "Athens, GA", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 61}
+  ]
   },
   {
     "fix": "TIRCO",
@@ -373,7 +473,12 @@
     },
     "turbulence": "LIGHT",
     "icing": "TRACE",
-    "atc_messages": null
+    "atc_messages": null,
+    "nearby_airports":[
+    {"icao": "KJAX", "name": "Jacksonville Intl", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 200},
+    {"icao": "KSSI", "name": "Brunswick/Golden Isles", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 150},
+    {"icao": "KCRG", "name": "Jacksonville Exec (Craig)", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 100}
+  ]
   },
   {
     "fix": "KFLL",
@@ -397,7 +502,12 @@
     },
     "turbulence": "NONE",
     "icing": "NONE",
-    "atc_messages": null
+    "atc_messages": null,
+    "nearby_airports": [
+    {"icao": "KFLL", "name": "Fort Lauderdale–Hollywood", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 206},
+    {"icao": "KMIA", "name": "Miami Intl", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 166},
+    {"icao": "KPBI", "name": "Palm Beach Intl", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 94}
+  ]
   }
 ],
   "final_fuel": "3388kg",

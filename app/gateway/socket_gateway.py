@@ -10,10 +10,10 @@ from app.database.flight_plan.routine import routine
 from app.utils.error_handler import handle_errors
 
 class Speed(Enum):
-    SLOW = 50
-    MEDIUM = 100
-    FAST = 200
-    EXTREME = 600
+    SLOW = 10
+    MEDIUM = 30
+    FAST = 60
+    EXTREME = 80
 
 class SocketGateway:
     def __init__(self, socket_service: Socket, flight_manager: FlightManager, mongodb: MongoDb):
@@ -36,6 +36,7 @@ class SocketGateway:
         self.socket_service.listen('routine_set_speed', self.on_routine_set_speed)
         self.socket_service.listen('disconnect', self.on_disconnect)
 
+    @handle_errors(event_name="error", message="Failed to connect")
     def on_connect(self, auth=None):
         sid = request.sid
         flight = self.flight_manager.create_session(routine, sid, self.mongodb, self.socket_service)
@@ -141,7 +142,7 @@ class SocketGateway:
         flight = self.flight_manager.get_session_by_pilot(sid)
         if flight:
             speed_label = data.get("speed", "MEDIUM")
-            selected_speed = Speed[speed_label.upper()]
+            selected_speed = Speed[speed_label]
             flight.routine.pause()
             flight.routine.simulation_speed(selected_speed)
             flight.routine.play()

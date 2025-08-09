@@ -17,7 +17,7 @@ class DatalinkStatus(Enum):
 
 class LogsManager:
     def __init__(self, mongodb):
-        self.logs = default_logs
+        self.logs = []
         self._mongodb = mongodb
 
     def get_logs(self):
@@ -36,7 +36,7 @@ class LogsManager:
         return sorted(self.logs, key=lambda log: log.timestamp, reverse=True)
 
     def add_log(self, entry):
-        message = self.mongodb.find_datalink_by_ref(entry.get("messageRef"))
+        message = self._mongodb.find_datalink_by_ref(entry.get("messageRef"))
         type = "downlink" if "DM" in message.get("Ref_Num") else "uplink"
 
         new_log = LogEntry(
@@ -45,16 +45,24 @@ class LogsManager:
             direction=type,
             status=self.set_new_log_status(message).value,
             intent=message.get("Message_Intent"),
-            additional=entry.get("additional"), 
-            urgency=entry.get("urgency"),
-            mongodb=self.mongodb,
+            additional=entry.get("additional", []), 
+            urgency=entry.get("urgency", "normal"),
+            mongodb=self._mongodb,
             response_required=LogEntry.is_response_required(message),
-            acceptable_responses=message.get("Acceptable_responses", [])
+            acceptable_responses=message.get("Acceptable_responses", []),
+            id=entry.get("id", None)
         )
         print(f"is response required: {LogEntry.is_response_required(message)}")
         self.logs.append(new_log)
         return new_log
     
+    def remove_log_by_id(self, log_id):
+        for i, log in enumerate(self.logs):
+            if log.id == log_id:
+                del self.logs[i]
+                return True
+        return False
+
     def set_new_log_status(self, datalink):
         if "U" in datalink.get("Ref_Num", " "):
             return DatalinkStatus.NEW if LogEntry.is_response_required(datalink) else DatalinkStatus.OPENED

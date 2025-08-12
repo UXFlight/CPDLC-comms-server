@@ -1,16 +1,18 @@
 import asyncio
+from dataclasses import dataclass
 from app.classes.flight_status.flight_status import FlightStatus
 from enum import Enum
 
+from app.constants.RoutineSnapshot import RoutineSnapshot
 from app.managers.logs_manager.logs_manager import LogsManager
 from app.managers.reports_manager import ReportsManager
 from app.utils.position_report_build import position_report_build
 
 class Speed(Enum):
-    SLOW = 10
-    MEDIUM = 30
-    FAST = 60
-    EXTREME = 100
+    SLOW = 3
+    MEDIUM = 6
+    FAST = 10
+    EXTREME = 20
 
 class Routine:
     def __init__(self, routine, socket, flight_status: FlightStatus, room, logs: LogsManager, reports: ReportsManager):
@@ -22,7 +24,7 @@ class Routine:
         self.logs = logs
         self.reports = reports
         self.acceleration = Speed.MEDIUM.value
-        self.tick_interval = 1
+        self.tick_interval = 0.1
         self.elapsed_simulated = 0
         self.current_fix = 0
         self.distance_in_segment = 0 
@@ -75,7 +77,6 @@ class Routine:
                     break
                 self.distance_in_segment = 0
                 position_report = position_report_build(self.routine, self.current_fix)
-                print(f"New position report: {position_report}")
                 self.reports.add_position_report(position_report)
 
                 self.socket.send("waypoint_change", {
@@ -173,20 +174,26 @@ class Routine:
                     continue
                 if (message["at_position"] <= self.distance_in_segment):
                     new_log = self.logs.add_log(message["message"])
-                    print(f"Message {self.logs.get_logs()} added to logs.")
                     self.visited_messages.append(f"{new_log.id}")
                     self.socket.send("log_added", new_log.to_dict(), room=self.room)
 
     def remove_um_message(self, fix):
-        print(f"Removing messages for fix: {fix}")
         messages_to_be_removed = [msg for msg in self.visited_messages if msg.startswith(f"{fix}")]
-        print(f"Messages to be removed: {messages_to_be_removed}")
         for log in self.logs.logs:
             if log.id in messages_to_be_removed:
                 self.visited_messages.remove(f"{log.id}")
                 self.logs.remove_log_by_id(log.id)
 
         self.socket.send("removed_logs", self.logs.get_logs(), room=self.room)
+
+    def add_um_message(self):
+        if not self.available_messages():
+            return
+        for message in self.route[self.current_fix]["atc_messages"]:
+            if message['message']['id'] not in self.visited_messages:
+                new_log = self.logs.add_log(message["message"])
+                self.visited_messages.append(f"{new_log.id}")
+                self.socket.send("log_added", new_log.to_dict(), room=self.room)
 
     # ACTIONS
     # def pause(self):
@@ -212,42 +219,51 @@ class Routine:
 
     async def stop_and_wait(self, timeout: float = 2.0):
         self.stop()
-        # Attendre que self.running passe à False (fin de la coroutine)
         deadline = asyncio.get_running_loop().time() + timeout
         while self.running and asyncio.get_running_loop().time() < deadline:
             await asyncio.sleep(0)
-        # Pas d'exception : si ça n'a pas fini, on sort quand même après timeout.
 
     def step_forward(self):
-        print(f"Stepping forward from current fix {self.current_fix}")
-        self.pause()
-        print(f"2222222222222222222222Stepping forward from current fix {self.current_fix}")
+        is_running_before_step = self.running
+        if is_running_before_step:
+            self.pause()
         if self.current_fix < len(self.route) - 1:
             self.current_fix += 1
             self.distance_in_segment = 0
+            self.add_um_message()
             self.update_flight_status()
+            position_report = position_report_build(self.routine, self.current_fix)
+            self.reports.add_position_report(position_report)
             self.socket.send("waypoint_change", {
                 "flight": self.flight_status.to_dict(),
                 "currentFixIndex": self.current_fix
             }, room=self.room)
-        self.play()
+        if is_running_before_step:
+            self.play()
 
     def step_back(self):
-        self.pause()
+        is_running_before_step = self.running
+        if is_running_before_step:
+            self.pause()
         if self.current_fix > 0:
             self.current_fix -= 1
 
         self.remove_um_message(self.route[self.current_fix]["fix"])
         self.distance_in_segment = 0
         self.update_flight_status()
+        position_report = position_report_build(self.routine, self.current_fix)
+        self.reports.add_position_report(position_report)
         self.socket.send("waypoint_change", {
             "flight": self.flight_status.to_dict(),
             "currentFixIndex": self.current_fix
         }, room=self.room)
-        self.play()
+        if is_running_before_step:
+            self.play()
 
-    def reset_parameters(self):
-        self.elapsed_simulated = 0
-        self.current_fix = 0
-        self.distance_in_segment = 0
-        self.running = False
+    def snapshot(self) -> RoutineSnapshot:
+        return RoutineSnapshot(
+            current_fix=self.route[self.current_fix]["fix"],
+            acceleration=self.acceleration,
+            tick_interval=self.tick_interval,
+            running=self.running
+        )

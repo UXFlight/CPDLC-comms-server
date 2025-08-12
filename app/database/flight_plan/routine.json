@@ -151,13 +151,13 @@
       {
       "at_position": 0,
       "message": {
-        "id": "ART_UM117",
-        "messageRef": "UM117",
-        "formattedMessage": "CONTACT BOSTON CENTER 127.82",
+        "id": "ART_UM130",
+        "messageRef": "UM130",
+        "formattedMessage": "REPORT PASSING SYR",
         "direction": "UPLINK",
         "status": "NEW",
         "sender": "ATC2",
-        "intent": "Instruction to change communication to a new frequency and contact a new ATC unit."
+        "intent": "Instruction to report when the aircraft has passed the specified position."
     }}
   ],
   "nearby_airports":[
@@ -188,7 +188,18 @@
     },
     "turbulence": "NONE",
     "icing": "TRACE",
-    "atc_messages": null,
+    "atc_messages": [{
+      "at_position": 0,
+      "message": {
+        "id": "SYR_UM128",
+        "messageRef": "UM128",
+        "formattedMessage": "DESCEND TO AND MAINTAIN FL370",
+        "direction": "UPLINK",
+        "status": "NEW",
+        "sender": "ATC",
+        "intent": "Instruction to descend to a lower flight level."
+      }
+    }],
     "nearby_airports":[
     {"icao": "KSYR", "name": "Syracuse Hancock", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 80},
     {"icao": "KRME", "name": "Griffiss (Rome, NY)", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 70},

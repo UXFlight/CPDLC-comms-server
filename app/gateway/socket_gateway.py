@@ -11,10 +11,10 @@ from app.database.flight_plan.routine import routine
 from app.utils.error_handler import handle_errors
 
 class Speed(Enum):
-    SLOW = 10
-    MEDIUM = 30
-    FAST = 60
-    EXTREME = 80
+    SLOW = 3
+    MEDIUM = 6
+    FAST = 10
+    EXTREME = 20
 
 class SocketGateway:
     def __init__(self, socket_service: Socket, flight_manager: FlightManager, mongodb: MongoDb):
@@ -42,7 +42,6 @@ class SocketGateway:
         flight = self.flight_manager.create_session(routine, sid, self.mongodb, self.socket_service)
         self.socket_service.send("connected", flight.to_dict(), room=sid)
 
-    @handle_errors(event_name="error", message="Failed to logon atc")
     def on_logon(self, data: dict):
         sid = request.sid
         atc_available = self.mongodb.find_available_atc(data.get("username"))
@@ -52,6 +51,8 @@ class SocketGateway:
             flight.atc_id = data.get("username")
             self.socket_service.send("logon_success", data={}, room=sid)
             self.socket_service.send("load_logs", flight.logs.get_logs(), room=sid)
+            self.socket_service.send("load_adsc_reports", flight.reports.adsc_to_dict(), room=sid)
+            flight.reports.start_adsc_timer()
             self.socket_service.start_background_task(asyncio.run, flight.routine.simulate_flight_progress())
         else:
             self.socket_service.send("logon_failure", data={}, room=sid)
@@ -129,7 +130,6 @@ class SocketGateway:
         if flight:
             flight.routine.step_back()
 
-    @handle_errors(event_name="error", message="Failed to step forward")
     def on_routine_step_forward(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session(sid)
@@ -148,7 +148,8 @@ class SocketGateway:
             flight.routine.play()
     # END - actions for the routine
 
-    # START - position report events
+    # START - Report events
+    # position report
     @handle_errors(event_name="error", message="Failed to send position report")
     def on_send_position_report(self, data: dict):
         sid = request.sid
@@ -157,6 +158,10 @@ class SocketGateway:
             position_report = PositionReport(**data)
             flight.position_reports.append(position_report)
             self.socket_service.send("position_report_sent", position_report.to_dict(), room=sid)
+    
+    @handle_errors(event_name="error", message="Failed to get activate adsc emergency")
+
+    # END - Report events
 
     @handle_errors(event_name="error", message="Failed to disconnect session")
     def on_disconnect(self, sid: str):

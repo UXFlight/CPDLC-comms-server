@@ -14,12 +14,13 @@ class FlightSession:
         self.pilot = Pilot(pilot_id)
         self.atc = Atc(atc_id)
         self.status = FlightStatus(routine["route"], mongodb)
-        self.logs = LogsManager(mongodb)
-        self.reports = ReportsManager(socket)
+        self.reports = ReportsManager(socket, self.status, pilot_id)
+        self.logs = LogsManager(mongodb, socket, self.reports)
         self.routine = Routine(routine, socket, self.status, pilot_id, self.logs, self.reports)
         self.route = routine["route"]
         self.current_data_authority = atc_id
         self.next_data_authority = None
+        self.reports.set_snapshot_provider(self.routine.snapshot) 
 
     def to_dict(self):
         return {

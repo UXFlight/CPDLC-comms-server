@@ -21,8 +21,7 @@ class FlightManager:
         if session is None:
             print(f"No session found for pilot {pilot_id}")
             return False
-
-        print(f"sessions before removal {self.sessions.keys()}")
+        asyncio.run(session.reports.stop_adsc_and_wait(timeout=2.0))
 
         try:
             asyncio.run(session.routine.stop_and_wait(timeout=2.0))

@@ -3,6 +3,8 @@ from app.classes.log_entry.log_entry import LogEntry
 from app.constants.logs_array import default_logs
 from enum import Enum
 
+from app.constants.responses import REPORT_INITIATION
+
 class DatalinkStatus(Enum):
     NEW = "new"
     PENDING = "pending"
@@ -16,9 +18,11 @@ class DatalinkStatus(Enum):
 
 
 class LogsManager:
-    def __init__(self, mongodb):
+    def __init__(self, mongodb, socket, reports):
         self.logs = []
         self._mongodb = mongodb
+        self.socket = socket
+        self.reports = reports
 
     def get_logs(self):
         return [log.to_dict() for log in self.logs]
@@ -53,6 +57,7 @@ class LogsManager:
             id=entry.get("id", None)
         )
         self.logs.append(new_log)
+        self.process_incoming_log(new_log)
         return new_log
     
     def remove_log_by_id(self, log_id):
@@ -75,3 +80,16 @@ class LogsManager:
                 return log
         return None
     
+    def process_incoming_log(self, log):
+        if log.direction == "downlink": 
+            self.process_Dm(log)
+        else:
+            self.process_Um(log)
+
+
+    def process_Dm(self, log):
+        print(f"rien encore {log.id}")
+
+    def process_Um(self, log):
+        if log.ref in REPORT_INITIATION:
+            print(f"Report initiation for {log.ref}")#multi layer lstm

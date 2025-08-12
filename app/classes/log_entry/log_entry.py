@@ -21,6 +21,7 @@ class LogEntry:
         self.communication_thread = communication_thread if communication_thread is not None else []
         self.response_required = response_required
         self.acceptable_responses = acceptable_responses if acceptable_responses is not None else []
+        #self.category = None
 
 
     def to_dict(self, depth=0, max_depth=5):

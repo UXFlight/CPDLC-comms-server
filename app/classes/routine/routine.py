@@ -30,6 +30,7 @@ class Routine:
         self.stepping = False
         self._stop_signal = False
         self.visited_messages = []
+        self._stop_event = None
 
         distances = [fix["distance_km"] for fix in self.route]
         self.socket.send("routine_load", {
@@ -41,11 +42,20 @@ class Routine:
         self.acceleration = speed.value
 
     async def simulate_flight_progress(self):
+        self._stop_event = asyncio.Event()
         self.running = True
         self._stop_signal = False
 
-        while self.current_fix < len(self.route)-1 and not self._stop_signal: # self.elapsed_simulated < self.route[-1]["elapsed_time_sec"]:
-            await asyncio.sleep(self.tick_interval)
+        while self.current_fix < len(self.route)-1: # self.elapsed_simulated < self.route[-1]["elapsed_time_sec"]:
+            try:
+                # attend tick_interval OU un stop (ce qui arrive en premier)
+                await asyncio.wait_for(self._stop_event.wait(), timeout=self.tick_interval)
+                # si on arrive ici sans TimeoutError, c'est que stop() a été appelé
+                break
+            except asyncio.TimeoutError:
+                pass  # pas de stop, on exécute le "tick" normal
+
+            #await asyncio.sleep(self.tick_interval)
 
             self.elapsed_simulated += self.tick_interval * self.acceleration
             distance_increment = self.calculate_distance()
@@ -179,16 +189,39 @@ class Routine:
         self.socket.send("removed_logs", self.logs.get_logs(), room=self.room)
 
     # ACTIONS
+    # def pause(self):
+    #     self._stop_signal = True
+    #     self.running = False
     def pause(self):
         self._stop_signal = True
         self.running = False
+        self._stop_event.set() 
 
+    # def play(self):
+    #     if not self.running:
+    #         self.socket.start_background_task(asyncio.run, self.simulate_flight_progress())
     def play(self):
         if not self.running:
+            self._stop_signal = False
+            self._stop_event.clear() 
             self.socket.start_background_task(asyncio.run, self.simulate_flight_progress())
 
+    def stop(self):
+        self.running = False
+        self._stop_event.set() 
+
+    async def stop_and_wait(self, timeout: float = 2.0):
+        self.stop()
+        # Attendre que self.running passe à False (fin de la coroutine)
+        deadline = asyncio.get_running_loop().time() + timeout
+        while self.running and asyncio.get_running_loop().time() < deadline:
+            await asyncio.sleep(0)
+        # Pas d'exception : si ça n'a pas fini, on sort quand même après timeout.
+
     def step_forward(self):
+        print(f"Stepping forward from current fix {self.current_fix}")
         self.pause()
+        print(f"2222222222222222222222Stepping forward from current fix {self.current_fix}")
         if self.current_fix < len(self.route) - 1:
             self.current_fix += 1
             self.distance_in_segment = 0

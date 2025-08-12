@@ -3,6 +3,7 @@ from copy import deepcopy
 from enum import Enum
 from flask import request  # type: ignore
 from app.classes import Socket  # type: ignore
+from app.classes.report.position_report import PositionReport
 from app.database.mongo_db import MongoDb
 from app.managers.flight_manager.flight_manager import FlightManager
 from app.database.flight_plan.flight_plan import flight_plan
@@ -36,7 +37,6 @@ class SocketGateway:
         self.socket_service.listen('routine_set_speed', self.on_routine_set_speed)
         self.socket_service.listen('disconnect', self.on_disconnect)
 
-    @handle_errors(event_name="error", message="Failed to connect")
     def on_connect(self, auth=None):
         sid = request.sid
         flight = self.flight_manager.create_session(routine, sid, self.mongodb, self.socket_service)
@@ -48,7 +48,7 @@ class SocketGateway:
         atc_available = self.mongodb.find_available_atc(data.get("username"))
         print(f"ATC available: {atc_available}")
         if atc_available:
-            flight = self.flight_manager.get_session_by_pilot(sid)
+            flight = self.flight_manager.get_session(sid)
             flight.atc_id = data.get("username")
             self.socket_service.send("logon_success", data={}, room=sid)
             self.socket_service.send("load_logs", flight.logs.get_logs(), room=sid)
@@ -59,7 +59,7 @@ class SocketGateway:
     @handle_errors(event_name="error", message="Failed to add log")
     def on_add_log(self, entry: dict):
         sid = request.sid
-        flight = self.flight_manager.get_session_by_pilot(sid)
+        flight = self.flight_manager.get_session(sid)
         if flight:
             new_log = flight.logs.add_log(entry.get("request"))
             self.socket_service.send("log_added", new_log.to_dict(), room=sid)
@@ -69,7 +69,7 @@ class SocketGateway:
     @handle_errors(event_name="error", message="Failed to check if log is loadable")
     def on_change_status(self, data: dict):
         sid = request.sid
-        flight = self.flight_manager.get_session_by_pilot(sid)
+        flight = self.flight_manager.get_session(sid)
         if flight:
             log_id = data.get("logId")
             log = flight.logs.get_log_by_id(log_id)
@@ -78,7 +78,7 @@ class SocketGateway:
 
     def on_is_loadable(self, data: dict):
         sid = request.sid
-        flight = self.flight_manager.get_session_by_pilot(sid)
+        flight = self.flight_manager.get_session(sid)
         if flight:
             log = flight.logs.get_log_by_id(data.get("logId"))
             is_lodable = log.is_loadable()
@@ -89,7 +89,7 @@ class SocketGateway:
     @handle_errors(event_name="error", message="Failed to load message")
     def on_load_fms(self, data: dict):
         sid = request.sid
-        flight = self.flight_manager.get_session_by_pilot(sid)
+        flight = self.flight_manager.get_session(sid)
         if flight:
             log = flight.logs.get_log_by_id(data.get("logId"))
             if log:
@@ -102,7 +102,7 @@ class SocketGateway:
     @handle_errors(event_name="error", message="Failed to load FMS route")
     def on_execute_route(self, data: dict):
         sid = request.sid
-        flight = self.flight_manager.get_session_by_pilot(sid)
+        flight = self.flight_manager.get_session(sid)
         new_route = flight.load_route(data.get("new_route", []))
         #flight.routine.update_routine(new_route)
         self.socket_service.send("route_loaded", new_route, room=sid)
@@ -111,35 +111,35 @@ class SocketGateway:
     @handle_errors(event_name="error", message="Failed to play routine")
     def on_routine_play(self, data: dict):
         sid = request.sid
-        flight = self.flight_manager.get_session_by_pilot(sid)
+        flight = self.flight_manager.get_session(sid)
         if flight:
             flight.routine.play()
 
     @handle_errors(event_name="error", message="Failed to pause routine")
     def on_routine_pause(self, data: dict):
         sid = request.sid
-        flight = self.flight_manager.get_session_by_pilot(sid)
+        flight = self.flight_manager.get_session(sid)
         if flight:
             flight.routine.pause()
 
     @handle_errors(event_name="error", message="Failed to step back")
     def on_routine_step_back(self, data: dict):
         sid = request.sid
-        flight = self.flight_manager.get_session_by_pilot(sid)
+        flight = self.flight_manager.get_session(sid)
         if flight:
             flight.routine.step_back()
 
     @handle_errors(event_name="error", message="Failed to step forward")
     def on_routine_step_forward(self, data: dict):
         sid = request.sid
-        flight = self.flight_manager.get_session_by_pilot(sid)
+        flight = self.flight_manager.get_session(sid)
         if flight:
             flight.routine.step_forward()
 
     @handle_errors(event_name="error", message="Failed to set speed")
     def on_routine_set_speed(self, data: dict):
         sid = request.sid
-        flight = self.flight_manager.get_session_by_pilot(sid)
+        flight = self.flight_manager.get_session(sid)
         if flight:
             speed_label = data.get("speed", "MEDIUM")
             selected_speed = Speed[speed_label]
@@ -148,7 +148,20 @@ class SocketGateway:
             flight.routine.play()
     # END - actions for the routine
 
+    # START - position report events
+    @handle_errors(event_name="error", message="Failed to send position report")
+    def on_send_position_report(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session(sid)
+        if flight:
+            position_report = PositionReport(**data)
+            flight.position_reports.append(position_report)
+            self.socket_service.send("position_report_sent", position_report.to_dict(), room=sid)
+
     @handle_errors(event_name="error", message="Failed to disconnect session")
     def on_disconnect(self, sid: str):
         sid = request.sid
-        self.flight_manager.remove_session_by_pilot(sid)
+        self.flight_manager.remove_session_by_sid(sid)
+        # flight = self.flight_manager.get_session(sid)
+        # flight.routine.reset_parameters()
+        # flight.reports.position_reports = []

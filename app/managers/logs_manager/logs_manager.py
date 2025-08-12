@@ -52,7 +52,6 @@ class LogsManager:
             acceptable_responses=message.get("Acceptable_responses", []),
             id=entry.get("id", None)
         )
-        print(f"is response required: {LogEntry.is_response_required(message)}")
         self.logs.append(new_log)
         return new_log
     
@@ -75,3 +74,4 @@ class LogsManager:
             if log.id == log_id:
                 return log
         return None
+    

@@ -3,6 +3,7 @@ from app.classes.flight_status.flight_status import FlightStatus
 from app.classes.pilot.pilot import Pilot
 from app.classes.routine.routine import Routine
 from app.managers.logs_manager.logs_manager import LogsManager
+from app.managers.reports_manager import ReportsManager
 
 
 class FlightSession:
@@ -14,7 +15,8 @@ class FlightSession:
         self.atc = Atc(atc_id)
         self.status = FlightStatus(routine["route"], mongodb)
         self.logs = LogsManager(mongodb)
-        self.routine = Routine(routine, socket, self.status, pilot_id, self.logs)
+        self.reports = ReportsManager(socket)
+        self.routine = Routine(routine, socket, self.status, pilot_id, self.logs, self.reports)
         self.route = routine["route"]
         self.current_data_authority = atc_id
         self.next_data_authority = None

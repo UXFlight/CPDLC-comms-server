@@ -1,3 +1,4 @@
+import asyncio
 from app.classes.flight_session.flight_session import FlightSession
 
 class FlightManager:
@@ -5,30 +6,33 @@ class FlightManager:
         self.sessions = {}
 
     def create_session(self, routine, pilot_id, mongodb, socket, atc_id=None):
-        if routine["flight_id"] not in self.sessions:
+        if pilot_id not in self.sessions:
             session = FlightSession(routine, pilot_id, atc_id, mongodb, socket)
-            self.sessions[routine["flight_id"]] = session
+            self.sessions[pilot_id] = session
             return session
-        return self.sessions[routine["flight_id"]]
+        return self.sessions[pilot_id]
 
-    def get_session(self, flight_id):
-        return self.sessions.get(flight_id)
-    
-    def get_session_by_pilot(self, pilot_id):
-        for session in self.sessions.values():
-            if session.pilot.id == pilot_id:
-                return session
-        return None
+    def get_session(self, pilot_id):
+        return self.sessions.get(pilot_id)
 
-    def remove_session(self, flight_id):
-        if flight_id in self.sessions:
-            del self.sessions[flight_id]
 
-    def remove_session_by_pilot(self, pilot_id):
-        for flight_id, session in list(self.sessions.items()):
-            if session.pilot.id == pilot_id:
-                del self.sessions[flight_id]
-                print(f"Removed session for pilot {pilot_id}")
-                return True
-        print(f"No session found for pilot {pilot_id}")
-        return False
+    def remove_session_by_sid(self, pilot_id: str) -> bool:
+        session: FlightSession | None = self.sessions.get(pilot_id)
+        if session is None:
+            print(f"No session found for pilot {pilot_id}")
+            return False
+
+        print(f"sessions before removal {self.sessions.keys()}")
+
+        try:
+            asyncio.run(session.routine.stop_and_wait(timeout=2.0))
+        except Exception as e:
+            print(f"Error while stopping routine for {pilot_id}: {e}")
+        finally:
+            # Supprimer après l’arrêt
+            self.sessions.pop(pilot_id, None)
+            print(f"sessions after removal {self.sessions.keys()}")
+            print(f"Removed session for pilot {pilot_id}")
+
+        return True
+

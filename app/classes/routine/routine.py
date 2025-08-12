@@ -3,6 +3,8 @@ from app.classes.flight_status.flight_status import FlightStatus
 from enum import Enum
 
 from app.managers.logs_manager.logs_manager import LogsManager
+from app.managers.reports_manager import ReportsManager
+from app.utils.position_report_build import position_report_build
 
 class Speed(Enum):
     SLOW = 10
@@ -11,12 +13,14 @@ class Speed(Enum):
     EXTREME = 100
 
 class Routine:
-    def __init__(self, routine, socket, flight_status: FlightStatus, room, logs: LogsManager):
-        self.routine = routine["route"]
+    def __init__(self, routine, socket, flight_status: FlightStatus, room, logs: LogsManager, reports: ReportsManager):
+        self.routine = routine
+        self.route = routine["route"]
         self.flight_status = flight_status
         self.socket = socket
         self.room = room
         self.logs = logs
+        self.reports = reports
         self.acceleration = Speed.MEDIUM.value
         self.tick_interval = 1
         self.elapsed_simulated = 0
@@ -27,9 +31,9 @@ class Routine:
         self._stop_signal = False
         self.visited_messages = []
 
-        distances = [fix["distance_km"] for fix in self.routine]
+        distances = [fix["distance_km"] for fix in self.route]
         self.socket.send("routine_load", {
-            "total_distance": self.routine[-1]["total_distance"],
+            "total_distance": self.route[-1]["total_distance"],
             "distances": distances
         }, room=self.room)
 
@@ -40,23 +44,19 @@ class Routine:
         self.running = True
         self._stop_signal = False
 
-        while self.current_fix < len(self.routine)-1: # self.elapsed_simulated < self.routine[-1]["elapsed_time_sec"]:
-            if self._stop_signal:
-                print("Simulation paused.")
-                break
-
+        while self.current_fix < len(self.route)-1 and not self._stop_signal: # self.elapsed_simulated < self.route[-1]["elapsed_time_sec"]:
             await asyncio.sleep(self.tick_interval)
 
             self.elapsed_simulated += self.tick_interval * self.acceleration
             distance_increment = self.calculate_distance()
             self.distance_in_segment += distance_increment
 
-            current_fix_obj = self.routine[self.current_fix]
+            current_fix_obj = self.route[self.current_fix]
             fix_distance = current_fix_obj["distance_km"]
             await self.simulate_um_message()
 
             if self.distance_in_segment >= fix_distance:
-                if self.current_fix < len(self.routine) - 1:
+                if self.current_fix < len(self.route) - 1:
                     self.current_fix += 1
                     self.update_flight_status()
                 else:
@@ -64,27 +64,31 @@ class Routine:
                     self.socket.send("plane_arrival", self.flight_status.to_dict(), room=self.room)
                     break
                 self.distance_in_segment = 0
+                position_report = position_report_build(self.routine, self.current_fix)
+                print(f"New position report: {position_report}")
+                self.reports.add_position_report(position_report)
+
                 self.socket.send("waypoint_change", {
                     "flight": self.flight_status.to_dict(),
                     "currentFixIndex": self.current_fix,
                 }, room=self.room)
             else:
                 self.flight_status.update({
-                    "distance": round(self.routine[self.current_fix]["total_distance"] - fix_distance + self.distance_in_segment, 2),
+                    "distance": round(self.route[self.current_fix]["total_distance"] - fix_distance + self.distance_in_segment, 2),
                     "fix_distance": int(self.distance_in_segment),
                     "elapsed_time_sec": int(self.elapsed_simulated),
                 })
                 self.socket.send("plane_partial_progress", self.flight_status.to_dict(), room=self.room)
 
     def calculate_distance(self):
-        current_speed = self.routine[self.current_fix]["speed_kmh"]
+        current_speed = self.route[self.current_fix]["speed_kmh"]
         return current_speed * self.acceleration / 3600  # km/h → km/sec * seconds
 
     def update_flight_status(self, end=False):
         if not end: 
-            fix = self.routine[self.current_fix]
+            fix = self.route[self.current_fix]
         else:
-            fix = self.routine[-1]
+            fix = self.route[-1]
         self.flight_status.update({
             "altitude": fix.get("altitude_ft", 0),
             "distance": fix.get("total_distance", 0),
@@ -109,10 +113,10 @@ class Routine:
 
     def update_routine(self, new_routine):
         self.running = False 
-        arrival_fix = self.routine[-1]
+        arrival_fix = self.route[-1]
         new_routine_fixes = {fix["fix"] for fix in new_routine}
-        self.routine = list(filter(lambda fix: fix["fix"] in new_routine_fixes, self.routine))
-        self.routine.append(arrival_fix)
+        self.route = list(filter(lambda fix: fix["fix"] in new_routine_fixes, self.route))
+        self.route.append(arrival_fix)
         self.normalize_routine()
 
         self.elapsed_simulated = 0
@@ -120,39 +124,39 @@ class Routine:
         self.distance_in_segment = 0
         self.running = True
 
-        distances = [fix["distance_km"] for fix in self.routine]
+        distances = [fix["distance_km"] for fix in self.route]
         self.socket.send("routine_load", {
-            "total_distance": self.routine[-1]["total_distance"],
+            "total_distance": self.route[-1]["total_distance"],
             "distances": distances
         }, room=self.room)
-        print(f"Routine updated: {self.routine}")
+        print(f"Routine updated: {self.route}")
         print(f"distances time reset to {distances} km")
 
         Routine.run_async_in_thread(self.simulate_flight_progress())
 
 
         # new_routine_fixes = {fix["fix"] for fix in new_routine}
-        # self.routine = list(filter(lambda fix: fix["fix"] in new_routine_fixes, self.routine))
+        # self.route = list(filter(lambda fix: fix["fix"] in new_routine_fixes, self.route))
         # self.elapsed_simulated = 0
         # self.current_fix = 0
         # self.distance_in_segment = 0
         
-        # distances = [fix["distance_km"] for fix in self.routine]
+        # distances = [fix["distance_km"] for fix in self.route]
         # self.socket.send("routine_load", {
-        #     "total_distance": self.routine[-1]["total_distance"],
+        #     "total_distance": self.route[-1]["total_distance"],
         #     "distances": distances
         # }, room=self.room)
         # self.simulate_flight_progress()
     
     def available_messages(self):
-        msgs = self.routine[self.current_fix].get("atc_messages") or []
+        msgs = self.route[self.current_fix].get("atc_messages") or []
         return len(msgs) > 0
 
     async def simulate_um_message(self):
         if not self.available_messages():
             return
         else:
-            for message in self.routine[self.current_fix]["atc_messages"]:
+            for message in self.route[self.current_fix]["atc_messages"]:
                 if message['message']['id'] in self.visited_messages:
                     #event only for debugging
                     self.socket.send("message_visited", message["message"], room=self.room)
@@ -185,7 +189,7 @@ class Routine:
 
     def step_forward(self):
         self.pause()
-        if self.current_fix < len(self.routine) - 1:
+        if self.current_fix < len(self.route) - 1:
             self.current_fix += 1
             self.distance_in_segment = 0
             self.update_flight_status()
@@ -200,7 +204,7 @@ class Routine:
         if self.current_fix > 0:
             self.current_fix -= 1
 
-        self.remove_um_message(self.routine[self.current_fix]["fix"])
+        self.remove_um_message(self.route[self.current_fix]["fix"])
         self.distance_in_segment = 0
         self.update_flight_status()
         self.socket.send("waypoint_change", {
@@ -208,3 +212,9 @@ class Routine:
             "currentFixIndex": self.current_fix
         }, room=self.room)
         self.play()
+
+    def reset_parameters(self):
+        self.elapsed_simulated = 0
+        self.current_fix = 0
+        self.distance_in_segment = 0
+        self.running = False

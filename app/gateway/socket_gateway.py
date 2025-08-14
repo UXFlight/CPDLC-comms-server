@@ -38,6 +38,7 @@ class SocketGateway:
         self.socket_service.listen('disconnect', self.on_disconnect)
 
     def on_connect(self, auth=None):
+        print(f"Client connected with auth: {auth}")
         sid = request.sid
         flight = self.flight_manager.create_session(routine, sid, self.mongodb, self.socket_service)
         self.socket_service.send("connected", flight.to_dict(), room=sid)
@@ -51,8 +52,8 @@ class SocketGateway:
             flight.atc_id = data.get("username")
             self.socket_service.send("logon_success", data={}, room=sid)
             self.socket_service.send("load_logs", flight.logs.get_logs(), room=sid)
-            self.socket_service.send("load_adsc_reports", flight.reports.adsc_to_dict(), room=sid)
-            flight.reports.start_adsc_timer()
+            self.socket_service.send("load_adsc_reports", flight.reports.adsc_manager.adsc_to_dict(), room=sid)
+            flight.reports.adsc_manager.start_adsc_timer()
             self.socket_service.start_background_task(asyncio.run, flight.routine.simulate_flight_progress())
         else:
             self.socket_service.send("logon_failure", data={}, room=sid)

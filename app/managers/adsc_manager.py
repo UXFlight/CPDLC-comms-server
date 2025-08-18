@@ -3,7 +3,11 @@ from copy import deepcopy
 import threading
 from typing import Optional
 import uuid
+from app.classes.fsm.fsm_scenarios.adsc_scenario import SCENARIO_ADSC_EMERG
+from app.classes.log_entry.log_entry import LogEntry
 from app.classes.report.adsc_contract import ADSCContract
+from app.constants.responses import ADSC_EMERGENCY
+from app.managers.logs_manager.logs_manager import LogsManager
 from app.utils.time_utils import get_current_timestamp
 
 
@@ -14,10 +18,12 @@ DEFAULT_ACTIVE_ADSC_CONTRACTS = [
 ]
 
 class AdscManager:
-    def __init__(self, socket, status, room, get_snapshot):
+    def __init__(self, socket, status, room, logs, scenario_manager, get_snapshot):
         self.socket = socket
         self.status = status
         self.room = room
+        self.logs : LogsManager = logs
+        self.scenario_manager = scenario_manager
         self._get_snapshot = get_snapshot
 
         self.adsc_contracts: list[ADSCContract] = deepcopy(DEFAULT_ACTIVE_ADSC_CONTRACTS)
@@ -35,7 +41,6 @@ class AdscManager:
         for contract in self.adsc_contracts:
             contract.period = contract.period/acceleration
             contract.time_Next = contract.time_Next/acceleration
-        print(f"ADSC contracts adjusted to acceleration {self.adsc_contracts}")
 
     def start_adsc_timer(self):
         if self._adsc_thread and self._adsc_thread.is_alive():
@@ -55,17 +60,14 @@ class AdscManager:
             t.join(timeout=join_timeout)
         self._adsc_thread = None
 
-    # --- dans ReportsManager ---
-
-    def stop_adsc(self):
+    def _signal_stop_adsc(self) -> None:
         self._adsc_stop.set()
 
     async def stop_adsc_and_wait(self, timeout: float = 2.0):
-        self.stop_adsc()
+        self._signal_stop_adsc()
         t = self._adsc_thread
         if not t:
             return
-
         loop = asyncio.get_running_loop()
         deadline = loop.time() + timeout
 
@@ -92,7 +94,6 @@ class AdscManager:
                     if not getattr(c, "is_active", False):
                         updates_payload.append(c.to_dict())
                         continue
-
                     try:
                         period = int(getattr(c, "period", 0))
                     except Exception:
@@ -110,7 +111,6 @@ class AdscManager:
                         tnext = period
 
                     c.time_Next = tnext
-
                     updates_payload.append({
                         "id": c.id,
                         "center": c.center,
@@ -119,16 +119,22 @@ class AdscManager:
                         "is_Active": c.is_active
                     })
 
-                if updates_payload:
+                if updates_payload and not self._adsc_stop.is_set():
                     self.socket.send("adsc_countdown", updates_payload, room=self.room)
-                    print(f"ADSC contracts updated: {updates_payload}")
-
 
     def _update_adsc_data(self, contract: ADSCContract, snap):
         match contract.trigger:
             case "speed":
-                contract.add_data(time=get_current_timestamp(), value=self.status.speed)
+                contract.add_data(type="speed", time=get_current_timestamp(), value=self.status.speed)
             case "position":
-                contract.add_data(time=get_current_timestamp(), value=snap.current_fix)
+                contract.add_data(type="position", time=get_current_timestamp(), value=snap.current_fix)
             case "altitude":
-                contract.add_data(time=get_current_timestamp(), value=self.status.altitude)
+                contract.add_data(type="altitude", time=get_current_timestamp(), value=self.status.altitude)
+
+    def activate_emergency(self):
+        self.is_adsc_emergency = True
+        self.scenario_manager.start_scenario(
+            scenario=SCENARIO_ADSC_EMERG,
+            room=self.room,
+            initiator="ATC"
+        )

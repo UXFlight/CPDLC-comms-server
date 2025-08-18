@@ -1,4 +1,7 @@
 
+from dataclasses import dataclass
+
+
 DM27 = {
     "direct_response":{
       "ref": "UM82",
@@ -32,12 +35,19 @@ POSITION_REPORT_REQUEST = ["UM147"]
 
 # ADS-C REPORT
 ADS_C_REPORT_REQUEST = []
-ADSC_EMERGENCY = ["UM169ak"] #confirm adsc emergency
-ADSC_CONFIRM = ["UM169an"] #confirm adsc armed
-ADSC_DEVIATION = ["UM169f", "UM169t", "UM169v"] #route, level, speed
-ADSC_SHUT_DOWN = ["UM169ao", "UM169at"]
+ADSC_EMERGENCY = 'UM169ak' #confirm adsc emergency
+ADSC_CONFIRM = 'UM169an' #confirm adsc armed
+ADSC_DEVIATION = ['UM169f', 'UM169t', 'UM169v'] #route, level, speed
+ADSC_SHUT_DOWN = ['UM169ao', 'UM169at']
 
-ADS_C_EMERGENCY_THREAD = []
+ADS_C_EMERGENCY_THREAD = [ADSC_EMERGENCY, "DM0", "DM67ab"]
+
+@dataclass
+class ResponseHandler:
+    initiator: str
+    response: str
+    second_response: str
+    third_response: str
 
 # MONITORING_REPORT
 MONITORING_REPORT_REQUEST = ["UM120", "UM121", "UM122"]

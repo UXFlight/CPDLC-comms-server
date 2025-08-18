@@ -2257,7 +2257,7 @@
     "Ref_Num": "UM169ak",
     "Message_Intent": "Notification that an ADS-C emergency report has been received from the aircraft.",
     "Message_Element": "CONFIRM ADS-C EMERGENCY",
-    "Response_required": [],
+    "Response_required": ["R"],
     "Category": "ADS-C",
     "urgency": "high"
   },
@@ -2404,22 +2404,6 @@
     "urgency": "normal"
   },
   {
-    "Ref_Num": "UM169u",
-    "Message_Intent": "Notification that an element contained in a CPDLC downlink message was not part of the approved CPDLC message set.",
-    "Message_Element": "MESSAGE NOT SUPPORTED BY THIS ATS UNIT",
-    "Response_required": ["R"],
-    "Category": "System Management Messages",
-    "urgency": "normal"
-  },
-  {
-    "Ref_Num": "UM169q",
-    "Message_Intent": "Notification that an element contained in a CPDLC downlink message was not part of the approved message set and should be communicated by voice.",
-    "Message_Element": "MESSAGE NOT SUPPORTED BY THIS ATS UNIT, CONTACT RTF",
-    "Response_required": ["R"],
-    "Category": "System Management Messages",
-    "urgency": "normal"
-  },
-  {
     "Ref_Num": "UM169am or UM183am",
     "Message_Intent": "Instruction to turn the CPDLC application off and to initiate a logon to a specified ATSU.",
     "Message_Element": "AUTOMATIC TRANSFER OF CPDLC FAILED. WHEN ENTERING [unit name] AREA DISCONNECT CPDLC THEN LOGON TO [facility designation]",
@@ -2465,20 +2449,6 @@
     "Message_Element": "CPDLC WILL BE SHUT DOWN. DISCONNECT CPDLC. CONTINUE ON VOICE",
     "Response_required": ["R"],
     "Category": "CPDLC Management",
-    "urgency": "normal"
-  },
-  {
-    "Ref_Num": "UM169ap",
-    "Message_Intent": "Instruction for intermediary CPDLC-capable aircraft to relay message to aircraft not in communication with ATC.",
-    "Message_Element": "RELAY TO [call sign] [unit name] [text of message to be relayed]",
-    "Response_required": ["R"],
-    "Acceptable_responses": [
-      {
-        "ref": "DM67ae",
-        "text": "MESSAGE RELAYED TO [callsign]"
-      }
-    ],
-    "Category": "Standardized Free Text",
     "urgency": "normal"
   }
 ]

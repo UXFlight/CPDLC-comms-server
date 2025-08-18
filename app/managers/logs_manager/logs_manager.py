@@ -1,4 +1,5 @@
 
+from app.classes.fsm.fsm_types import Scenario
 from app.classes.log_entry.log_entry import LogEntry
 from app.constants.logs_array import default_logs
 from enum import Enum
@@ -18,11 +19,11 @@ class DatalinkStatus(Enum):
 
 
 class LogsManager:
-    def __init__(self, mongodb, socket, reports):
+    def __init__(self, mongodb, socket, scenario_manager):
         self.logs = []
         self._mongodb = mongodb
         self.socket = socket
-        self.reports = reports
+        self.scenario_manager = scenario_manager
 
     def get_logs(self):
         return [log.to_dict() for log in self.logs]
@@ -39,7 +40,7 @@ class LogsManager:
     def filter_by_timestamp(self):
         return sorted(self.logs, key=lambda log: log.timestamp, reverse=True)
 
-    def add_log(self, entry):
+    def create_add_log(self, entry, scenario: Scenario = None):
         message = self._mongodb.find_datalink_by_ref(entry.get("messageRef"))
         type = "downlink" if "DM" in message.get("Ref_Num") else "uplink"
 
@@ -47,7 +48,7 @@ class LogsManager:
             ref=message.get("Ref_Num"),
             content=entry.get("formattedMessage"),
             direction=type,
-            status=self.set_new_log_status(message).value,
+            status=LogsManager.set_new_log_status(message).value,
             intent=message.get("Message_Intent"),
             additional=entry.get("additional", []), 
             urgency=entry.get("urgency", "normal"),
@@ -57,7 +58,29 @@ class LogsManager:
             id=entry.get("id", None)
         )
         self.logs.append(new_log)
-        self.process_incoming_log(new_log)
+        if scenario:
+            self.start_scenario(type, new_log.ref, new_log.content, scenario)
+        return new_log
+
+    @staticmethod
+    def create_log(mongodb, log_ref: str, content: str):
+        message = mongodb.find_datalink_by_ref(log_ref)
+        type = "downlink" if "DM" in message.get("Ref_Num") else "uplink"
+
+        new_log = LogEntry(
+            ref=message.get("Ref_Num"),
+            content=content,
+            direction=type,
+            status=LogsManager.set_new_log_status(message).value,
+            intent=message.get("Message_Intent"),
+            additional=[],
+            urgency="normal",
+            mongodb=mongodb,
+            response_required=LogEntry.is_response_required(message),
+            acceptable_responses=message.get("Acceptable_responses", []),
+            id=None
+        )
+        print(f"Created log: {new_log.to_dict()}")
         return new_log
     
     def remove_log_by_id(self, log_id):
@@ -67,7 +90,8 @@ class LogsManager:
                 return True
         return False
 
-    def set_new_log_status(self, datalink):
+    @staticmethod
+    def set_new_log_status(datalink):
         if "U" in datalink.get("Ref_Num", " "):
             return DatalinkStatus.NEW if LogEntry.is_response_required(datalink) else DatalinkStatus.OPENED
         else:
@@ -79,17 +103,28 @@ class LogsManager:
             if log.id == log_id:
                 return log
         return None
-    
-    def process_incoming_log(self, log):
-        if log.direction == "downlink": 
-            self.process_Dm(log)
+
+    def start_scenario(self, type, pilot_ref, pilot_text, scenario: Scenario):
+        self.scenario_manager.set_scenario(scenario)
+        if type == "downlink":
+            self.scenario_manager.on_pilot_dm(pilot_ref, pilot_text)
+        else: 
+            self.scenario_manager.enter("atc_entry")
+
+    def add_log(self, log: LogEntry, thread_id = None, scenario: Scenario = None):
+        if thread_id:
+            return self.handle_response(log, thread_id)
+        self.logs.append(log)
+        if scenario:
+            self.start_scenario(type, log.ref, log.content, scenario)
+        return log
+            
+
+    def handle_response(self, log: LogEntry, thread_id: str):
+        parent = self.find_log_by_id(thread_id)
+        if parent:
+            parent.communication_thread.append(log)
+            return parent
         else:
-            self.process_Um(log)
-
-
-    def process_Dm(self, log):
-        print(f"rien encore {log.id}")
-
-    def process_Um(self, log):
-        if log.ref in REPORT_INITIATION:
-            print(f"Report initiation for {log.ref}")#multi layer lstm
+            self.logs.append(log)
+            return log

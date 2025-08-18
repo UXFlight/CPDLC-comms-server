@@ -3,11 +3,14 @@ from copy import deepcopy
 from enum import Enum
 from flask import request  # type: ignore
 from app.classes import Socket  # type: ignore
+from app.classes.flight_session.flight_session import FlightSession
+from app.classes.log_entry.log_entry import LogEntry
 from app.classes.report.position_report import PositionReport
 from app.database.mongo_db import MongoDb
 from app.managers.flight_manager.flight_manager import FlightManager
 from app.database.flight_plan.flight_plan import flight_plan
 from app.database.flight_plan.routine import routine
+from app.managers.logs_manager.logs_manager import LogsManager
 from app.utils.error_handler import handle_errors
 
 class Speed(Enum):
@@ -35,10 +38,14 @@ class SocketGateway:
         self.socket_service.listen('routine_step_back', self.on_routine_step_back)
         self.socket_service.listen('routine_step_forward', self.on_routine_step_forward)
         self.socket_service.listen('routine_set_speed', self.on_routine_set_speed)
+        self.socket_service.listen('ads_c_emergency_on', self.on_activate_adsc_emergency)
+        self.socket_service.listen('ads_c_emergency_off', self.on_deactivate_adsc_emergency)
+        self.socket_service.listen('ads_c_disabled', self.on_disable_adsc)
+        self.socket_service.listen('ads_c_enable', self.on_enable_adsc)
+        self.socket_service.listen('pilot_response', self.on_pilot_response)
         self.socket_service.listen('disconnect', self.on_disconnect)
 
     def on_connect(self, auth=None):
-        print(f"Client connected with auth: {auth}")
         sid = request.sid
         flight = self.flight_manager.create_session(routine, sid, self.mongodb, self.socket_service)
         self.socket_service.send("connected", flight.to_dict(), room=sid)
@@ -46,7 +53,6 @@ class SocketGateway:
     def on_logon(self, data: dict):
         sid = request.sid
         atc_available = self.mongodb.find_available_atc(data.get("username"))
-        print(f"ATC available: {atc_available}")
         if atc_available:
             flight = self.flight_manager.get_session(sid)
             flight.atc_id = data.get("username")
@@ -59,24 +65,50 @@ class SocketGateway:
             self.socket_service.send("logon_failure", data={}, room=sid)
 
     @handle_errors(event_name="error", message="Failed to add log")
-    def on_add_log(self, entry: dict):
+    def on_add_log(self, payload: dict):
         sid = request.sid
+        entry = payload.get("log_entry") or {}
+        thread_id = payload.get("thread_id") or ""
         flight = self.flight_manager.get_session(sid)
-        if flight:
-            new_log = flight.logs.add_log(entry.get("request"))
-            self.socket_service.send("log_added", new_log.to_dict(), room=sid)
+        if not flight or not entry:
+            return
+        if thread_id:
+            log = LogEntry.from_dict(entry, mongodb=flight.logs._mongodb)
+            new_log = flight.logs.add_log(log, thread_id=thread_id)   
         else:
-            print(f"Flight session not found for sid {sid}")
+            new_log = flight.logs.create_add_log(entry)             
 
+        self.socket_service.send("log_added", new_log.to_dict(), room=sid)
+
+    # START -  PILOT RESPONSE
+    def on_pilot_response(self, data: dict):
+        sid = request.sid
+        entry = data.get("log_entry")
+        thread_id = data.get("thread_id", "")
+        flight : FlightSession = self.flight_manager.get_session(sid)
+        if flight:
+            log = LogsManager.create_log(self.mongodb, entry.get("ref"), entry.get("text"))
+            new_log = flight.logs.add_log(log, thread_id=thread_id)
+            is_scenario= flight.scenarios.on_pilot_dm_by_thread(
+                        thread_id=thread_id,
+                        pilot_ref=entry.get("ref"),
+                        pilot_text=entry.get("text")
+            )
+            print(f"ANSWER SENT SUCCESSFULLY", {is_scenario}) 
+            self.socket_service.send("log_added", new_log.to_dict(), room=sid)
+
+    
     @handle_errors(event_name="error", message="Failed to check if log is loadable")
     def on_change_status(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session(sid)
         if flight:
             log_id = data.get("logId")
-            log = flight.logs.get_log_by_id(log_id)
+            log: LogEntry = flight.logs.get_log_by_id(log_id)
             log.change_status_for_UM(data.get("status"))
             self.socket_service.send("status_changed", log.to_dict(), room=sid)
+
+    # END - PILOT RESPONSE
 
     def on_is_loadable(self, data: dict):
         sid = request.sid
@@ -160,7 +192,34 @@ class SocketGateway:
             flight.position_reports.append(position_report)
             self.socket_service.send("position_report_sent", position_report.to_dict(), room=sid)
     
-    @handle_errors(event_name="error", message="Failed to get activate adsc emergency")
+
+    # adsc events
+    def on_activate_adsc_emergency(self):
+        sid = request.sid
+        flight : FlightSession = self.flight_manager.get_session(sid)
+        if flight:
+            flight.reports.adsc_manager.activate_emergency()
+
+    @handle_errors(event_name="error", message="Failed to deactivate adsc emergency")
+    def on_deactivate_adsc_emergency(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session(sid)
+        # if flight:
+        #     flight.adsc_manager.deactivate_emergency()
+
+    @handle_errors(event_name="error", message="Failed to disable adsc")
+    def on_disable_adsc(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session(sid)
+        #if flight:
+            #flight.adsc_manager.disable()
+    
+    @handle_errors(event_name="error", message="Failed to enable adsc")
+    def on_enable_adsc(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session(sid)
+        #if flight:
+            #flight.adsc_manager.enable()
 
     # END - Report events
 
@@ -168,6 +227,3 @@ class SocketGateway:
     def on_disconnect(self, sid: str):
         sid = request.sid
         self.flight_manager.remove_session_by_sid(sid)
-        # flight = self.flight_manager.get_session(sid)
-        # flight.routine.reset_parameters()
-        # flight.reports.position_reports = []

@@ -1051,6 +1051,16 @@
     "Urgency": "normal"
   },
   {
+  "Ref_Num": "DM67ab",
+  "Message_Intent": "Notification that the ADS-C emergency mode was inadvertent and has been set to OFF. Note.— No equivalent in ICAO Doc 4444.",
+  "Message_Element": "ADS-C RESET",
+  "Response_required": [
+    "N"
+  ],
+  "Category": "Additional Messages (downlink)",
+  "Urgency": "normal"
+},
+  {
     "Ref_Num": "DM68",
     "Message_Intent": "Distress urgency, high alert",
     "Message_Element": "[free text]",

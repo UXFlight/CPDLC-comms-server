@@ -1,4 +1,6 @@
+from enum import Enum
 import re
+from typing import Any, Dict
 import uuid
 from app.utils.time_utils import get_current_timestamp
 
@@ -6,14 +8,14 @@ ACTION_REQUIRED_UM = ["Y", "W/U", "A/N", "R"]
 NO_ACTION_REQUIRED_UM = ["N", "N/E"]
 
 class LogEntry:
-    def __init__(self, ref, content, direction, status, urgency, response_required, intent=None, position=None, additional=None, mongodb=None, communication_thread=None, acceptable_responses=None, id=None):
+    def __init__(self, ref, content, direction, status, urgency, response_required, intent=None, position=None, additional=None, mongodb=None, communication_thread=None, acceptable_responses=None, id=None, timestamp=None):
         self.id = str(uuid.uuid4()) if id is None else id
         self.ref = ref
         self.content = content
         self.direction = direction
         self.status = status
         self.urgency = urgency
-        self.timestamp = get_current_timestamp()
+        self.timestamp = timestamp if timestamp is not None else get_current_timestamp()
         self.intent = intent
         self.position = position
         self.additional = additional if additional is not None else []
@@ -33,7 +35,7 @@ class LogEntry:
             "ref": self.ref,
             "direction": self.direction,
             "element": self.content,
-            "status": self.status,
+            "status": self.status.value if isinstance(self.status, Enum) else self.status,
             "urgency": self.urgency,
             "intent": self.intent,
             "timeStamp": self.timestamp,
@@ -45,6 +47,22 @@ class LogEntry:
             "response_required": self.response_required,
             "acceptable_responses": self.acceptable_responses,
         }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any], mongodb=None) -> "LogEntry":
+        return cls(
+            ref=data.get("ref"),
+            content=data.get("element"),  
+            direction=data.get("direction", "uplink"),
+            status=data.get("status", "new"),
+            intent=data.get("intent"),
+            additional=data.get("additional", []),
+            urgency=data.get("urgency", "normal"),
+            mongodb=mongodb,
+            response_required=data.get("response_required", False),
+            acceptable_responses=data.get("acceptable_responses", []),
+            id=data.get("id"),
+        )
 
     def is_loadable(self):
         ref = self.__mongodb.find_UM_by_ref(self.ref)
@@ -75,31 +93,11 @@ class LogEntry:
             self.status = "REJECTED"
         elif ref == "DM2":
             self.status = "OPENED"
-        else : #revoir!!!!!
+        else :
             self.status = "ACCEPTED"
             return
         self.format_simple_response(ref)    
         return self
-    
-    def format_simple_response(self, ref):
-        message = self.__mongodb.find_datalink_by_ref(ref)
-        if not message:
-            print(f"No message found for ref {ref}")
-            return
-
-        type = "downlink" if "DM" in message.get("Ref_Num") else "uplink"
-
-        response_entry = LogEntry(
-            ref=ref,
-            content=message.get("Message_Element"),
-            direction=type,
-            status= "OPENED",
-            urgency="Normal",
-            intent=message.get("Message_Intent"),
-            mongodb=self.__mongodb,
-            response_required=LogEntry.is_response_required(message),
-        )
-        self.communication_thread.append(response_entry)
     
     # def get_available_actions(self):
     #     if self.response_required:

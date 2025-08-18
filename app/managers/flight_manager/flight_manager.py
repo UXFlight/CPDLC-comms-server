@@ -30,7 +30,6 @@ class FlightManager:
         finally:
             # Supprimer après l’arrêt
             self.sessions.pop(pilot_id, None)
-            print(f"sessions after removal {self.sessions.keys()}")
             print(f"Removed session for pilot {pilot_id}")
 
         return True

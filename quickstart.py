@@ -20,18 +20,18 @@ try:
     print("Pinged your deployment. You successfully connected to MongoDB!")
 
     # db = client["datalinks"]
-    # uplinks_coll = db["uplinks"]
+    # #uplinks_coll = db["uplinks"]
     # downlinks_coll = db["downlinks"]
 
-    # uplinks_coll.drop()
+    # #uplinks_coll.drop()
     # downlinks_coll.drop()
     
-    # db = client["users"]
-    # atc_coll = db["atc"]
-    # atc_coll.drop()
-    # atc_coll.insert_many(atcs)
-    # populate the collections with data
-    # uplinks_coll.insert_many(uplinks)
+    # # db = client["users"]
+    # # atc_coll = db["atc"]
+    # # atc_coll.drop()
+    # # atc_coll.insert_many(atcs)
+    # #populate the collections with data
+    # #uplinks_coll.insert_many(uplinks)
     # downlinks_coll.insert_many(downlinks)
 
 

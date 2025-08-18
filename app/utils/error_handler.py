@@ -4,7 +4,6 @@ def handle_errors(event_name="error", message="An error occurred"):
     def decorator(func):
         def wrapper(self, *args, **kwargs):
             sid = request.sid
-            print(f"error handler sid found: {sid}")
             try:
                 return func(self, *args, **kwargs)
             except Exception as e:

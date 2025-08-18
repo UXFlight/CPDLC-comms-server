@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class AdscData:
+    type: str
     time: str
     value: str
 
@@ -26,5 +27,5 @@ class ADSCContract:
             "is_Active": bool(self.is_active),
         }
 
-    def add_data(self, time: str, value: float):
-        self.data.append(AdscData(time=time, value=value))
+    def add_data(self, type: str, time: str, value: float):
+        self.data.append(AdscData(type=type, time=time, value=value))

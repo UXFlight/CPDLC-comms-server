@@ -140,8 +140,6 @@ class Routine:
             "total_distance": self.route[-1]["total_distance"],
             "distances": distances
         }, room=self.room)
-        print(f"Routine updated: {self.route}")
-        print(f"distances time reset to {distances} km")
 
         Routine.run_async_in_thread(self.simulate_flight_progress())
 
@@ -169,11 +167,9 @@ class Routine:
         else:
             for message in self.route[self.current_fix]["atc_messages"]:
                 if message['message']['id'] in self.visited_messages:
-                    #event only for debugging
-                    self.socket.send("message_visited", message["message"], room=self.room)
                     continue
                 if (message["at_position"] <= self.distance_in_segment):
-                    new_log = self.logs.add_log(message["message"])
+                    new_log = self.logs.create_add_log(message["message"])
                     self.visited_messages.append(f"{new_log.id}")
                     self.socket.send("log_added", new_log.to_dict(), room=self.room)
 
@@ -191,7 +187,7 @@ class Routine:
             return
         for message in self.route[self.current_fix]["atc_messages"]:
             if message['message']['id'] not in self.visited_messages:
-                new_log = self.logs.add_log(message["message"])
+                new_log = self.logs.create_add_log(message["message"])
                 self.visited_messages.append(f"{new_log.id}")
                 self.socket.send("log_added", new_log.to_dict(), room=self.room)
 
@@ -201,8 +197,10 @@ class Routine:
     #     self.running = False
     def pause(self):
         self._stop_signal = True
+        self.reports.adsc_manager.stop_adsc_timer()
         self.running = False
-        self._stop_event.set() 
+        if self._stop_event:
+            self._stop_event.set()
 
     # def play(self):
     #     if not self.running:
@@ -210,12 +208,14 @@ class Routine:
     def play(self):
         if not self.running:
             self._stop_signal = False
+            self.reports.adsc_manager.start_adsc_timer()
             self._stop_event.clear() 
             self.socket.start_background_task(asyncio.run, self.simulate_flight_progress())
 
     def stop(self):
         self.running = False
-        self._stop_event.set() 
+        if self._stop_event:
+            self._stop_event.set() 
 
     async def stop_and_wait(self, timeout: float = 2.0):
         self.stop()

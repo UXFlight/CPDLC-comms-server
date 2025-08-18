@@ -1,7 +1,7 @@
 import asyncio
 from copy import deepcopy
 from enum import Enum
-from flask import request  # type: ignore
+from flask import json, request  # type: ignore
 from app.classes import Socket  # type: ignore
 from app.classes.flight_session.flight_session import FlightSession
 from app.classes.log_entry.log_entry import LogEntry
@@ -64,7 +64,6 @@ class SocketGateway:
         else:
             self.socket_service.send("logon_failure", data={}, room=sid)
 
-    @handle_errors(event_name="error", message="Failed to add log")
     def on_add_log(self, payload: dict):
         sid = request.sid
         entry = payload.get("log_entry") or {}
@@ -77,7 +76,6 @@ class SocketGateway:
             new_log = flight.logs.add_log(log, thread_id=thread_id)   
         else:
             new_log = flight.logs.create_add_log(entry)             
-
         self.socket_service.send("log_added", new_log.to_dict(), room=sid)
 
     # START -  PILOT RESPONSE
@@ -89,14 +87,14 @@ class SocketGateway:
         if flight:
             log = LogsManager.create_log(self.mongodb, entry.get("ref"), entry.get("text"))
             new_log = flight.logs.add_log(log, thread_id=thread_id)
-            is_scenario= flight.scenarios.on_pilot_dm_by_thread(
-                        thread_id=thread_id,
+            self.socket_service.send("log_added", new_log.to_dict(), room=sid)
+            parent = flight.logs.get_parent_by_child_id(thread_id)
+            scenario = flight.scenarios.on_pilot_dm_by_thread(
+                        thread_id=parent.id,
                         pilot_ref=entry.get("ref"),
                         pilot_text=entry.get("text")
             )
-            print(f"ANSWER SENT SUCCESSFULLY", {is_scenario}) 
-            self.socket_service.send("log_added", new_log.to_dict(), room=sid)
-
+            print(f"scenario {scenario}")
     
     @handle_errors(event_name="error", message="Failed to check if log is loadable")
     def on_change_status(self, data: dict):

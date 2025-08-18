@@ -32,6 +32,20 @@ class LogsManager:
         for log in self.logs:
             if log.id == log_id:
                 return log
+            else:
+                for child in log.communication_thread:
+                    if child.id == log_id:
+                        return child
+        return None
+
+    def get_parent_by_child_id(self, child_id):
+        for log in self.logs:
+            if log.id == child_id:
+                return log
+            else:
+                for child in log.communication_thread:
+                    if child.id == child_id:
+                        return log
         return None
 
     def to_dict(self):
@@ -55,7 +69,7 @@ class LogsManager:
             mongodb=self._mongodb,
             response_required=LogEntry.is_response_required(message),
             acceptable_responses=message.get("Acceptable_responses", []),
-            id=entry.get("id", None)
+            id=entry.get("id", None),
         )
         self.logs.append(new_log)
         if scenario:
@@ -78,9 +92,8 @@ class LogsManager:
             mongodb=mongodb,
             response_required=LogEntry.is_response_required(message),
             acceptable_responses=message.get("Acceptable_responses", []),
-            id=None
+            id=None,
         )
-        print(f"Created log: {new_log.to_dict()}")
         return new_log
     
     def remove_log_by_id(self, log_id):
@@ -96,13 +109,6 @@ class LogsManager:
             return DatalinkStatus.NEW if LogEntry.is_response_required(datalink) else DatalinkStatus.OPENED
         else:
             return DatalinkStatus.REQUESTED if LogEntry.is_response_required(datalink) else DatalinkStatus.OPENED
-
-
-    def find_log_by_id(self, log_id):
-        for log in self.logs:
-            if log.id == log_id:
-                return log
-        return None
 
     def start_scenario(self, type, pilot_ref, pilot_text, scenario: Scenario):
         self.scenario_manager.set_scenario(scenario)
@@ -121,7 +127,7 @@ class LogsManager:
             
 
     def handle_response(self, log: LogEntry, thread_id: str):
-        parent = self.find_log_by_id(thread_id)
+        parent = self.get_parent_by_child_id(thread_id)
         if parent:
             parent.communication_thread.append(log)
             return parent

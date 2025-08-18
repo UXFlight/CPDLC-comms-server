@@ -42,10 +42,12 @@ class FsmEngine:
             self.thread_id = log_entry_dict.get("id")
 
         if trans:
-            log_entry_dict["acceptable_responses"] = self._get_formatted_response(trans)
-            log_entry_dict["response_required"] = "Y" if trans.next_state is not "end" else "N" #BUG ICIIIIIIIII !!!!!!!!!!!!
-            print(f"{"Y" if trans.next_state is not "end" else "N"}")
+            next_state = trans.next_state
+            next_trans = self.scenario[next_state] if next_state else None
 
+            log_entry_dict["acceptable_responses"] = self._get_formatted_response(trans, next_trans)
+            log_entry_dict["response_required"] = "Y" if next_state and next_state != "end" else "N"
+        
         payload = {
             "log_entry": log_entry_dict,
             "thread_id": self.thread_id,  # <- indispensable pour le manager
@@ -61,7 +63,7 @@ class FsmEngine:
 
         self.socket.send("scenario_log_add", payload, room=self.room)
 
-    def _get_formatted_response(self, trans: Transition):
+    def _get_formatted_response(self, trans: Transition, next_trans: Transition):
         """Construit la liste des réponses acceptables (branches d’abord, sinon expected explicite)."""
         responses = []
         if trans.branches:
@@ -69,10 +71,10 @@ class FsmEngine:
                 dl = self.mongodb.find_datalink_by_ref(ref)
                 if dl:
                     responses.append({"ref": ref, "text": dl.get("Message_Element")})
-        elif isinstance(trans.expected, str) and trans.expected not in ("__ANY__", ""):
-            dl = self.mongodb.find_datalink_by_ref(trans.expected)
+        elif next_trans and isinstance(next_trans.expected, str) and next_trans.expected not in ("__ANY__", ""):
+            dl = self.mongodb.find_datalink_by_ref(next_trans.expected)
             if dl:
-                responses.append({"ref": trans.expected, "text": dl.get("Message_Element")})
+                responses.append({"ref": next_trans.expected, "text": dl.get("Message_Element")})
         return responses
 
     def _cancel_timer(self):
@@ -153,34 +155,32 @@ class FsmEngine:
                 return
 
             # expected
-            expected = trans.expected
+            next_state = trans.next_state
+            next_trans = self.scenario[next_state] if next_state else None
+
+            expected = next_trans.expected
             matched = (expected == "__ANY__") or (pilot_ref == expected)
+            print(f"Pilot DM: {pilot_ref} (expected: {expected})")
             if not matched:
                 print(f"EXPECTED MISMATCH: got {pilot_ref}, expected {expected}")
                 return
 
-            # atc_replies
-            # if trans.atc_replies:
-            #     self._emit_atc(trans.atc_replies)
-            # self._cancel_timer()
+            # si match on avance
+            trans = next_trans
 
-            # 4) Avancer
-            if trans.next_state:
-                self.state_id = trans.next_state
-                nxt = self.scenario[self.state_id]
-                if nxt.atc_opening:
-                    self._emit_atc(nxt.atc_opening, nxt)
-                self._arm_timeout(nxt)
-            elif trans.branches:
+            # avancer
+            if trans.next_state != "end":
+                if trans.atc_replies:
+                    self._emit_atc(trans.atc_replies, trans)
                 self._arm_timeout(trans)
             else:
-                # Fin du scénario
                 self.state_id = "end" if "end" in self.scenario else None
                 if self.state_id:
                     end = self.scenario[self.state_id]
                     if end.atc_replies:
-                        self._emit_atc(end.atc_replies)
+                        self._emit_atc(end.atc_replies, trans)
                 self._cancel_timer()
+                self.socket.send("thread_ending",  self.thread_id, room=self.room)
                 self.state_id = None
                 if self._on_end:
                     try:

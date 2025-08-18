@@ -106,24 +106,7 @@
     },
     "turbulence": "MODERATE",
     "icing": "TRACE",
-    "atc_messages": [
-      {
-      "at_position": 0,
-      "message": {
-      "id": "BOS_UM28",
-      "messageRef": "UM28",
-      "formattedMessage": "I don t know",
-      "direction": "UPLINK",
-      "status": "NEW",
-      "sender": "ATC1",
-      "intent": "Clearance to climb from current altitude to FL370 after departure."
-    }}
-  ],
-  "nearby_airports":[
-    {"icao": "KBOS", "name": "Boston Logan", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 109},
-    {"icao": "KBED", "name": "Bedford Hanscom", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 69},
-    {"icao": "KBVY", "name": "Beverly", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 145}
-  ]
+    "atc_messages": []
   },
   {
     "fix": "ART",

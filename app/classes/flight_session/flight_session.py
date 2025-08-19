@@ -1,3 +1,4 @@
+import copy
 from app.classes.atc.atc import Atc
 from app.classes.flight_status.flight_status import FlightStatus
 from app.classes.fsm.fsm_engine import FsmEngine
@@ -38,15 +39,50 @@ class FlightSession:
             "NDA": "ATC2",
         }
     
-    def temp_route(self, waypoint):
+    # def temp_route(self, current_waypoint, waypoint):
+    #     if not self.route:
+    #         return []
+
+    #     for i, point in enumerate(self.route):
+    #         if point.get("fix") == waypoint:
+    #             temp_route = self.route[i:] 
+    #             return temp_route
+    #     return []
+    def temp_route(self, current_waypoint_index, waypoint_name):
         if not self.route:
             return []
 
+        target_index = None
         for i, point in enumerate(self.route):
-            if point.get("fix") == waypoint:
-                temp_route = self.route[i:] 
-                return temp_route
-        return []
+            if point.get("fix") == waypoint_name:
+                target_index = i
+                break
+
+        if target_index is None:
+            return []
+
+        if target_index <= current_waypoint_index:
+            return copy.deepcopy(self.route)
+
+        temp_route = (
+            copy.deepcopy(self.route[:current_waypoint_index + 1]) +
+            [copy.deepcopy(self.route[target_index])] +
+            copy.deepcopy(self.route[target_index + 1:])
+        )
+
+        updated_route = self.recalculate_total_distance(temp_route)
+        print(f"Updated route: {updated_route}")
+        return updated_route
+
+
+    def recalculate_total_distance(self, route):
+        cumulative_distance = 0.0
+        for point in route:
+            distance = point.get("distance_km", 0.0)
+            cumulative_distance += distance
+            point["total_distance"] = round(cumulative_distance, 2)  # arrondi pour lisibilité
+        return route
+
 
     def get_route(self) :
         return [fix["fix"] for fix in self.routine.routine]

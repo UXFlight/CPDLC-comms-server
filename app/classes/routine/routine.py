@@ -9,10 +9,10 @@ from app.managers.reports_manager import ReportsManager
 from app.utils.position_report_build import position_report_build
 
 class Speed(Enum):
-    SLOW = 3
-    MEDIUM = 6
-    FAST = 10
-    EXTREME = 20
+    SLOW = 30
+    MEDIUM = 60
+    FAST = 100
+    EXTREME = 200
 
 class Routine:
     def __init__(self, routine, socket, flight_status: FlightStatus, room, logs: LogsManager, reports: ReportsManager):
@@ -24,7 +24,7 @@ class Routine:
         self.logs = logs
         self.reports = reports
         self.acceleration = Speed.MEDIUM.value
-        self.tick_interval = 0.1
+        self.tick_interval = 1
         self.elapsed_simulated = 0
         self.current_fix = 0
         self.distance_in_segment = 0 
@@ -39,6 +39,17 @@ class Routine:
             "total_distance": self.route[-1]["total_distance"],
             "distances": distances
         }, room=self.room)
+
+    def set_new_route(self, new_route):
+        self.route = new_route
+        distances = [fix["distance_km"] for fix in new_route]
+
+        self.socket.send("routine_load", {
+            "total_distance": self.route[-1]["total_distance"],
+            "distances": distances,
+            "current_fix": self.current_fix
+        }, room=self.room)
+        self.play()
 
     def simulation_speed(self, speed: Speed):
         self.acceleration = speed.value
@@ -75,14 +86,14 @@ class Routine:
                     self.update_flight_status(end=True)
                     self.socket.send("plane_arrival", self.flight_status.to_dict(), room=self.room)
                     break
-                self.distance_in_segment = 0
-                position_report = position_report_build(self.routine, self.current_fix)
-                self.reports.add_position_report(position_report)
-
                 self.socket.send("waypoint_change", {
                     "flight": self.flight_status.to_dict(),
                     "currentFixIndex": self.current_fix,
                 }, room=self.room)
+                self.distance_in_segment = 0
+
+                position_report = position_report_build(self.routine, self.current_fix)
+                self.reports.add_position_report(position_report)
             else:
                 self.flight_status.update({
                     "distance": round(self.route[self.current_fix]["total_distance"] - fix_distance + self.distance_in_segment, 2),
@@ -112,51 +123,20 @@ class Routine:
             "speed": fix.get("speed_kmh", 0),
             "icing": fix.get("icing", "NONE"),
         })
-
-    @staticmethod
-    def run_async_in_thread(coroutine):
-        def runner():
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            loop.run_until_complete(coroutine)
-
-        #threading.Thread(target=runner).start()
-
-    def update_routine(self, new_routine):
-        self.running = False 
-        arrival_fix = self.route[-1]
-        new_routine_fixes = {fix["fix"] for fix in new_routine}
-        self.route = list(filter(lambda fix: fix["fix"] in new_routine_fixes, self.route))
-        self.route.append(arrival_fix)
-        self.normalize_routine()
-
-        self.elapsed_simulated = 0
-        self.current_fix = 0
-        self.distance_in_segment = 0
-        self.running = True
-
-        distances = [fix["distance_km"] for fix in self.route]
-        self.socket.send("routine_load", {
-            "total_distance": self.route[-1]["total_distance"],
-            "distances": distances
-        }, room=self.room)
-
-        Routine.run_async_in_thread(self.simulate_flight_progress())
-
-
-        # new_routine_fixes = {fix["fix"] for fix in new_routine}
-        # self.route = list(filter(lambda fix: fix["fix"] in new_routine_fixes, self.route))
-        # self.elapsed_simulated = 0
-        # self.current_fix = 0
-        # self.distance_in_segment = 0
-        
-        # distances = [fix["distance_km"] for fix in self.route]
-        # self.socket.send("routine_load", {
-        #     "total_distance": self.route[-1]["total_distance"],
-        #     "distances": distances
-        # }, room=self.room)
-        # self.simulate_flight_progress()
     
+    def concerned_messages(self, fix=None):
+        all_msgs = []
+        if not fix:  # pour ajouter les logs suite a un step + 1
+            curr_fix = self.current_fix if self.current_fix == 0 else self.current_fix-1
+            for i in range(curr_fix, -1, -1):
+                fix_msgs = self.route[i].get("atc_messages") or []
+                all_msgs[:0] = fix_msgs 
+        else:  # pour retirer les logs suite a un backup
+            for i in range(len(self.route) - 1, self.current_fix - 1, -1):
+                fix_msgs = self.route[i].get("atc_messages") or []
+                all_msgs.extend(fix_msgs)
+        return all_msgs if all_msgs else None
+
     def available_messages(self):
         msgs = self.route[self.current_fix].get("atc_messages") or []
         return len(msgs) > 0
@@ -174,27 +154,29 @@ class Routine:
                     self.socket.send("log_added", new_log.to_dict(), room=self.room)
 
     def remove_um_message(self, fix):
-        messages_to_be_removed = [msg for msg in self.visited_messages if msg.startswith(f"{fix}")]
-        for log in self.logs.logs:
-            if log.id in messages_to_be_removed:
-                self.visited_messages.remove(f"{log.id}")
-                self.logs.remove_log_by_id(log.id)
-
-        self.socket.send("removed_logs", self.logs.get_logs(), room=self.room)
+        msgs = self.concerned_messages(fix)
+        if not msgs:
+            return
+        msg_ids_to_remove = {msg["message"]["id"] for msg in msgs}
+        for log_id in self.visited_messages[:]:
+            if log_id in msg_ids_to_remove:
+                self.visited_messages.remove(log_id)
+                self.logs.remove_log_by_id(log_id)
+                
+        ids = [log.id for log in self.logs.logs]
+        self.socket.send("removed_logs", list(reversed(self.logs.get_logs())), room=self.room)
 
     def add_um_message(self):
-        if not self.available_messages():
+        msgs = self.concerned_messages()
+        if not msgs:
             return
-        for message in self.route[self.current_fix]["atc_messages"]:
-            if message['message']['id'] not in self.visited_messages:
+        for message in msgs:
+            msg_id = message["message"]["id"]
+            if msg_id not in self.visited_messages:
                 new_log = self.logs.create_add_log(message["message"])
                 self.visited_messages.append(f"{new_log.id}")
                 self.socket.send("log_added", new_log.to_dict(), room=self.room)
 
-    # ACTIONS
-    # def pause(self):
-    #     self._stop_signal = True
-    #     self.running = False
     def pause(self):
         self._stop_signal = True
         self.reports.adsc_manager.stop_adsc_timer()
@@ -202,9 +184,6 @@ class Routine:
         if self._stop_event:
             self._stop_event.set()
 
-    # def play(self):
-    #     if not self.running:
-    #         self.socket.start_background_task(asyncio.run, self.simulate_flight_progress())
     def play(self):
         if not self.running:
             self._stop_signal = False

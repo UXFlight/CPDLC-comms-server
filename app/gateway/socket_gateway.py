@@ -14,10 +14,10 @@ from app.managers.logs_manager.logs_manager import LogsManager
 from app.utils.error_handler import handle_errors
 
 class Speed(Enum):
-    SLOW = 3
-    MEDIUM = 6
-    FAST = 10
-    EXTREME = 20
+    SLOW = 30
+    MEDIUM = 60
+    FAST = 100
+    EXTREME = 200
 
 class SocketGateway:
     def __init__(self, socket_service: Socket, flight_manager: FlightManager, mongodb: MongoDb):
@@ -33,6 +33,7 @@ class SocketGateway:
         self.socket_service.listen('is_loadable', self.on_is_loadable)
         self.socket_service.listen('load_fms', self.on_load_fms)
         self.socket_service.listen('execute_route', self.on_execute_route)
+        self.socket_service.listen('cancel_execute_route', self.on_cancel_execute_route)
         self.socket_service.listen('routine_play', self.on_routine_play)
         self.socket_service.listen('routine_pause', self.on_routine_pause)
         self.socket_service.listen('routine_step_back', self.on_routine_step_back)
@@ -118,15 +119,16 @@ class SocketGateway:
         else:
             print(f"Flight session not found for sid {sid}")
 
-    @handle_errors(event_name="error", message="Failed to load message")
     def on_load_fms(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session(sid)
         if flight:
             log = flight.logs.get_log_by_id(data.get("logId"))
             if log:
+                flight.routine.pause()
                 waypoint = log.get_waypoint()
-                new_route = flight.temp_route(waypoint)
+                current_waypoint = flight.routine.current_fix
+                new_route = flight.temp_route(current_waypoint, waypoint)
                 self.socket_service.send("new_route", new_route, room=sid)
             else:
                 print(f"Log not found for sid {sid}")
@@ -135,9 +137,16 @@ class SocketGateway:
     def on_execute_route(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session(sid)
-        new_route = flight.load_route(data.get("new_route", []))
-        #flight.routine.update_routine(new_route)
+        if flight: 
+            new_route = flight.load_route(data.get("new_route", []))
+            flight.routine.set_new_route(new_route)
         self.socket_service.send("route_loaded", new_route, room=sid)
+
+    def on_cancel_execute_route(self):
+        sid = request.sid
+        flight = self.flight_manager.get_session(sid)
+        if flight:
+            flight.routine.play()
 
     # START - actions for the routine 
     @handle_errors(event_name="error", message="Failed to play routine")
@@ -154,7 +163,6 @@ class SocketGateway:
         if flight:
             flight.routine.pause()
 
-    @handle_errors(event_name="error", message="Failed to step back")
     def on_routine_step_back(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session(sid)

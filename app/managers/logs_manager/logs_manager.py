@@ -26,7 +26,9 @@ class LogsManager:
         self.scenario_manager = scenario_manager
 
     def get_logs(self):
-        return [log.to_dict() for log in self.logs]
+        logs =  [log.to_dict() for log in self.logs]
+        print(f"LogsManager: Retrieved {logs} logs.")
+        return logs
     
     def get_log_by_id(self, log_id):
         for log in self.logs:

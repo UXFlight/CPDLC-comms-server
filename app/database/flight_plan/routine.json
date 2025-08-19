@@ -67,7 +67,7 @@
     "turbulence": "NONE",
     "icing": "LIGHT",
     "atc_messages": [  
-      {"at_position": 0,
+      {"at_position": 2,
       "message":{
         "id": "PTD_UM129",
         "messageRef": "UM129",
@@ -106,7 +106,18 @@
     },
     "turbulence": "MODERATE",
     "icing": "TRACE",
-    "atc_messages": []
+    "atc_messages":  [{
+      "at_position": 20,
+      "message": {
+        "id": "GARDN_UM74",
+        "messageRef": "UM74",
+        "formattedMessage": "PROCEED DIRECT TO OAKLE",
+        "direction": "UPLINK",
+        "status": "NEW",
+        "sender": "ATC",
+        "intent": "ATC instructs the aircraft to proceed directly to the specified waypoint, usually for sequencing or approach."
+      }
+    }]
   },
   {
     "fix": "ART",
@@ -132,7 +143,7 @@
     "icing": "LIGHT",
     "atc_messages": [
       {
-      "at_position": 0,
+      "at_position": 2,
       "message": {
         "id": "ART_UM130",
         "messageRef": "UM130",
@@ -172,7 +183,7 @@
     "turbulence": "NONE",
     "icing": "TRACE",
     "atc_messages": [{
-      "at_position": 0,
+      "at_position": 2,
       "message": {
         "id": "SYR_UM128",
         "messageRef": "UM128",
@@ -216,7 +227,7 @@
       "message":{
         "id": "CNTER_UM24",
         "messageRef": "UM24",
-        "formattedMessage": "DESCEND TO AND MAINTAIN FL370",
+        "formattedMessage": "DESCEND TO AND MAINTAIN FL260",
         "direction": "UPLINK",
         "status": "NEW",
         "sender": "ATC",
@@ -311,18 +322,7 @@
     },
     "turbulence": "NONE",
     "icing": "MODERATE",
-    "atc_messages": [{
-      "at_position": 100,
-      "message": {
-        "id": "GARDN_UM74",
-        "messageRef": "UM74",
-        "formattedMessage": "PROCEED DIRECT TO OAKLE",
-        "direction": "UPLINK",
-        "status": "NEW",
-        "sender": "ATC",
-        "intent": "ATC instructs the aircraft to proceed directly to the specified waypoint, usually for sequencing or approach."
-      }
-    }],
+    "atc_messages": [],
     "nearby_airports":[
     {"icao": "KIAD", "name": "Washington Dulles", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 150},
     {"icao": "KBWI", "name": "Baltimore/Washington", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 120},

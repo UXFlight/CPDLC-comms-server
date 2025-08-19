@@ -15,6 +15,7 @@ class MongoDb:
     def find_datalink_by_ref(self, ref):
         #type = "downlinks" if "DM" in ref else "uplinks" autre facon de faire
         #return self.db[type].find_one({"Ref_Num": ref})
+        print(f"Finding datalink by ref: {ref}")
         type = self.uplinks if "UM" in ref else self.downlinks
         return type.find_one({"Ref_Num": ref})
     

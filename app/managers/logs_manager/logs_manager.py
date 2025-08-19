@@ -26,9 +26,22 @@ class LogsManager:
         self.scenario_manager = scenario_manager
 
     def get_logs(self):
-        logs =  [log.to_dict() for log in self.logs]
-        print(f"LogsManager: Retrieved {logs} logs.")
-        return logs
+        def get_comparison_timestamp(log):
+            if log.communication_thread and len(log.communication_thread) > 0:
+                return log.communication_thread[-1].timestamp
+            return log.timestamp
+
+        # Trier tous les logs selon le bon timestamp (du plus récent au plus ancien)
+        sorted_logs = sorted(
+            self.logs,
+            key=get_comparison_timestamp,
+            reverse=True
+        )
+
+        # Convertir les logs triés en dictionnaires
+        logs_dict = [log.to_dict() for log in sorted_logs]
+
+        return logs_dict
     
     def get_log_by_id(self, log_id):
         for log in self.logs:

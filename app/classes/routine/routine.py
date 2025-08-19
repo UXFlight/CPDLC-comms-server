@@ -9,10 +9,10 @@ from app.managers.reports_manager import ReportsManager
 from app.utils.position_report_build import position_report_build
 
 class Speed(Enum):
-    SLOW = 30
-    MEDIUM = 60
-    FAST = 100
-    EXTREME = 200
+    SLOW = 3
+    MEDIUM = 6
+    FAST = 10
+    EXTREME = 20
 
 class Routine:
     def __init__(self, routine, socket, flight_status: FlightStatus, room, logs: LogsManager, reports: ReportsManager):
@@ -24,7 +24,7 @@ class Routine:
         self.logs = logs
         self.reports = reports
         self.acceleration = Speed.MEDIUM.value
-        self.tick_interval = 1
+        self.tick_interval = 0.1
         self.elapsed_simulated = 0
         self.current_fix = 0
         self.distance_in_segment = 0 
@@ -164,7 +164,7 @@ class Routine:
                 self.logs.remove_log_by_id(log_id)
                 
         ids = [log.id for log in self.logs.logs]
-        self.socket.send("removed_logs", list(reversed(self.logs.get_logs())), room=self.room)
+        self.socket.send("removed_logs", self.logs.get_logs(), room=self.room)
 
     def add_um_message(self):
         msgs = self.concerned_messages()

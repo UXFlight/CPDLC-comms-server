@@ -24,6 +24,7 @@ class FsmScenarioManager:
         initiator: str = "ATC",
         pilot_ref: Optional[str] = None,
         pilot_text: str = "",
+        thread_id: Optional[str] = None
     ) -> None:
         # Crée l'engine + l'instance (non indexée tant qu'on n'a pas le thread_id)
         fsm = FsmEngine(
@@ -57,6 +58,7 @@ class FsmScenarioManager:
 
         # Démarre le scénario
         if initiator.upper() == "PILOT" and pilot_ref:
+            fsm.thread_id = thread_id
             fsm.on_pilot_dm(pilot_ref=pilot_ref, pilot_text=pilot_text)
         else:
             fsm.enter("atc_entry")

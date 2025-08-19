@@ -30,38 +30,36 @@ class FsmEngine:
 
     # ---------------- internals ----------------
     def _emit_atc(self, msgs: List[Msg], trans: Transition = None):
-        """Émet un message ATC + attache thread_id + appelle le hook on_emit."""
         if not msgs:
             return
 
-        m = choice(msgs)
-        log_entry_dict = m.log_entry.to_dict()
+        def _delayed_emit(): #delai de reponse simule
+            m = choice(msgs)
+            log_entry_dict = m.log_entry.to_dict()
 
-        # au 1er log emis (ouverture du thread de communication)
-        if self.thread_id is None:
-            self.thread_id = log_entry_dict.get("id")
+            if self.thread_id is None:
+                self.thread_id = log_entry_dict.get("id")
 
-        if trans:
-            next_state = trans.next_state
-            next_trans = self.scenario[next_state] if next_state else None
+            if trans:
+                next_state = trans.next_state
+                next_trans = self.scenario[next_state] if next_state else None
+                log_entry_dict["acceptable_responses"] = self._get_formatted_response(trans, next_trans)
+                log_entry_dict["response_required"] = "Y" if next_state and next_state != "end" else "N"
 
-            log_entry_dict["acceptable_responses"] = self._get_formatted_response(trans, next_trans)
-            log_entry_dict["response_required"] = "Y" if next_state and next_state != "end" else "N"
-        
-        payload = {
-            "log_entry": log_entry_dict,
-            "thread_id": self.thread_id,  # <- indispensable pour le manager
-        }
+            payload = {
+                "log_entry": log_entry_dict,
+                "thread_id": self.thread_id,
+            }
 
-        # 4) Notifier le manager pour qu'il indexe thread_id -> instance
-        if self._on_emit:
-            try:
-                self._on_emit(payload)
-            except Exception:
-                # Ne bloque pas le flux si un observateur plante
-                pass
+            if self._on_emit:
+                try:
+                    self._on_emit(payload)
+                except Exception:
+                    pass
 
-        self.socket.send("scenario_log_add", payload, room=self.room)
+            self.socket.send("scenario_log_add", payload, room=self.room)
+
+        threading.Timer(5.0, _delayed_emit).start()
 
     def _get_formatted_response(self, trans: Transition, next_trans: Transition):
         """Construit la liste des réponses acceptables (branches d’abord, sinon expected explicite)."""

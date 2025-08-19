@@ -5,6 +5,7 @@ from flask import json, request  # type: ignore
 from app.classes import Socket  # type: ignore
 from app.classes.flight_session.flight_session import FlightSession
 from app.classes.log_entry.log_entry import LogEntry
+from app.classes.report.emergency_report import EmergencyReport
 from app.classes.report.position_report import PositionReport
 from app.database.mongo_db import MongoDb
 from app.managers.flight_manager.flight_manager import FlightManager
@@ -14,10 +15,10 @@ from app.managers.logs_manager.logs_manager import LogsManager
 from app.utils.error_handler import handle_errors
 
 class Speed(Enum):
-    SLOW = 30
-    MEDIUM = 60
-    FAST = 100
-    EXTREME = 200
+    SLOW = 3
+    MEDIUM = 6
+    FAST = 10
+    EXTREME = 20
 
 class SocketGateway:
     def __init__(self, socket_service: Socket, flight_manager: FlightManager, mongodb: MongoDb):
@@ -43,6 +44,7 @@ class SocketGateway:
         self.socket_service.listen('ads_c_emergency_off', self.on_deactivate_adsc_emergency)
         self.socket_service.listen('ads_c_disabled', self.on_disable_adsc)
         self.socket_service.listen('ads_c_enable', self.on_enable_adsc)
+        self.socket_service.listen('emergency_report', self.on_emergency)
         self.socket_service.listen('pilot_response', self.on_pilot_response)
         self.socket_service.listen('disconnect', self.on_disconnect)
 
@@ -226,6 +228,25 @@ class SocketGateway:
         flight = self.flight_manager.get_session(sid)
         #if flight:
             #flight.adsc_manager.enable()
+
+
+    
+    # START - Emergency 
+    #@handle_errors(event_name="error", message="Failed to handle emergency")
+    def on_emergency(self, data: dict):
+        sid = request.sid
+        request_data = data.get("request", "")
+        emergencyData = data.get("emergencyData", {})
+        flight :FlightSession = self.flight_manager.get_session(sid)
+        if not flight or not request_data:
+            return
+        new_log = flight.logs.create_add_log(request_data)
+        self.socket_service.send("log_added", new_log.to_dict(), room=sid)
+        print(f"New log created: {new_log.id}")
+        flight.reports.set_emergency_report(EmergencyReport(**emergencyData), new_log.id)
+
+
+    # END - Emergency
 
     # END - Report events
 

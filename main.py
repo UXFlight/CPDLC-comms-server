@@ -6,13 +6,18 @@ from app.database.mongo_db import MongoDb
 from app.gateway.socket_gateway import SocketGateway
 from flask_cors import CORS # type: ignore
 from app.managers.flight_manager.flight_manager import FlightManager
+
 # from app.classes.ingsvc.agent import Echo
+allowed_origins = [
+        "http://localhost:3000/",
+        "https://mycpdlc.netlify.app/",
+    ]
 
 def create_app():
     app = Flask(__name__)
-    CORS(app, origins=["http://localhost:3000"])
+    CORS(app, origins=allowed_origins)
     app.register_blueprint(general_bp)
-    socketio = SocketIO(app, cors_allowed_origins="*")
+    socketio = SocketIO(app, cors_allowed_origins=allowed_origins, async_mode="threading")
     return app, socketio
 
 app, socketio = create_app()

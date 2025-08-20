@@ -1,7 +1,8 @@
+import os
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
-URI = "mongodb+srv://datalinksDb:datalinksDbPassword@cluster0.hx4d37v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+URI = os.getenv('MONGODB_URI')
 
 class MongoDb:
     def __init__(self, db_uri=URI): 

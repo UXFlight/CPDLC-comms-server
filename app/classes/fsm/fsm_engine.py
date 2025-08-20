@@ -148,7 +148,6 @@ class FsmEngine:
                     return
 
             trans = self.scenario[self.state_id]
-            print(f"doit etre ici ----------------------------{pilot_ref}")
             # branches
             if trans.branches and pilot_ref in trans.branches:
                 nxt = trans.branches[pilot_ref]
@@ -165,7 +164,7 @@ class FsmEngine:
                 return
 
             if pilot_ref == "DM0":  # WILCO
-                print(f"rentre ici car dm0 merde")
+                print(f"rentre ici car dm0")
                 next_state = "end"
                 self.go_to_next_state(self.scenario[next_state])
                 return

@@ -71,7 +71,6 @@ class FlightSession:
         )
 
         updated_route = self.recalculate_total_distance(temp_route)
-        print(f"Updated route: {updated_route}")
         return updated_route
 
 

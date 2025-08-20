@@ -37,6 +37,10 @@ mongodb = MongoDb()
 socket_manager = SocketGateway(socket_service, flight_manager, mongodb)
 socket_manager.init_events()
 
+@app.route('/')
+def index():
+    return 'Welcome !'
+
 if __name__ == '__main__':
     # Echo.start_ingescape_agent()
     socketio.run(app, host="0.0.0.0", port=port, debug=False)

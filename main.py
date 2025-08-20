@@ -15,8 +15,9 @@ def create_app():
     socketio = SocketIO(app, cors_allowed_origins="*")
     return app, socketio
 
+app, socketio = create_app()
+
 if __name__ == '__main__':
-    app, socketio = create_app()
     # Echo.start_ingescape_agent()
 
     socket_service = Socket(socketio)

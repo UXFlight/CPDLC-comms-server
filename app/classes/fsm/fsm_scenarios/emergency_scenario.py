@@ -20,7 +20,7 @@ SCENARIO_EMERGENCY: Scenario = {
         expected="DM55",
         atc_replies=[
             # 4.8.2.3(a) : UM169r ROGER PAN
-            Msg(log_entry=LogsManager.create_log(mongodb, "UM169r", "ROGER PAN"), role="ATC"),
+            Msg(log_entry={"ref": "UM169r", "text": "ROGER PAN"}, role="ATC"),
         ],
         next_state="end",
     ),
@@ -30,12 +30,11 @@ SCENARIO_EMERGENCY: Scenario = {
         expected="DM56",
         atc_replies=[
             # 4.8.2.3(b) : UM169q ROGER MAYDAY
-            Msg(log_entry=LogsManager.create_log(mongodb, "UM169q", "ROGER MAYDAY"), role="ATC"),
+            Msg(log_entry={"ref": "UM169q", "text": "ROGER MAYDAY"}, role="ATC"),
         ],
         next_state="end",
     ),
 
-    
     # Fin
     "end": Transition(
         expected="__ANY__",

@@ -56,9 +56,13 @@ class FsmScenarioManager:
         fsm._on_emit = _on_emit
         fsm._on_end = _on_end
 
+        if thread_id:
+            fsm.thread_id = thread_id
+            with self._lock:
+                self._by_thread[thread_id] = inst
+
         # Démarre le scénario
         if initiator.upper() == "PILOT" and pilot_ref:
-            fsm.thread_id = thread_id
             fsm.on_pilot_dm(pilot_ref=pilot_ref, pilot_text=pilot_text)
         else:
             fsm.enter("atc_entry")

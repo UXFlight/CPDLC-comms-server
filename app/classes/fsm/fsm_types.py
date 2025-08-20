@@ -8,28 +8,17 @@ Role = Literal["PILOT", "ATC"]
 
 @dataclass
 class Msg:
-    log_entry: LogEntry
+    log_entry: {"ref": str, "text": str} # type: ignore
     role: Role         # "PILOT" ou "ATC"
 
 @dataclass
 class Transition:
-    # Messages ATC envoyés automatiquement à l'entrée de l'état
     atc_opening: Optional[List[Msg]] = None
-
-    # DM attendu (strict). "__ANY__" = on accepte tout (on regarde alors branches)
     expected: str  = "__ANY__"
-
-    # Réponses ATC à renvoyer lorsque le DM attendu arrive
     atc_replies: Optional[List[Msg]] = field(default_factory=list)
-
-    # S'il n'y a pas de branches, on passe ici après atc_replies
     next_state: Optional[str] = None
-
-    # Branches : {pilot_ref -> state_id}
     branches: Optional[Dict[str, str]] = None
+    timeout_ms: Optional[int] = 90000
 
-    # Délai d’inactivité (ms) avant un rappel (ex: STANDBY)
-    timeout_ms: Optional[int] = 5000
-
-# Un scénario = graphe
+# scenario = graphe
 Scenario = Dict[str, Transition]

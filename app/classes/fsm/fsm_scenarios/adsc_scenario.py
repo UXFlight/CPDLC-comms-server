@@ -7,7 +7,7 @@ mongodb = MongoDb()
 SCENARIO_ADSC_EMERG: Scenario = {
     "atc_entry": Transition(
         atc_opening=[
-            Msg(log_entry=LogsManager.create_log(mongodb, "UM169ak", "CONFIRM ADS-C EMERGENCY"), role="ATC"),
+            Msg(log_entry={"ref": "UM169ak", "text": "CONFIRM ADS-C EMERGENCY"}, role="ATC"),
         ],
         expected="__ANY__",                   # on attend une réponse du pilote
         branches={
@@ -20,7 +20,7 @@ SCENARIO_ADSC_EMERG: Scenario = {
     "pilot_entry": Transition(
         expected="DM67ab", # pilote: ADS‑C RESET
         atc_replies=[
-            Msg(log_entry=LogsManager.create_log(mongodb, "UM3", "ROGER ADS-C RESET."), role="ATC")
+            Msg(log_entry={"ref": "UM3", "text": "ROGER ADS-C RESET."}, role="ATC")
         ],
         next_state="end",
     ),
@@ -28,7 +28,7 @@ SCENARIO_ADSC_EMERG: Scenario = {
     "pilot_reset_ok": Transition(
         expected="DM67ab",  # si on venait d'un atc_emerg_on
         atc_replies=[
-            Msg(log_entry=LogsManager.create_log(mongodb, "UM3", "ROGER ADS‑C RESET. EMERGENCY CANCELLED."), role="ATC")
+            Msg(log_entry={"ref": "UM3", "text": "ROGER ADS‑C RESET. EMERGENCY CANCELLED."}, role="ATC")
         ],
         branches={
             "DM0": "adsc_on_wilco",
@@ -44,15 +44,15 @@ SCENARIO_ADSC_EMERG: Scenario = {
     "due_to_perf": Transition(
         expected="DM66",
         atc_replies=[
-            Msg(log_entry=LogsManager.create_log(mongodb, "UM227", "ACKNOWLEDGED DUE TO ACFT PERFORMANCE"), role="ATC"),
-            Msg(log_entry=LogsManager.create_log(mongodb, "UM19", "MAINTAIN PRESENT ALTITUDE"), role="ATC"),
+            Msg(log_entry={"ref": "UM227", "text": "ACKNOWLEDGED DUE TO ACFT PERFORMANCE"}, role="ATC"),
+            Msg(log_entry={"ref": "UM19", "text": "MAINTAIN PRESENT ALTITUDE"}, role="ATC"),
         ],
         next_state="adsc_on_wilco",
     ),
     "due_to_weather": Transition(
         expected="DM65",
         atc_replies=[
-            Msg(log_entry=LogsManager.create_log(mongodb, "UM227", "ACKNOWLEDGED DUE TO WEATHER"), role="ATC"),
+            Msg(log_entry={"ref": "UM227", "text": "ACKNOWLEDGED DUE TO WEATHER"}, role="ATC"),
         ],
         next_state="adsc_on_wilco",
     ),

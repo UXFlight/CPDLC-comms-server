@@ -34,8 +34,12 @@ class FsmEngine:
             return
 
         def _delayed_emit(): #delai de reponse simule
+            if self.state_id is None:
+                return
+            
             m = choice(msgs)
-            log_entry_dict = m.log_entry.to_dict()
+            log = LogsManager.create_log(self.mongodb, m.log_entry["ref"], m.log_entry["text"])
+            log_entry_dict = log.to_dict()
 
             if self.thread_id is None:
                 self.thread_id = log_entry_dict.get("id")
@@ -62,7 +66,6 @@ class FsmEngine:
         threading.Timer(5.0, _delayed_emit).start()
 
     def _get_formatted_response(self, trans: Transition, next_trans: Transition):
-        """Construit la liste des réponses acceptables (branches d’abord, sinon expected explicite)."""
         responses = []
         if trans.branches:
             for ref in trans.branches.keys():
@@ -73,6 +76,11 @@ class FsmEngine:
             dl = self.mongodb.find_datalink_by_ref(next_trans.expected)
             if dl:
                 responses.append({"ref": next_trans.expected, "text": dl.get("Message_Element")})
+        responses.extend([
+            {"ref": "DM2", "text": "STANDBY"},
+            {"ref": "DM1", "text": "UNABLE"},
+            {"ref": "DM0", "text": "WILCO"},
+        ])
         return responses
 
     def _cancel_timer(self):
@@ -140,7 +148,7 @@ class FsmEngine:
                     return
 
             trans = self.scenario[self.state_id]
-
+            print(f"doit etre ici ----------------------------{pilot_ref}")
             # branches
             if trans.branches and pilot_ref in trans.branches:
                 nxt = trans.branches[pilot_ref]
@@ -149,7 +157,23 @@ class FsmEngine:
                 nxt_trans = self.scenario[self.state_id]
                 if nxt_trans.atc_replies:
                     self._emit_atc(nxt_trans.atc_replies, nxt_trans)
+                    return
                 self._arm_timeout(nxt_trans)
+
+             # branches par défaut
+            if pilot_ref == "DM2":  # STANDBY
+                return
+
+            if pilot_ref == "DM0":  # WILCO
+                print(f"rentre ici car dm0 merde")
+                next_state = "end"
+                self.go_to_next_state(self.scenario[next_state])
+                return
+
+
+            if pilot_ref == "DM1":  # UNABLE
+                next_state = "end"
+                self.go_to_next_state(self.scenario[next_state])
                 return
 
             # expected
@@ -165,23 +189,25 @@ class FsmEngine:
 
             # si match on avance
             trans = next_trans
+            self.go_to_next_state(trans)
 
-            # avancer
-            if trans.next_state != "end":
-                if trans.atc_replies:
-                    self._emit_atc(trans.atc_replies, trans)
-                self._arm_timeout(trans)
-            else:
-                self.state_id = "end" if "end" in self.scenario else None
-                if self.state_id:
-                    end = self.scenario[self.state_id]
-                    if end.atc_replies:
-                        self._emit_atc(end.atc_replies, trans)
-                self._cancel_timer()
-                self.socket.send("thread_ending",  self.thread_id, room=self.room)
-                self.state_id = None
-                if self._on_end:
-                    try:
-                        self._on_end()
-                    finally:
-                        self.thread_id = None   # libère l’ID pour ce moteur
+           
+    def go_to_next_state(self, trans):
+        if trans.next_state != "end" and trans.next_state:
+            if trans.atc_replies:
+                self._emit_atc(trans.atc_replies, trans)
+            self._arm_timeout(trans)
+        else:
+            self.state_id = "end" if "end" in self.scenario else None
+            if self.state_id:
+                end = self.scenario[self.state_id]
+                if end.atc_replies:
+                    self._emit_atc(end.atc_replies, trans)
+            self._cancel_timer()
+            self.socket.send("thread_ending",  self.thread_id, room=self.room)
+            self.state_id = None
+            if self._on_end:
+                try:
+                    self._on_end()
+                finally:
+                    self.thread_id = None   # libère l’ID pour ce moteur

@@ -28,6 +28,7 @@ class AdscManager:
 
         self.adsc_contracts: list[ADSCContract] = deepcopy(DEFAULT_ACTIVE_ADSC_CONTRACTS)
         self.is_adsc_emergency = False
+        self.is_adsc_disabled = False
 
         self._adsc_lock = threading.Lock()
         self._adsc_stop = threading.Event()
@@ -138,3 +139,14 @@ class AdscManager:
             room=self.room,
             initiator="ATC"
         )
+
+    def deactivate_emergency(self):
+        self.is_adsc_emergency = False
+
+    def disable(self):
+        self.is_adsc_disabled = True
+        self.stop_adsc_timer()
+
+    def enable(self):
+        self.is_adsc_disabled = False
+        self.start_adsc_timer()

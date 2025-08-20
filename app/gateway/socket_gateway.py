@@ -42,8 +42,8 @@ class SocketGateway:
         self.socket_service.listen('routine_set_speed', self.on_routine_set_speed)
         self.socket_service.listen('ads_c_emergency_on', self.on_activate_adsc_emergency)
         self.socket_service.listen('ads_c_emergency_off', self.on_deactivate_adsc_emergency)
-        self.socket_service.listen('ads_c_disabled', self.on_disable_adsc)
-        self.socket_service.listen('ads_c_enable', self.on_enable_adsc)
+        # self.socket_service.listen('ads_c_disabled', self.on_disable_adsc)
+        # self.socket_service.listen('ads_c_enable', self.on_enable_adsc)
         self.socket_service.listen('emergency_report', self.on_emergency)
         self.socket_service.listen('pilot_response', self.on_pilot_response)
         self.socket_service.listen('disconnect', self.on_disconnect)
@@ -200,7 +200,6 @@ class SocketGateway:
             flight.position_reports.append(position_report)
             self.socket_service.send("position_report_sent", position_report.to_dict(), room=sid)
     
-
     # adsc events
     def on_activate_adsc_emergency(self):
         sid = request.sid
@@ -209,25 +208,25 @@ class SocketGateway:
             flight.reports.adsc_manager.activate_emergency()
 
     @handle_errors(event_name="error", message="Failed to deactivate adsc emergency")
-    def on_deactivate_adsc_emergency(self, data: dict):
+    def on_deactivate_adsc_emergency(self):
         sid = request.sid
-        flight = self.flight_manager.get_session(sid)
-        # if flight:
-        #     flight.adsc_manager.deactivate_emergency()
+        flight : FlightSession = self.flight_manager.get_session(sid)
+        if flight:
+            flight.reports.adsc_manager.deactivate_emergency()
 
-    @handle_errors(event_name="error", message="Failed to disable adsc")
-    def on_disable_adsc(self, data: dict):
-        sid = request.sid
-        flight = self.flight_manager.get_session(sid)
-        #if flight:
-            #flight.adsc_manager.disable()
-    
-    @handle_errors(event_name="error", message="Failed to enable adsc")
-    def on_enable_adsc(self, data: dict):
-        sid = request.sid
-        flight = self.flight_manager.get_session(sid)
-        #if flight:
-            #flight.adsc_manager.enable()
+    # @handle_errors(event_name="error", message="Failed to disable adsc")
+    # def on_disable_adsc(self):
+    #     sid = request.sid
+    #     flight : FlightSession = self.flight_manager.get_session(sid)
+    #     if flight:
+    #         flight.reports.adsc_manager.disable()
+
+    # @handle_errors(event_name="error", message="Failed to enable adsc")
+    # def on_enable_adsc(self, data: dict):
+    #     sid = request.sid
+    #     flight = self.flight_manager.get_session(sid)
+    #     if flight:
+    #         flight.reports.adsc_manager.enable()
 
 
     

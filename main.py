@@ -17,7 +17,7 @@ port = int(os.environ.get('PORT', 5321))
 allowed_origins = [
     "http://localhost:3000",
     "http://localhost:3000/",
-    "http://localhost:5321"
+    "http://localhost:5321",
     "https://mycpdlc.netlify.app/",
     "https://68a554b6ea47ba54e927c891--mycpdlc.netlify.app",
 ]

@@ -115,7 +115,6 @@ class SocketGateway:
                         pilot_ref=entry.get("ref"),
                         pilot_text=entry.get("text")
             )
-            print(f"scenario {scenario}")
     
     @handle_errors(event_name="error", message="Failed to check if log is loadable")
     def on_change_status(self, data: dict):

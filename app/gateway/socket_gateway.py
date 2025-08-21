@@ -12,13 +12,14 @@ from app.managers.flight_manager.flight_manager import FlightManager
 from app.database.flight_plan.flight_plan import flight_plan
 from app.database.flight_plan.routine import routine
 from app.managers.logs_manager.logs_manager import LogsManager
+from app.utils.position_report_build import position_report_build
 from app.utils.error_handler import handle_errors
 
 class Speed(Enum):
-    SLOW = 3
-    MEDIUM = 6
-    FAST = 10
-    EXTREME = 20
+    SLOW = 30
+    MEDIUM = 60
+    FAST = 100
+    EXTREME = 200
 
 class SocketGateway:
     def __init__(self, socket_service: Socket, flight_manager: FlightManager, mongodb: MongoDb):
@@ -40,12 +41,15 @@ class SocketGateway:
         self.socket_service.listen('routine_step_back', self.on_routine_step_back)
         self.socket_service.listen('routine_step_forward', self.on_routine_step_forward)
         self.socket_service.listen('routine_set_speed', self.on_routine_set_speed)
+        self.socket_service.listen('position_report', self.on_send_position_report)
         self.socket_service.listen('ads_c_emergency_on', self.on_activate_adsc_emergency)
         self.socket_service.listen('ads_c_emergency_off', self.on_deactivate_adsc_emergency)
-        # self.socket_service.listen('ads_c_disabled', self.on_disable_adsc)
-        # self.socket_service.listen('ads_c_enable', self.on_enable_adsc)
+        self.socket_service.listen('ads_c_disabled', self.on_disable_adsc)
+        self.socket_service.listen('ads_c_enable', self.on_enable_adsc)
         self.socket_service.listen('emergency_report', self.on_emergency)
         self.socket_service.listen('pilot_response', self.on_pilot_response)
+        self.socket_service.listen('monitoring_report', self.on_monitoring_report)
+        self.socket_service.listen('add_index_report', self.on_add_index_report)
         self.socket_service.listen('disconnect', self.on_disconnect)
 
     def on_connect(self, auth=None):
@@ -76,9 +80,23 @@ class SocketGateway:
             return
         if thread_id:
             log = LogEntry.from_dict(entry, mongodb=flight.logs._mongodb)
-            new_log = flight.logs.add_log(log, thread_id=thread_id)   
+            new_log = flight.logs.add_log(log, thread_id=thread_id)
         else:
-            new_log = flight.logs.create_add_log(entry)             
+            valid_log = None
+            for log in flight.logs.logs:
+                scenario = flight.scenarios.on_pilot_dm_by_thread(
+                    thread_id=log.id,
+                    pilot_ref=entry.get("messageRef"),
+                    pilot_text=entry.get("formattedMessage")
+                )
+                if scenario:
+                    valid_log = log
+                    child_log = flight.logs.create_log(self.mongodb, entry.get("messageRef"), entry.get("formattedMessage"))
+                    new_log = flight.logs.add_log(child_log, thread_id=valid_log.id)
+                    print(f"Found valid log: {valid_log.content}")
+                    break
+                else:
+                    new_log = flight.logs.create_add_log(entry)             
         self.socket_service.send("log_added", new_log.to_dict(), room=sid)
 
     # START -  PILOT RESPONSE
@@ -128,6 +146,7 @@ class SocketGateway:
             log = flight.logs.get_log_by_id(data.get("logId"))
             if log:
                 flight.routine.pause()
+                self.socket_service.send("flight_paused", "pause", room=sid)
                 waypoint = log.get_waypoint()
                 current_waypoint = flight.routine.current_fix
                 new_route = flight.temp_route(current_waypoint, waypoint)
@@ -142,13 +161,17 @@ class SocketGateway:
         if flight: 
             new_route = flight.load_route(data.get("new_route", []))
             flight.routine.set_new_route(new_route)
+            flight.routine.play()
+            self.socket_service.send("flight_playing", "play", room=sid)
         self.socket_service.send("route_loaded", new_route, room=sid)
 
     def on_cancel_execute_route(self):
         sid = request.sid
-        flight = self.flight_manager.get_session(sid)
+        flight :FlightSession = self.flight_manager.get_session(sid)
         if flight:
             flight.routine.play()
+            self.socket_service.send("flight_playing", "play", room=sid)
+
 
     # START - actions for the routine 
     @handle_errors(event_name="error", message="Failed to play routine")
@@ -191,15 +214,28 @@ class SocketGateway:
 
     # START - Report events
     # position report
-    @handle_errors(event_name="error", message="Failed to send position report")
     def on_send_position_report(self, data: dict):
         sid = request.sid
-        flight = self.flight_manager.get_session(sid)
+        log_to_be_added = None
+        flight : FlightSession = self.flight_manager.get_session(sid)
         if flight:
-            position_report = PositionReport(**data)
-            flight.position_reports.append(position_report)
-            self.socket_service.send("position_report_sent", position_report.to_dict(), room=sid)
-    
+            position_report = position_report_build(flight.routine.routine, flight.routine.current_fix)
+            flight.reports.add_position_report(position_report)
+            log_requested = flight.logs.position_request_pending()
+            new_log = flight.logs.create_log(self.mongodb, data.get("ref"), data.get("message"))
+            if log_requested:
+                log_to_be_added = flight.logs.add_log(new_log, thread_id=log_requested)
+                scenario = flight.scenarios.on_pilot_dm_by_thread(
+                        thread_id=log_requested,
+                        pilot_ref=data.get("ref"),
+                        pilot_text=data.get("message")
+                )
+                print(f"scenario {scenario}")
+            else:   
+                log_to_be_added =flight.logs.add_log(new_log)
+
+            self.socket_service.send("log_added", log_to_be_added.to_dict(), room=sid)
+
     # adsc events
     def on_activate_adsc_emergency(self):
         sid = request.sid
@@ -214,24 +250,22 @@ class SocketGateway:
         if flight:
             flight.reports.adsc_manager.deactivate_emergency()
 
-    # @handle_errors(event_name="error", message="Failed to disable adsc")
-    # def on_disable_adsc(self):
-    #     sid = request.sid
-    #     flight : FlightSession = self.flight_manager.get_session(sid)
-    #     if flight:
-    #         flight.reports.adsc_manager.disable()
+    @handle_errors(event_name="error", message="Failed to disable adsc")
+    def on_disable_adsc(self):
+        sid = request.sid
+        flight : FlightSession = self.flight_manager.get_session(sid)
+        if flight:
+            flight.reports.adsc_manager.disable()
 
-    # @handle_errors(event_name="error", message="Failed to enable adsc")
-    # def on_enable_adsc(self, data: dict):
-    #     sid = request.sid
-    #     flight = self.flight_manager.get_session(sid)
-    #     if flight:
-    #         flight.reports.adsc_manager.enable()
+    @handle_errors(event_name="error", message="Failed to enable adsc")
+    def on_enable_adsc(self, data: dict):
+        sid = request.sid
+        flight = self.flight_manager.get_session(sid)
+        if flight:
+            flight.reports.adsc_manager.enable()
 
-
-    
     # START - Emergency 
-    #@handle_errors(event_name="error", message="Failed to handle emergency")
+    @handle_errors(event_name="error", message="Failed to handle emergency")
     def on_emergency(self, data: dict):
         sid = request.sid
         request_data = data.get("request", "")
@@ -241,11 +275,28 @@ class SocketGateway:
             return
         new_log = flight.logs.create_add_log(request_data)
         self.socket_service.send("log_added", new_log.to_dict(), room=sid)
-        print(f"New log created: {new_log.id}")
         flight.reports.set_emergency_report(EmergencyReport(**emergencyData), new_log.id)
-
-
     # END - Emergency
+
+    # START - Monitoring
+    def on_monitoring_report(self, data: dict):
+        sid = request.sid
+        flight :FlightSession= self.flight_manager.get_session(sid)
+        if flight:
+            new_log = flight.logs.create_log(self.mongodb, data.get("ref"), data.get("message"))
+            flight.logs.add_log(new_log)
+            self.socket_service.send("log_added", new_log.to_dict(), room=sid)
+            flight.reports.set_monitoring_report(data.get("data"))
+    # END - Monitoring
+
+    # START - Index Reports
+    def on_add_index_report(self, data: dict):
+        sid = request.sid
+        flight :FlightSession= self.flight_manager.get_session(sid)
+        if flight:
+            flight.reports.add_index_report(data)
+
+    # END - Index Reports
 
     # END - Report events
 

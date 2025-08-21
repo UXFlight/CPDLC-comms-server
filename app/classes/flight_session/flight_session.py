@@ -19,8 +19,8 @@ class FlightSession:
         self.status = FlightStatus(routine["route"], mongodb)
         self.scenarios = FsmScenarioManager(socket, mongodb)     
         self.logs = LogsManager(mongodb, socket, scenario_manager=self.scenarios)
-        self.reports = ReportsManager(socket, self.status, pilot_id, self.logs, scenario_manager=self.scenarios)
-        self.routine = Routine(routine, socket, self.status, pilot_id, self.logs, self.reports)
+        self.reports = ReportsManager(mongodb,socket, self.status, pilot_id, self.logs, scenario_manager=self.scenarios)
+        self.routine = Routine(routine, socket, self.status, pilot_id, self.logs, self.reports, self.scenarios)
         self.route = routine["route"]
         self.current_data_authority = atc_id
         self.next_data_authority = None
@@ -71,7 +71,6 @@ class FlightSession:
         )
 
         updated_route = self.recalculate_total_distance(temp_route)
-        print(f"Updated route: {updated_route}")
         return updated_route
 
 

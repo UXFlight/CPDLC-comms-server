@@ -57,6 +57,7 @@ class FsmScenarioManager:
         fsm._on_end = _on_end
 
         if thread_id:
+            print(f"N EST PAS SUPPOSE ENTRER ICI")
             fsm.thread_id = thread_id
             with self._lock:
                 self._by_thread[thread_id] = inst

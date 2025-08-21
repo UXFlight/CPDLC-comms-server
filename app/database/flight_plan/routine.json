@@ -27,7 +27,8 @@
     "icing": "LIGHT",
     "atc_messages": [
       {
-      "at_position": 5,
+      "at_position": 1,
+      "scenario": "SCENARIO_CLIMB_AND_REPORT_MAINTAINING",
       "message": {
       "id": "CYUL_UM20",
       "messageRef": "UM20",
@@ -66,18 +67,7 @@
     },
     "turbulence": "NONE",
     "icing": "LIGHT",
-    "atc_messages": [  
-      {"at_position": 2,
-      "message":{
-        "id": "PTD_UM129",
-        "messageRef": "UM129",
-        "formattedMessage": "REPORT MAINTAINING FL370",
-        "direction": "UPLINK",
-        "status": "NEW",
-        "sender": "ATC3",
-        "intent": "Request for a position or level report once the aircraft reaches the cleared flight level."
-      }}
-    ],
+    "atc_messages":  [],
     "nearby_airports":  [
     {"icao": "KABE", "name": "Allentown–Bethlehem", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 67},
     {"icao": "KMDT", "name": "Harrisburg Intl", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 152},
@@ -141,19 +131,7 @@
     },
     "turbulence": "SEVERE",
     "icing": "LIGHT",
-    "atc_messages": [
-      {
-      "at_position": 2,
-      "message": {
-        "id": "ART_UM130",
-        "messageRef": "UM130",
-        "formattedMessage": "REPORT PASSING SYR",
-        "direction": "UPLINK",
-        "status": "NEW",
-        "sender": "ATC2",
-        "intent": "Instruction to report when the aircraft has passed the specified position."
-    }}
-  ],
+    "atc_messages": [],
   "nearby_airports":[
     {"icao": "KART", "name": "Watertown Intl", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 50},
     {"icao": "KGTB", "name": "Wheeler-Sack (Fort Drum)", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 60},
@@ -182,18 +160,7 @@
     },
     "turbulence": "NONE",
     "icing": "TRACE",
-    "atc_messages": [{
-      "at_position": 2,
-      "message": {
-        "id": "SYR_UM128",
-        "messageRef": "UM128",
-        "formattedMessage": "DESCEND TO AND MAINTAIN FL370",
-        "direction": "UPLINK",
-        "status": "NEW",
-        "sender": "ATC",
-        "intent": "Instruction to descend to a lower flight level."
-      }
-    }],
+    "atc_messages": [],
     "nearby_airports":[
     {"icao": "KSYR", "name": "Syracuse Hancock", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 80},
     {"icao": "KRME", "name": "Griffiss (Rome, NY)", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 70},
@@ -222,18 +189,7 @@
     },
     "turbulence": "SEVERE",
     "icing": "NONE",
-    "atc_messages": [{
-      "at_position": 100,
-      "message":{
-        "id": "CNTER_UM24",
-        "messageRef": "UM24",
-        "formattedMessage": "DESCEND TO AND MAINTAIN FL260",
-        "direction": "UPLINK",
-        "status": "NEW",
-        "sender": "ATC",
-        "intent": "Instruction to descend to a lower flight level."
-      }
-    }],
+    "atc_messages": [],
     "nearby_airports": [
     {"icao": "KELM", "name": "Elmira/Corning", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 88},
     {"icao": "KBGM", "name": "Binghamton", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 69},
@@ -380,7 +336,18 @@
     },
     "turbulence": "LIGHT",
     "icing": "MODERATE",
-    "atc_messages": null,
+    "atc_messages": [   {
+      "at_position": 10,
+      "message": {
+        "id": "PTD_UM130",
+        "messageRef": "UM130",
+        "formattedMessage": "REPORT PASSING MULBE",
+        "direction": "UPLINK",
+        "status": "NEW",
+        "sender": "ATC",
+        "intent": "Instruction to report when the aircraft has passed the specified position."
+      }
+    }],
     "nearby_airports":[
     {"icao": "KRDU", "name": "Raleigh–Durham", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 109},
     {"icao": "KGSO", "name": "Greensboro/Piedmont Triad", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 166},
@@ -409,7 +376,21 @@
     },
     "turbulence": "MODERATE",
     "icing": "LIGHT",
-    "atc_messages": null,
+    "atc_messages": [
+    {
+      "at_position": 10,
+      "scenario": "SCENARIO_REQ_POSITION_REPORT",
+      "message": {
+        "id": "ASBUR_UM147",
+        "messageRef": "UM147",
+        "formattedMessage": "REQUEST POSITION REPORT",
+        "direction": "UPLINK",
+        "status": "NEW",
+        "sender": "ATC",
+        "intent": "Request for a position report from the aircraft."
+      }
+    }
+  ],
     "nearby_airports":[
     {"icao": "KCLT", "name": "Charlotte Douglas", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 206},
     {"icao": "KGSP", "name": "Greenville–Spartanburg", "descend_to": "FL100", "offset": {"direction": "RIGHT", "distance_nm": 15}, "fuel_kg": 166},

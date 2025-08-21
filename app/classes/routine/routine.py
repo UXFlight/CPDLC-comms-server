@@ -3,19 +3,29 @@ from dataclasses import dataclass
 from app.classes.flight_status.flight_status import FlightStatus
 from enum import Enum
 
+from app.classes.fsm.fsm_scenarios.climb_and_report_scenario import SCENARIO_CLIMB_AND_REPORT_MAINTAINING
+from app.classes.fsm.fsm_scenarios.fsm_scenario_manager import FsmScenarioManager
+from app.classes.fsm.fsm_scenarios.pos_report_scenario import SCENARIO_REQ_POSITION_REPORT
+from app.classes.fsm.fsm_types import Scenario
 from app.constants.RoutineSnapshot import RoutineSnapshot
 from app.managers.logs_manager.logs_manager import LogsManager
 from app.managers.reports_manager import ReportsManager
 from app.utils.position_report_build import position_report_build
 
 class Speed(Enum):
-    SLOW = 3
-    MEDIUM = 6
-    FAST = 10
-    EXTREME = 20
+    SLOW = 30
+    MEDIUM = 60
+    FAST = 100
+    EXTREME = 200
+
+SCENARIO_REGISTRY: dict[str, Scenario] = {
+    "SCENARIO_REQ_POSITION_REPORT": SCENARIO_REQ_POSITION_REPORT,
+    "SCENARIO_CLIMB_AND_REPORT_MAINTAINING": SCENARIO_CLIMB_AND_REPORT_MAINTAINING
+}
+
 
 class Routine:
-    def __init__(self, routine, socket, flight_status: FlightStatus, room, logs: LogsManager, reports: ReportsManager):
+    def __init__(self, routine, socket, flight_status: FlightStatus, room, logs: LogsManager, reports: ReportsManager, scenarios: FsmScenarioManager):
         self.routine = routine
         self.route = routine["route"]
         self.flight_status = flight_status
@@ -23,8 +33,9 @@ class Routine:
         self.room = room
         self.logs = logs
         self.reports = reports
+        self.scenarios = scenarios
         self.acceleration = Speed.MEDIUM.value
-        self.tick_interval = 0.1
+        self.tick_interval = 1
         self.elapsed_simulated = 0
         self.current_fix = 0
         self.distance_in_segment = 0 
@@ -49,7 +60,6 @@ class Routine:
             "distances": distances,
             "current_fix": self.current_fix
         }, room=self.room)
-        self.play()
 
     def simulation_speed(self, speed: Speed):
         self.acceleration = speed.value
@@ -149,9 +159,26 @@ class Routine:
                 if message['message']['id'] in self.visited_messages:
                     continue
                 if (message["at_position"] <= self.distance_in_segment):
-                    new_log = self.logs.create_add_log(message["message"])
-                    self.visited_messages.append(f"{new_log.id}")
-                    self.socket.send("log_added", new_log.to_dict(), room=self.room)
+                    if "scenario" in message:
+                        self.visited_messages.append(message['message']['id'])
+                        self.handle_scenario(message)
+                    else:
+                        new_log = self.logs.create_add_log(message["message"])
+                        self.visited_messages.append(f"{new_log.id}")
+                        self.socket.send("log_added", new_log.to_dict(), room=self.room)
+
+    def handle_scenario(self, message: dict):
+        scenario_key = message.get("scenario")
+        if not scenario_key:
+            return
+
+        scenario_obj = SCENARIO_REGISTRY.get(scenario_key)
+        if scenario_obj:
+            self.scenarios.start_scenario(
+                scenario=scenario_obj,
+                room=self.room,
+                initiator="ATC",
+            )
 
     def remove_um_message(self, fix):
         msgs = self.concerned_messages(fix)

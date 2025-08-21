@@ -149,3 +149,10 @@ class LogsManager:
         else:
             self.logs.append(log)
             return log
+
+    def position_request_pending(self):
+        for log in self.logs:
+            if log.ref == "UM147" and not log.ended:
+                print(f"Position request pending for log {log.id}")
+                return log.id
+        return None

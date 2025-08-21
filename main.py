@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()  # charge .env dans os.environ
+
 import os
 from flask import Flask  # type: ignore
 from app.classes import Socket
@@ -14,8 +17,9 @@ port = int(os.environ.get('PORT', 5321))
 allowed_origins = [
     "http://localhost:3000",
     "http://localhost:3000/",
+    "http://localhost:5321"
     "https://mycpdlc.netlify.app/",
-    "https://68a554b6ea47ba54e927c891--mycpdlc.netlify.app"
+    "https://68a554b6ea47ba54e927c891--mycpdlc.netlify.app",
 ]
 
 def create_app():
@@ -26,8 +30,6 @@ def create_app():
     socketio = SocketIO(
         app, 
         cors_allowed_origins=allowed_origins,
-        logger=True,
-        engineio_logger=True
     )
     return app, socketio
 

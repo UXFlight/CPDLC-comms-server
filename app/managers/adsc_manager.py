@@ -4,6 +4,7 @@ import threading
 from typing import Optional
 import uuid
 from app.classes.fsm.fsm_scenarios.adsc_scenario import SCENARIO_ADSC_EMERG
+from app.classes.fsm.fsm_scenarios.adsc_unable_scenario import SCENARIO_ADSC_CONFIRM_ARMED
 from app.classes.log_entry.log_entry import LogEntry
 from app.classes.report.adsc_contract import ADSCContract
 from app.constants.responses import ADSC_EMERGENCY
@@ -146,6 +147,11 @@ class AdscManager:
     def disable(self):
         self.is_adsc_disabled = True
         self.stop_adsc_timer()
+        self.scenario_manager.start_scenario(
+            scenario=SCENARIO_ADSC_CONFIRM_ARMED,
+            room=self.room,
+            initiator="ATC"
+        )
 
     def enable(self):
         self.is_adsc_disabled = False

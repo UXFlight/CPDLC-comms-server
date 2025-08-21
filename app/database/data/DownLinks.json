@@ -704,7 +704,7 @@
   {
     "Ref_Num": "DM37",
     "Message_Intent": "Notification that the aircraft is maintaining the specified level.",
-    "Message_Element": "MAINTAINING [level] or LEVEL [altitude]",
+    "Message_Element": "MAINTAINING [level]",
     "Response_required": [
       "N"
     ],

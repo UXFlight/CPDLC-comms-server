@@ -63,7 +63,7 @@ class FsmEngine:
 
             self.socket.send("scenario_log_add", payload, room=self.room)
 
-        threading.Timer(5.0, _delayed_emit).start()
+        threading.Timer(3.0, _delayed_emit).start()
 
     def _get_formatted_response(self, trans: Transition, next_trans: Transition):
         responses = []
@@ -71,6 +71,9 @@ class FsmEngine:
             for ref in trans.branches.keys():
                 dl = self.mongodb.find_datalink_by_ref(ref)
                 if dl:
+                    msg = dl.get("Message_Element", "")
+                    if "[" in msg and "]" in msg:
+                        continue
                     responses.append({"ref": ref, "text": dl.get("Message_Element")})
         elif next_trans and isinstance(next_trans.expected, str) and next_trans.expected not in ("__ANY__", ""):
             dl = self.mongodb.find_datalink_by_ref(next_trans.expected)
@@ -148,6 +151,7 @@ class FsmEngine:
                     return
 
             trans = self.scenario[self.state_id]
+            
             # branches
             if trans.branches and pilot_ref in trans.branches:
                 nxt = trans.branches[pilot_ref]
@@ -156,6 +160,10 @@ class FsmEngine:
                 nxt_trans = self.scenario[self.state_id]
                 if nxt_trans.atc_replies:
                     self._emit_atc(nxt_trans.atc_replies, nxt_trans)
+                    if nxt_trans.next_state == "end":
+                        def _delayed_emit():
+                            self.socket.send("thread_ending",  self.thread_id, room=self.room)
+                        threading.Timer(10.0, _delayed_emit).start()
                     return
                 self._arm_timeout(nxt_trans)
 
@@ -164,11 +172,9 @@ class FsmEngine:
                 return
 
             if pilot_ref == "DM0":  # WILCO
-                print(f"rentre ici car dm0")
                 next_state = "end"
                 self.go_to_next_state(self.scenario[next_state])
                 return
-
 
             if pilot_ref == "DM1":  # UNABLE
                 next_state = "end"
@@ -177,11 +183,11 @@ class FsmEngine:
 
             # expected
             next_state = trans.next_state
+            print(f"next_state: {next_state}")
             next_trans = self.scenario[next_state] if next_state else None
 
             expected = next_trans.expected
             matched = (expected == "__ANY__") or (pilot_ref == expected)
-            print(f"Pilot DM: {pilot_ref} (expected: {expected})")
             if not matched:
                 print(f"EXPECTED MISMATCH: got {pilot_ref}, expected {expected}")
                 return

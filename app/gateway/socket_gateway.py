@@ -1,7 +1,6 @@
 import asyncio
 from copy import deepcopy
 from enum import Enum
-import threading
 from flask import json, request  # type: ignore
 from app.classes import Socket  # type: ignore
 from app.classes.flight_session.flight_session import FlightSession
@@ -68,12 +67,7 @@ class SocketGateway:
             self.socket_service.send("load_logs", flight.logs.get_logs(), room=sid)
             self.socket_service.send("load_adsc_reports", flight.reports.adsc_manager.adsc_to_dict(), room=sid)
             flight.reports.adsc_manager.start_adsc_timer()
-            
-            def run_simulation():
-                asyncio.run(flight.routine.simulate_flight_progress())
-            
-            thread = threading.Thread(target=run_simulation, daemon=True)
-            thread.start()
+            self.socket_service.start_background_task(flight.routine.simulate_flight_progress)
         else:
             self.socket_service.send("logon_failure", data={}, room=sid)
 

@@ -1,9 +1,9 @@
 from flask import Blueprint, request
 from app.classes.log_entry.log_entry import LogEntry
-from app.database.mongo_db import MongoDb
+from app.database.mongo_db import mongo_db, MongoDb
 
 general_bp = Blueprint('general', __name__)
-mongodb = MongoDb()
+mongodb = mongo_db
 
 @general_bp.route('/logs', methods=['POST'])
 def logs():

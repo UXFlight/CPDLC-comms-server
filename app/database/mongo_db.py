@@ -30,3 +30,7 @@ class MongoDb:
         if not atc:
             return None
         return atc if atc.get("available") else None
+
+
+## Global MangoDb instance
+mongo_db = MongoDb()

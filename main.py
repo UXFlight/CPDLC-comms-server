@@ -1,9 +1,11 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 import os
 from flask import Flask # type: ignore
 from app.classes import Socket
 from flask_socketio import SocketIO # type: ignore
 from app.controllers.routes import general_bp
-from app.database.mongo_db import MongoDb
 from app.gateway.socket_gateway import SocketGateway
 from flask_cors import CORS # type: ignore
 from app.managers.flight_manager.flight_manager import FlightManager
@@ -33,8 +35,7 @@ def create_app():
 app, socketio = create_app()
 socket_service = Socket(socketio)
 flight_manager = FlightManager()
-mongodb = MongoDb()
-socket_manager = SocketGateway(socket_service, flight_manager, mongodb)
+socket_manager = SocketGateway(socket_service, flight_manager)
 socket_manager.init_events()
 
 @app.route('/')

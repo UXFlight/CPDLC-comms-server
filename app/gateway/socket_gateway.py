@@ -7,7 +7,7 @@ from app.classes.flight_session.flight_session import FlightSession
 from app.classes.log_entry.log_entry import LogEntry
 from app.classes.report.emergency_report import EmergencyReport
 from app.classes.report.position_report import PositionReport
-from app.database.mongo_db import MongoDb
+from app.database.mongo_db import mongo_db, MongoDb
 from app.managers.flight_manager.flight_manager import FlightManager
 from app.database.flight_plan.flight_plan import flight_plan
 from app.database.flight_plan.routine import routine
@@ -22,10 +22,10 @@ class Speed(Enum):
     EXTREME = 200
 
 class SocketGateway:
-    def __init__(self, socket_service: Socket, flight_manager: FlightManager, mongodb: MongoDb):
+    def __init__(self, socket_service: Socket, flight_manager: FlightManager):
         self.socket_service = socket_service
         self.flight_manager = flight_manager
-        self.mongodb = mongodb
+        self.mongodb : MongoDb = mongo_db
 
     def init_events(self):
         self.socket_service.listen('connect', self.on_connect)

@@ -1,8 +1,4 @@
 from app.classes.fsm.fsm_types import Msg, Scenario, Transition
-from app.database.mongo_db import MongoDb
-from app.managers.logs_manager.logs_manager import LogsManager
-
-mongodb = MongoDb()
 
 SCENARIO_ADSC_EMERG: Scenario = {
     "atc_entry": Transition(

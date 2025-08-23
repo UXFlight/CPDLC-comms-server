@@ -1,10 +1,7 @@
-from dotenv import load_dotenv
-load_dotenv()  # charge .env dans os.environ
-
 import os
-from flask import Flask  # type: ignore
+from flask import Flask # type: ignore
 from app.classes import Socket
-from flask_socketio import SocketIO  # type: ignore
+from flask_socketio import SocketIO # type: ignore
 from app.controllers.routes import general_bp
 from app.database.mongo_db import MongoDb
 from app.gateway.socket_gateway import SocketGateway
@@ -17,8 +14,8 @@ port = int(os.environ.get('PORT', 5321))
 allowed_origins = [
     "http://localhost:3000",
     "http://localhost:3000/",
-    "http://localhost:5321"
-    "https://mycpdlc.netlify.app/",
+    "http://localhost:5321",
+    "https://mycpdlc.netlify.app",
     "https://68a554b6ea47ba54e927c891--mycpdlc.netlify.app",
 ]
 
@@ -26,15 +23,14 @@ def create_app():
     app = Flask(__name__)
     CORS(app, origins=allowed_origins)
     app.register_blueprint(general_bp)
-    
     socketio = SocketIO(
-        app, 
+        app,
         cors_allowed_origins=allowed_origins,
+        async_mode='eventlet'
     )
     return app, socketio
 
 app, socketio = create_app()
-
 socket_service = Socket(socketio)
 flight_manager = FlightManager()
 mongodb = MongoDb()
@@ -47,4 +43,5 @@ def index():
 
 if __name__ == '__main__':
     # Echo.start_ingescape_agent()
-    socketio.run(app, host="0.0.0.0", port=port, debug=False)
+    print(f"Serveur démarré sur le port {port}")
+    socketio.run(app, host="0.0.0.0", port=port, debug=True)

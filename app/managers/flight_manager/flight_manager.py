@@ -21,17 +21,15 @@ class FlightManager:
         if session is None:
             print(f"No session found for pilot {pilot_id}")
             return False
+        asyncio.run(session.reports.adsc_manager.stop_adsc_and_wait(timeout=2.0))
 
-        async def stop_and_remove():
-            try:
-                await session.reports.adsc_manager.stop_adsc_and_wait(timeout=2.0)
-                await session.routine.stop_and_wait(timeout=2.0)
-            except Exception as e:
-                print(f"Error while stopping routine for {pilot_id}: {e}")
-            finally:
-                self.sessions.pop(pilot_id, None)
-                print(f"Removed session for pilot {pilot_id}")
+        try:
+            asyncio.run(session.routine.stop_and_wait(timeout=2.0))
+        except Exception as e:
+            print(f"Error while stopping routine for {pilot_id}: {e}")
+        finally:
+            self.sessions.pop(pilot_id, None)
+            print(f"Removed session for pilot {pilot_id}")
 
-        self.socket.start_background_task(stop_and_remove)
         return True
 

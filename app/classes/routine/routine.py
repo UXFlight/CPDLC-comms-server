@@ -215,8 +215,9 @@ class Routine:
         if not self.running:
             self._stop_signal = False
             self.reports.adsc_manager.start_adsc_timer()
-            self._stop_event.clear() 
-            self.socket.start_background_task(self.simulate_flight_progress)
+            if(self._stop_event is not None) :
+                self._stop_event.clear() 
+            self.socket.start_background_task(asyncio.run, self.simulate_flight_progress())
 
     def stop(self):
         self.running = False

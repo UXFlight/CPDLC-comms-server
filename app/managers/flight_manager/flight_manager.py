@@ -28,6 +28,7 @@ class FlightManager:
         except Exception as e:
             print(f"Error while stopping routine for {pilot_id}: {e}")
         finally:
+            # Supprimer après l’arrêt
             self.sessions.pop(pilot_id, None)
             print(f"Removed session for pilot {pilot_id}")
 

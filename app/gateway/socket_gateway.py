@@ -67,7 +67,17 @@ class SocketGateway:
             self.socket_service.send("load_logs", flight.logs.get_logs(), room=sid)
             self.socket_service.send("load_adsc_reports", flight.reports.adsc_manager.adsc_to_dict(), room=sid)
             flight.reports.adsc_manager.start_adsc_timer()
-            self.socket_service.start_background_task(asyncio.run, flight.routine.simulate_flight_progress())
+            
+            # Wrapper pour background task
+            def _run_flight_simulation():
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                try:
+                    loop.run_until_complete(flight.routine.simulate_flight_progress())
+                finally:
+                    loop.close()
+            
+            self.socket_service.start_background_task(_run_flight_simulation)
         else:
             self.socket_service.send("logon_failure", data={}, room=sid)
 

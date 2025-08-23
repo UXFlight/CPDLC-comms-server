@@ -21,16 +21,21 @@ class FlightManager:
         if session is None:
             print(f"No session found for pilot {pilot_id}")
             return False
-        asyncio.run(session.reports.adsc_manager.stop_adsc_and_wait(timeout=2.0))
-
+        
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        
         try:
-            asyncio.run(session.routine.stop_and_wait(timeout=2.0))
+            loop.run_until_complete(session.reports.adsc_manager.stop_adsc_and_wait(timeout=2.0))
+            loop.run_until_complete(session.routine.stop_and_wait(timeout=2.0))
         except Exception as e:
             print(f"Error while stopping routine for {pilot_id}: {e}")
         finally:
-            # Supprimer après l’arrêt
+            # Fermer la boucle
+            loop.close()
+            # Supprimer la session après l'arrêt
             self.sessions.pop(pilot_id, None)
             print(f"Removed session for pilot {pilot_id}")
-
+        
         return True
 

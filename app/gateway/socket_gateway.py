@@ -71,6 +71,36 @@ class SocketGateway:
         else:
             self.socket_service.send("logon_failure", data={}, room=sid)
 
+    # def on_add_log(self, payload: dict):
+    #     sid = request.sid
+    #     entry = payload.get("log_entry") or {}
+    #     thread_id = payload.get("thread_id") or ""
+    #     flight = self.flight_manager.get_session(sid)
+    #     if not flight or not entry:
+    #         return
+    #     if thread_id:
+    #         log = LogEntry.from_dict(entry, mongodb=flight.logs._mongodb)
+    #         if not log.ref:
+    #             log = flight.logs.create_log(self.mongodb, entry.get("messageRef"), entry.get("formattedMessage"))
+    #         new_log = flight.logs.add_log(log, thread_id=thread_id)
+    #     else:
+    #         valid_log = None
+    #         for log in flight.logs.logs:
+    #             scenario = flight.scenarios.on_pilot_dm_by_thread(
+    #                 thread_id=log.id,
+    #                 pilot_ref=entry.get("messageRef"),
+    #                 pilot_text=entry.get("formattedMessage")
+    #             )
+    #             if scenario:
+    #                 valid_log = log
+    #                 child_log = flight.logs.create_log(self.mongodb, entry.get("messageRef"), entry.get("formattedMessage"))
+    #                 new_log = flight.logs.add_log(child_log, thread_id=valid_log.id)
+    #                 print(f"Found valid log: {valid_log.content}")
+    #                 break
+    #             else:
+    #                 new_log = flight.logs.create_add_log(entry)             
+    #     self.socket_service.send("log_added", new_log.to_dict(), room=sid)
+
     def on_add_log(self, payload: dict):
         sid = request.sid
         entry = payload.get("log_entry") or {}
@@ -80,23 +110,9 @@ class SocketGateway:
             return
         if thread_id:
             log = LogEntry.from_dict(entry, mongodb=flight.logs._mongodb)
-            new_log = flight.logs.add_log(log, thread_id=thread_id)
+            new_log = flight.logs.add_log(log, thread_id=thread_id)   
         else:
-            valid_log = None
-            for log in flight.logs.logs:
-                scenario = flight.scenarios.on_pilot_dm_by_thread(
-                    thread_id=log.id,
-                    pilot_ref=entry.get("messageRef"),
-                    pilot_text=entry.get("formattedMessage")
-                )
-                if scenario:
-                    valid_log = log
-                    child_log = flight.logs.create_log(self.mongodb, entry.get("messageRef"), entry.get("formattedMessage"))
-                    new_log = flight.logs.add_log(child_log, thread_id=valid_log.id)
-                    print(f"Found valid log: {valid_log.content}")
-                    break
-                else:
-                    new_log = flight.logs.create_add_log(entry)             
+            new_log = flight.logs.create_add_log(entry)             
         self.socket_service.send("log_added", new_log.to_dict(), room=sid)
 
     # START -  PILOT RESPONSE

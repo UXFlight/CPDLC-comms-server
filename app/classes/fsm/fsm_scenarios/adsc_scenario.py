@@ -26,7 +26,7 @@ SCENARIO_ADSC_EMERG: Scenario = {
     ),
 
     "pilot_reset_ok": Transition(
-        expected="DM67ab",  # si on venait d'un atc_emerg_on
+        expected="DM67ab", 
         atc_replies=[
             Msg(log_entry={"ref": "UM3", "text": "ROGER ADS‑C RESET. EMERGENCY CANCELLED."}, role="ATC")
         ],

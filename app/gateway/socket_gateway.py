@@ -44,6 +44,8 @@ class SocketGateway:
         self.socket_service.listen('position_report', self.on_send_position_report)
         self.socket_service.listen('ads_c_emergency_on', self.on_activate_adsc_emergency)
         self.socket_service.listen('ads_c_emergency_off', self.on_deactivate_adsc_emergency)
+        self.socket_service.listen('request_adsc_data', self.on_request_adsc_data)
+        self.socket_service.listen('stop_adsc_data', self.on_stop_adsc_data)
         self.socket_service.listen('ads_c_disabled', self.on_disable_adsc)
         self.socket_service.listen('ads_c_enable', self.on_enable_adsc)
         self.socket_service.listen('emergency_report', self.on_emergency)
@@ -98,7 +100,7 @@ class SocketGateway:
     #                 print(f"Found valid log: {valid_log.content}")
     #                 break
     #             else:
-    #                 new_log = flight.logs.create_add_log(entry)             
+    #                 new_log = flight.logs.create_add_log(entry)
     #     self.socket_service.send("log_added", new_log.to_dict(), room=sid)
 
     def on_add_log(self, payload: dict):
@@ -110,9 +112,9 @@ class SocketGateway:
             return
         if thread_id:
             log = LogEntry.from_dict(entry, mongodb=flight.logs._mongodb)
-            new_log = flight.logs.add_log(log, thread_id=thread_id)   
+            new_log = flight.logs.add_log(log, thread_id=thread_id)
         else:
-            new_log = flight.logs.create_add_log(entry)             
+            new_log = flight.logs.create_add_log(entry)
         self.socket_service.send("log_added", new_log.to_dict(), room=sid)
 
     # START -  PILOT RESPONSE
@@ -131,7 +133,7 @@ class SocketGateway:
                         pilot_ref=entry.get("ref"),
                         pilot_text=entry.get("text")
             )
-    
+
     @handle_errors(event_name="error", message="Failed to check if log is loadable")
     def on_change_status(self, data: dict):
         sid = request.sid
@@ -173,7 +175,7 @@ class SocketGateway:
     def on_execute_route(self, data: dict):
         sid = request.sid
         flight = self.flight_manager.get_session(sid)
-        if flight: 
+        if flight:
             new_route = flight.load_route(data.get("new_route", []))
             flight.routine.set_new_route(new_route)
             flight.routine.play()
@@ -188,7 +190,7 @@ class SocketGateway:
             self.socket_service.send("flight_playing", "play", room=sid)
 
 
-    # START - actions for the routine 
+    # START - actions for the routine
     @handle_errors(event_name="error", message="Failed to play routine")
     def on_routine_play(self, data: dict):
         sid = request.sid
@@ -246,7 +248,7 @@ class SocketGateway:
                         pilot_text=data.get("message")
                 )
                 print(f"scenario {scenario}")
-            else:   
+            else:
                 log_to_be_added =flight.logs.add_log(new_log)
 
             self.socket_service.send("log_added", log_to_be_added.to_dict(), room=sid)
@@ -265,6 +267,20 @@ class SocketGateway:
         if flight:
             flight.reports.adsc_manager.deactivate_emergency()
 
+    @handle_errors(event_name="error", message="Failed to request adsc data")
+    def on_request_adsc_data(self):
+        sid = request.sid
+        flight : FlightSession = self.flight_manager.get_session(sid)
+        if flight:
+            flight.reports.adsc_manager.provide_data = True
+
+    @handle_errors(event_name="error", message="Failed to stop adsc data")
+    def on_stop_adsc_data(self):
+        sid = request.sid
+        flight : FlightSession = self.flight_manager.get_session(sid)
+        if flight:
+            flight.reports.adsc_manager.provide_data = False
+
     @handle_errors(event_name="error", message="Failed to disable adsc")
     def on_disable_adsc(self):
         sid = request.sid
@@ -279,7 +295,7 @@ class SocketGateway:
         if flight:
             flight.reports.adsc_manager.enable()
 
-    # START - Emergency 
+    # START - Emergency
     @handle_errors(event_name="error", message="Failed to handle emergency")
     def on_emergency(self, data: dict):
         sid = request.sid

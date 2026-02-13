@@ -32,7 +32,7 @@ class ReportsManager:
         self.adsc_manager = None
         self.emergency_report : EmergencyReport = None
 
-    def set_snapshot_provider(self, fn: Callable[[], RoutineSnapshot]):
+    def set_snapshot_provider(self, fn: Callable[[], RoutineSnapshot]): # fournit l'etat courant de la routine
         self.adsc_manager = AdscManager(self.socket, self.status, self.room, self.logs, self.scenario_manager, fn)
         self._get_snapshot = fn
 

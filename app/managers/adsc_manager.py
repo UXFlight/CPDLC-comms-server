@@ -26,6 +26,7 @@ class AdscManager:
         self.logs : LogsManager = logs
         self.scenario_manager = scenario_manager
         self._get_snapshot = get_snapshot
+        self.provide_data = False
 
         self.adsc_contracts: list[ADSCContract] = deepcopy(DEFAULT_ACTIVE_ADSC_CONTRACTS)
         self.is_adsc_emergency = False
@@ -121,7 +122,7 @@ class AdscManager:
                         "is_Active": c.is_active
                     })
 
-                if updates_payload and not self._adsc_stop.is_set():
+                if updates_payload and not self._adsc_stop.is_set() and self.provide_data:
                     self.socket.send("adsc_countdown", updates_payload, room=self.room)
 
     def _update_adsc_data(self, contract: ADSCContract, snap):

@@ -3,6 +3,7 @@ import threading
 from random import choice
 from typing import List, Optional, Callable
 from app.classes.fsm.fsm_types import Msg, Scenario, Transition
+from app.core.logging import log_error, log_user_action
 from app.managers.logs_manager.logs_manager import LogsManager
 
 class FsmEngine:
@@ -62,6 +63,13 @@ class FsmEngine:
                     pass
 
             self.socket.send("scenario_log_add", payload, room=self.room)
+            log_user_action(
+                self.room,
+                "message_send",
+                target="scenario_log_add",
+                thread_id=self.thread_id,
+                ref=m.log_entry.get("ref"),
+            )
 
         threading.Timer(3.0, _delayed_emit).start()
 
@@ -147,7 +155,12 @@ class FsmEngine:
                     # self._emit_atc([
                     #     Msg(log_entry=LogsManager.create_log(self.mongodb, "UM1", "STANDBY."), role="ATC")
                     # ])
-                    print(f"INVALIDE STATE, FOR on_pilot_dm")
+                    log_error(
+                        self.room,
+                        "fsm_invalid_state",
+                        "invalid state for on_pilot_dm",
+                        pilot_ref=pilot_ref,
+                    )
                     return
 
             trans = self.scenario[self.state_id]
@@ -183,13 +196,18 @@ class FsmEngine:
 
             # expected
             next_state = trans.next_state
-            print(f"next_state: {next_state}")
             next_trans = self.scenario[next_state] if next_state else None
 
             expected = next_trans.expected
             matched = (expected == "__ANY__") or (pilot_ref == expected)
             if not matched:
-                print(f"EXPECTED MISMATCH: got {pilot_ref}, expected {expected}")
+                log_error(
+                    self.room,
+                    "fsm_expected_mismatch",
+                    "pilot response does not match expected value",
+                    got=pilot_ref,
+                    expected=expected,
+                )
                 return
 
             # si match on avance

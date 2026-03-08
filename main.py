@@ -6,12 +6,15 @@ from flask import Flask # type: ignore
 from app.classes import Socket
 from flask_socketio import SocketIO # type: ignore
 from app.controllers.routes import general_bp
+from app.core.logging import get_logger
 from app.gateway.socket_gateway import SocketGateway
 from flask_cors import CORS # type: ignore
 from app.managers.flight_manager.flight_manager import FlightManager
 # from app.classes.ingsvc.agent import Echo
 
 port = int(os.environ.get('PORT', 5321))
+debug_mode = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+socket_log_output = os.getenv("SOCKET_LOG_OUTPUT", "false").lower() == "true"
 
 allowed_origins = [
     "http://localhost:3000",
@@ -28,7 +31,9 @@ def create_app():
     socketio = SocketIO(
         app,
         cors_allowed_origins=allowed_origins,
-        async_mode='eventlet'
+        async_mode='eventlet',
+        logger=socket_log_output,
+        engineio_logger=socket_log_output,
     )
     return app, socketio
 
@@ -44,5 +49,25 @@ def index():
 
 if __name__ == '__main__':
     # Echo.start_ingescape_agent()
-    print(f"Serveur démarré sur le port {port}")
-    socketio.run(app, host="0.0.0.0", port=port, debug=True)
+    logger = get_logger()
+    logger.info(
+        "server_startup",
+        extra={
+            "client_id": "-",
+            "event": "startup",
+            "meta": (
+                f" | host=0.0.0.0"
+                f" | port={port}"
+                f" | debug={debug_mode}"
+                f" | socket_log_output={socket_log_output}"
+            ),
+        },
+    )
+    socketio.run(
+        app,
+        host="0.0.0.0",
+        port=port,
+        debug=debug_mode,
+        use_reloader=debug_mode,
+        log_output=socket_log_output,
+    )

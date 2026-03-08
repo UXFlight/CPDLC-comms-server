@@ -2,6 +2,7 @@ import os
 from pymongo.mongo_client import MongoClient
 from pymongo.errors import PyMongoError
 from pymongo.server_api import ServerApi
+from app.core.logging import log_error
 
 URI = os.getenv('MONGODB_URI')
 MONGO_TIMEOUT_MS = int(os.getenv("MONGODB_TIMEOUT_MS", "1500"))
@@ -25,7 +26,12 @@ class MongoDb:
         try:
             return collection.find_one(query)
         except PyMongoError as e:
-            print(f"[MongoDb] Query failed on '{collection.name}': {e}")
+            log_error(
+                client_id=None,
+                event="mongo_query_failed",
+                error=e,
+                collection=collection.name,
+            )
             return None
 
     def find_datalink_by_ref(self, ref):

@@ -1,5 +1,6 @@
 import asyncio
 from app.classes.flight_session.flight_session import FlightSession
+from app.core.logging import log_error, log_user_action
 
 class FlightManager:
     def __init__(self):
@@ -9,6 +10,7 @@ class FlightManager:
         if pilot_id not in self.sessions:
             session = FlightSession(routine, pilot_id, atc_id, mongodb, socket)
             self.sessions[pilot_id] = session
+            log_user_action(pilot_id, "session_create")
             return session
         return self.sessions[pilot_id]
 
@@ -19,18 +21,21 @@ class FlightManager:
     def remove_session_by_sid(self, pilot_id: str) -> bool:
         session: FlightSession | None = self.sessions.get(pilot_id)
         if session is None:
-            print(f"No session found for pilot {pilot_id}")
+            log_error(
+                client_id=pilot_id,
+                event="session_remove_failed",
+                error="session_not_found",
+            )
             return False
         asyncio.run(session.reports.adsc_manager.stop_adsc_and_wait(timeout=2.0))
 
         try:
             asyncio.run(session.routine.stop_and_wait(timeout=2.0))
         except Exception as e:
-            print(f"Error while stopping routine for {pilot_id}: {e}")
+            log_error(client_id=pilot_id, event="routine_stop_failed", error=e)
         finally:
             # Supprimer après l’arrêt
             self.sessions.pop(pilot_id, None)
-            print(f"Removed session for pilot {pilot_id}")
+            log_user_action(pilot_id, "session_remove")
 
         return True
-

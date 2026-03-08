@@ -2,6 +2,7 @@ from enum import Enum
 import re
 from typing import Any, Dict
 import uuid
+from app.core.logging import log_error
 from app.utils.time_utils import get_current_timestamp
 
 ACTION_REQUIRED_UM = ["Y", "W/U", "A/N", "R"]
@@ -68,7 +69,7 @@ class LogEntry:
     def is_loadable(self):
         ref = self.__mongodb.find_UM_by_ref(self.ref)
         if not ref:
-            print(f"No UM found for ref {self.ref}")
+            log_error(None, "message_lookup_missing", "UM reference not found", ref=self.ref)
             return False
 
         category = ref.get("Category", "")

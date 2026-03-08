@@ -3,6 +3,7 @@ import threading
 from typing import Dict, Optional
 from app.classes.fsm.fsm_types import Scenario
 from app.classes.fsm.fsm_engine import FsmEngine
+from app.core.logging import log_error
 
 class ScenarioInstance:
     def __init__(self, fsm: FsmEngine, room: str):
@@ -57,7 +58,12 @@ class FsmScenarioManager:
         fsm._on_end = _on_end
 
         if thread_id:
-            print(f"N EST PAS SUPPOSE ENTRER ICI")
+            log_error(
+                room,
+                "fsm_thread_id_preseeded",
+                "scenario started with pre-existing thread_id",
+                thread_id=thread_id,
+            )
             fsm.thread_id = thread_id
             with self._lock:
                 self._by_thread[thread_id] = inst

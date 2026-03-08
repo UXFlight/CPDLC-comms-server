@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from pymongo.mongo_client import MongoClient 
 from pymongo.server_api import ServerApi
 
+from app.core.logging import log_error, log_user_action
 from app.database.data.uplinks import uplinks
 from app.database.data.downlinks import downlinks
 from app.database.data.atc import atcs
@@ -17,7 +18,7 @@ client = MongoClient(URI, server_api=ServerApi('1'))
 
 try:
     client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
+    log_user_action("-", "mongo_ping_success")
 
     # db = client["datalinks"]
     # #uplinks_coll = db["uplinks"]
@@ -36,4 +37,4 @@ try:
 
 
 except Exception as e:
-    print(e)
+    log_error(None, "mongo_ping_failed", e)

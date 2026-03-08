@@ -5,6 +5,7 @@ from app.constants.logs_array import default_logs
 from enum import Enum
 
 from app.constants.responses import REPORT_INITIATION
+from app.core.logging import log_user_action
 
 class DatalinkStatus(Enum):
     NEW = "new"
@@ -153,6 +154,6 @@ class LogsManager:
     def position_request_pending(self):
         for log in self.logs:
             if log.ref == "UM147" and not log.ended:
-                print(f"Position request pending for log {log.id}")
+                log_user_action("-", "position_request_pending", log_id=log.id)
                 return log.id
         return None

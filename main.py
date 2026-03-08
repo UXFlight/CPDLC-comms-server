@@ -18,10 +18,7 @@ socket_log_output = os.getenv("SOCKET_LOG_OUTPUT", "false").lower() == "true"
 
 allowed_origins = [
     "http://localhost:3000",
-    "http://localhost:3000/",
-    "http://localhost:5321",
-    "https://mycpdlc.netlify.app",
-    "https://68a554b6ea47ba54e927c891--mycpdlc.netlify.app",
+    "http://64.176.194.195",
 ]
 
 def create_app():

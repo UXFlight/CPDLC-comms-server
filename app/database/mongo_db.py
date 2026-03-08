@@ -1,14 +1,18 @@
 import os
+import time
 from pymongo.mongo_client import MongoClient
 from pymongo.errors import PyMongoError
+from pymongo.errors import ServerSelectionTimeoutError
 from pymongo.server_api import ServerApi
 from app.core.logging import log_error
 
 URI = os.getenv('MONGODB_URI')
 MONGO_TIMEOUT_MS = int(os.getenv("MONGODB_TIMEOUT_MS", "1500"))
+MONGO_ERROR_LOG_INTERVAL_SEC = int(os.getenv("MONGO_ERROR_LOG_INTERVAL_SEC", "30"))
 
 class MongoDb:
     def __init__(self, db_uri=URI):
+        self._last_mongo_error_log_at = 0.0
         self.client = MongoClient(
             db_uri,
             server_api=ServerApi('1'),
@@ -22,16 +26,30 @@ class MongoDb:
         self.downlinks = db_datalinks["downlinks"]
         self.atcs = db_users["atc"]
 
+    @staticmethod
+    def _mongo_error_reason(error: PyMongoError) -> str:
+        if isinstance(error, ServerSelectionTimeoutError):
+            return "mongodb_unreachable"
+        error_text = str(error).lower()
+        if "connection refused" in error_text:
+            return "connection_refused"
+        if "timeout" in error_text:
+            return "mongodb_timeout"
+        return "mongo_query_error"
+
     def _safe_find_one(self, collection, query):
         try:
             return collection.find_one(query)
         except PyMongoError as e:
-            log_error(
-                client_id=None,
-                event="mongo_query_failed",
-                error=e,
-                collection=collection.name,
-            )
+            now = time.monotonic()
+            if now - self._last_mongo_error_log_at >= MONGO_ERROR_LOG_INTERVAL_SEC:
+                self._last_mongo_error_log_at = now
+                log_error(
+                    client_id=None,
+                    event="mongo_query_failed",
+                    error=self._mongo_error_reason(e),
+                    collection=collection.name,
+                )
             return None
 
     def find_datalink_by_ref(self, ref):

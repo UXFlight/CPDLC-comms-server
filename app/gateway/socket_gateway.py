@@ -57,19 +57,29 @@ class SocketGateway:
         flight = self.flight_manager.create_session(routine, sid, self.mongodb, self.socket_service)
         self.socket_service.send("connected", flight.to_dict(), room=sid)
 
+    @handle_errors(event_name="logon_failure", message="Failed to process logon")
     def on_logon(self, data: dict):
         sid = request.sid
-        atc_available = self.mongodb.find_available_atc(data.get("username"))
+        payload = data if isinstance(data, dict) else {}
+        username = (payload.get("username") or "").strip()
+        if not username:
+            self.socket_service.send("logon_failure", data={"reason": "invalid_payload"}, room=sid)
+            return
+
+        atc_available = self.mongodb.find_available_atc(username)
         if atc_available:
             flight = self.flight_manager.get_session(sid)
-            flight.atc_id = data.get("username")
+            if not flight:
+                self.socket_service.send("logon_failure", data={"reason": "session_not_found"}, room=sid)
+                return
+            flight.atc_id = username
             self.socket_service.send("logon_success", data={}, room=sid)
             self.socket_service.send("load_logs", flight.logs.get_logs(), room=sid)
             self.socket_service.send("load_adsc_reports", flight.reports.adsc_manager.adsc_to_dict(), room=sid)
             flight.reports.adsc_manager.start_adsc_timer()
             self.socket_service.start_background_task(flight.routine.simulate_flight_progress)
         else:
-            self.socket_service.send("logon_failure", data={}, room=sid)
+            self.socket_service.send("logon_failure", data={"reason": "atc_unavailable"}, room=sid)
 
     def on_add_log(self, payload: dict):
         sid = request.sid

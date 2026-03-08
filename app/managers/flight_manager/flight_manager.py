@@ -1,6 +1,6 @@
 import asyncio
 from app.classes.flight_session.flight_session import FlightSession
-from app.core.logging import log_error, log_user_action
+from app.classes.logging import log_error, log_user_action
 
 class FlightManager:
     def __init__(self):

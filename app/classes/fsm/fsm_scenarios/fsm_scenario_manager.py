@@ -3,7 +3,7 @@ import threading
 from typing import Dict, Optional
 from app.classes.fsm.fsm_types import Scenario
 from app.classes.fsm.fsm_engine import FsmEngine
-from app.core.logging import log_error
+from app.classes.logging import log_error
 
 class ScenarioInstance:
     def __init__(self, fsm: FsmEngine, room: str):

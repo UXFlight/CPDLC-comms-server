@@ -7,7 +7,7 @@ from app.classes.flight_session.flight_session import FlightSession
 from app.classes.log_entry.log_entry import LogEntry
 from app.classes.report.emergency_report import EmergencyReport
 from app.classes.report.position_report import PositionReport
-from app.core.logging import log_error, log_user_action
+from app.classes.logging import log_error, log_user_action
 from app.database.mongo_db import mongo_db, MongoDb
 from app.managers.flight_manager.flight_manager import FlightManager
 from app.database.flight_plan.flight_plan import flight_plan

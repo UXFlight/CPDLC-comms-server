@@ -3,7 +3,7 @@ import threading
 from random import choice
 from typing import List, Optional, Callable
 from app.classes.fsm.fsm_types import Msg, Scenario, Transition
-from app.core.logging import log_error, log_user_action
+from app.classes.logging import log_error, log_user_action
 from app.managers.logs_manager.logs_manager import LogsManager
 
 class FsmEngine:

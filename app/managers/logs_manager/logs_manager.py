@@ -5,7 +5,7 @@ from app.constants.logs_array import default_logs
 from enum import Enum
 
 from app.constants.responses import REPORT_INITIATION
-from app.core.logging import log_user_action
+from app.classes.logging import log_user_action
 
 class DatalinkStatus(Enum):
     NEW = "new"

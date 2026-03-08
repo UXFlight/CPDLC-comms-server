@@ -2,7 +2,7 @@ from enum import Enum
 import re
 from typing import Any, Dict
 import uuid
-from app.core.logging import log_error
+from app.classes.logging import log_error
 from app.utils.time_utils import get_current_timestamp
 
 ACTION_REQUIRED_UM = ["Y", "W/U", "A/N", "R"]

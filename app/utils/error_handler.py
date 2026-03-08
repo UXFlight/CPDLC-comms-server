@@ -1,5 +1,5 @@
 from flask import request # type: ignore
-from app.core.logging import log_error
+from app.classes.logging import log_error
 
 def handle_errors(event_name="error", message="An error occurred"):
     def decorator(func):

@@ -4,7 +4,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.errors import PyMongoError
 from pymongo.errors import ServerSelectionTimeoutError
 from pymongo.server_api import ServerApi
-from app.core.logging import log_error
+from app.classes.logging import log_error
 
 URI = os.getenv('MONGODB_URI')
 MONGO_TIMEOUT_MS = int(os.getenv("MONGODB_TIMEOUT_MS", "1500"))

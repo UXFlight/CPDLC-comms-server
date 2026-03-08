@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from pymongo.mongo_client import MongoClient 
 from pymongo.server_api import ServerApi
 
-from app.core.logging import log_error, log_user_action
+from app.classes.logging import log_error, log_user_action
 from app.database.data.uplinks import uplinks
 from app.database.data.downlinks import downlinks
 from app.database.data.atc import atcs

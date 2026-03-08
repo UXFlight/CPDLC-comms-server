@@ -6,7 +6,7 @@ from flask import Flask # type: ignore
 from app.classes import Socket
 from flask_socketio import SocketIO # type: ignore
 from app.controllers.routes import general_bp
-from app.core.logging import get_logger
+from app.classes.logging import get_logger
 from app.gateway.socket_gateway import SocketGateway
 from flask_cors import CORS # type: ignore
 from app.managers.flight_manager.flight_manager import FlightManager

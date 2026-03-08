@@ -1,6 +1,7 @@
 import logging
 import os
 from typing import Any
+from .telegram_notifier import send_telegram_message
 
 USER_ACTION_LEVEL = 25
 LOGGER_NAME = "cpdlc"
@@ -113,11 +114,27 @@ def log_error(
     if isinstance(error, Exception):
         metadata["error_type"] = type(error).__name__
     metadata.update(extra)
-    logger.error(
-        "error",
-        extra={
-            "client_id": _compact_client_id(client_id),
-            "event": event,
-            "meta": _build_meta(metadata),
-        },
+    extra_payload = {
+        "client_id": _compact_client_id(client_id),
+        "event": event,
+        "meta": _build_meta(metadata),
+    }
+    record = logger.makeRecord(
+        logger.name,
+        logging.ERROR,
+        fn="",
+        lno=0,
+        msg="error",
+        args=(),
+        exc_info=None,
+        extra=extra_payload,
     )
+    if logger.isEnabledFor(logging.ERROR):
+        logger.handle(record)
+
+    try:
+        if logger.handlers and logger.handlers[0].formatter:
+            log_message = logger.handlers[0].formatter.format(record)
+            send_telegram_message(log_message)
+    except Exception:
+        return

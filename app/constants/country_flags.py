@@ -1,0 +1,41 @@
+COUNTRY_FLAGS = {
+    "US": "🇺🇸",
+    "FR": "🇫🇷",
+    "CA": "🇨🇦",
+    "GB": "🇬🇧",
+    "DE": "🇩🇪",
+    "ES": "🇪🇸",
+    "IT": "🇮🇹",
+    "NL": "🇳🇱",
+    "BE": "🇧🇪",
+    "CH": "🇨🇭",
+    "AU": "🇦🇺",
+    "BR": "🇧🇷",
+    "MX": "🇲🇽",
+    "JP": "🇯🇵",
+    "IN": "🇮🇳",
+    "CN": "🇨🇳",
+}
+
+COUNTRY_NAMES = {
+    "US": "United States",
+    "FR": "France",
+    "CA": "Canada",
+    "GB": "United Kingdom",
+    "DE": "Germany",
+    "ES": "Spain",
+    "IT": "Italy",
+    "NL": "Netherlands",
+    "BE": "Belgium",
+    "CH": "Switzerland",
+    "AU": "Australia",
+    "BR": "Brazil",
+    "MX": "Mexico",
+    "JP": "Japan",
+    "IN": "India",
+    "CN": "China",
+    "LOCAL": "Local Network",
+    "UNKNOWN": "Unknown",
+}
+
+FALLBACK_FLAG = "🌍"

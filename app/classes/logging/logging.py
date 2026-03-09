@@ -2,6 +2,7 @@ import logging
 import os
 from typing import Any
 from .telegram_notifier import send_telegram_message
+from app.services.analytics_event_store import record_event
 
 USER_ACTION_LEVEL = 25
 LOGGER_NAME = "cpdlc"
@@ -34,6 +35,12 @@ def _compact_client_id(client_id: str | None) -> str:
     if not client_id:
         return DEFAULT_CLIENT_ID
     return client_id[:7]
+
+
+def _normalize_client_id(client_id: str | None) -> str:
+    if not client_id:
+        return DEFAULT_CLIENT_ID
+    return str(client_id)
 
 
 def _build_meta(fields: dict[str, Any]) -> str:
@@ -101,6 +108,15 @@ def log_user_action(
             "meta": _build_meta(metadata),
         },
     )
+    try:
+        record_event(
+            kind="user_action",
+            client_id=_normalize_client_id(client_id),
+            event=event,
+            metadata=metadata,
+        )
+    except Exception:
+        return
 
 
 def log_error(
@@ -131,6 +147,16 @@ def log_error(
     )
     if logger.isEnabledFor(logging.ERROR):
         logger.handle(record)
+
+    try:
+        record_event(
+            kind="error",
+            client_id=_normalize_client_id(client_id),
+            event=event,
+            metadata=metadata,
+        )
+    except Exception:
+        pass
 
     try:
         if logger.handlers and logger.handlers[0].formatter:

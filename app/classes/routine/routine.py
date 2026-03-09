@@ -7,6 +7,7 @@ from app.classes.fsm.fsm_scenarios.climb_and_report_scenario import SCENARIO_CLI
 from app.classes.fsm.fsm_scenarios.fsm_scenario_manager import FsmScenarioManager
 from app.classes.fsm.fsm_scenarios.pos_report_scenario import SCENARIO_REQ_POSITION_REPORT
 from app.classes.fsm.fsm_types import Scenario
+from app.classes.logging import log_user_action
 from app.constants.RoutineSnapshot import RoutineSnapshot
 from app.managers.logs_manager.logs_manager import LogsManager
 from app.managers.reports_manager import ReportsManager
@@ -95,6 +96,13 @@ class Routine:
                 else:
                     self.update_flight_status(end=True)
                     self.socket.send("plane_arrival", self.flight_status.to_dict(), room=self.room)
+                    log_user_action(
+                        self.room,
+                        "route_completed",
+                        departure=self.routine.get("departure"),
+                        arrival=self.routine.get("arrival"),
+                        route_completion_pct=100,
+                    )
                     break
                 self.socket.send("waypoint_change", {
                     "flight": self.flight_status.to_dict(),

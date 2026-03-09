@@ -34,6 +34,16 @@ class FlightManager:
         except Exception as e:
             log_error(client_id=pilot_id, event="routine_stop_failed", error=e)
         finally:
+            completion_pct = session.route_completion_pct()
+            session_duration = session.session_duration_sec()
+            log_user_action(
+                pilot_id,
+                "route_session_closed",
+                departure=session.departure,
+                arrival=session.arrival,
+                route_completion_pct=completion_pct,
+                session_duration_sec=session_duration,
+            )
             # Supprimer après l’arrêt
             self.sessions.pop(pilot_id, None)
             log_user_action(pilot_id, "session_remove")

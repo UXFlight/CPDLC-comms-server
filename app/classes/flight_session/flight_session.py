@@ -1,4 +1,5 @@
 import copy
+from datetime import datetime, timezone
 from app.classes.atc.atc import Atc
 from app.classes.flight_status.flight_status import FlightStatus
 from app.classes.fsm.fsm_engine import FsmEngine
@@ -25,6 +26,7 @@ class FlightSession:
         self.current_data_authority = atc_id
         self.next_data_authority = None
         self.reports.set_snapshot_provider(self.routine.snapshot) 
+        self.created_at = datetime.now(timezone.utc)
 
     def to_dict(self):
         return {
@@ -89,3 +91,17 @@ class FlightSession:
     def load_route(self, route):
         self.route = route
         return self.route
+
+    def session_duration_sec(self) -> int:
+        elapsed = datetime.now(timezone.utc) - self.created_at
+        return max(0, int(elapsed.total_seconds()))
+
+    def route_completion_pct(self) -> float:
+        if not self.route:
+            return 0.0
+        total_distance = float(self.route[-1].get("total_distance", 0) or 0)
+        if total_distance <= 0:
+            return 0.0
+        current_distance = float(self.status.current_distance or 0)
+        completion = (current_distance / total_distance) * 100
+        return round(max(0.0, min(100.0, completion)), 2)

@@ -112,6 +112,12 @@ class SocketGateway:
             flight.reports.adsc_manager.start_adsc_timer()
             self.socket_service.start_background_task(flight.routine.simulate_flight_progress)
             log_user_action(sid, "authentication_success", target=username)
+            log_user_action(
+                sid,
+                "route_started",
+                departure=flight.departure,
+                arrival=flight.arrival,
+            )
         else:
             self.socket_service.send("logon_failure", data={"reason": "atc_unavailable"}, room=sid)
             log_user_action(sid, "authentication_failed", target=username, reason="atc_unavailable")

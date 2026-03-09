@@ -9,8 +9,7 @@ from typing import Any
 EVENTS_FILE_PATH = (
     Path(__file__).resolve().parents[1] / "database" / "log_storage" / "analytics_events.jsonl"
 )
-MAX_FILE_BYTES = 3 * 1024 * 1024
-RETENTION_DAYS = 14
+MAX_FILE_BYTES = 128 * 1024 * 1024
 MIN_LINES_TO_KEEP = 500
 
 _LOCK = threading.Lock()
@@ -42,6 +41,49 @@ def _parse_timestamp(value: Any) -> datetime | None:
         return None
 
 
+def _week_start_utc(dt: datetime) -> datetime:
+    base = dt.astimezone(timezone.utc)
+    return datetime(base.year, base.month, base.day, tzinfo=timezone.utc) - timedelta(
+        days=base.weekday()
+    )
+
+
+def _filter_events(predicate) -> list[str]:
+    kept_lines: list[str] = []
+    with EVENTS_FILE_PATH.open("r", encoding="utf-8") as f:
+        for raw_line in f:
+            line = raw_line.strip()
+            if not line:
+                continue
+            try:
+                event = json.loads(line)
+                if not isinstance(event, dict):
+                    continue
+                ts = _parse_timestamp(event.get("timestamp"))
+                if ts and predicate(ts):
+                    kept_lines.append(line)
+            except Exception:
+                continue
+    return kept_lines
+
+
+def _rewrite_lines(lines: list[str]) -> None:
+    with EVENTS_FILE_PATH.open("w", encoding="utf-8") as f:
+        for line in lines:
+            f.write(line + "\n")
+
+
+def _reset_week_if_needed() -> None:
+    if not EVENTS_FILE_PATH.exists():
+        return
+    week_start = _week_start_utc(datetime.now(timezone.utc))
+    try:
+        kept_lines = _filter_events(lambda ts: ts >= week_start)
+        _rewrite_lines(kept_lines)
+    except Exception:
+        return
+
+
 def _prune_if_needed() -> None:
     if not EVENTS_FILE_PATH.exists():
         return
@@ -51,33 +93,15 @@ def _prune_if_needed() -> None:
     except Exception:
         return
 
-    cutoff = datetime.now(timezone.utc) - timedelta(days=RETENTION_DAYS)
-    kept_lines: list[str] = []
-
     try:
-        with EVENTS_FILE_PATH.open("r", encoding="utf-8") as f:
-            for raw_line in f:
-                line = raw_line.strip()
-                if not line:
-                    continue
-                keep = False
-                try:
-                    event = json.loads(line)
-                    ts = _parse_timestamp(event.get("timestamp")) if isinstance(event, dict) else None
-                    keep = bool(ts and ts >= cutoff)
-                except Exception:
-                    keep = False
-                if keep:
-                    kept_lines.append(line)
+        kept_lines = _filter_events(lambda ts: True)
 
         if len(kept_lines) < MIN_LINES_TO_KEEP:
             with EVENTS_FILE_PATH.open("r", encoding="utf-8") as f:
                 tail = [ln.strip() for ln in f if ln.strip()]
             kept_lines = tail[-MIN_LINES_TO_KEEP:]
 
-        with EVENTS_FILE_PATH.open("w", encoding="utf-8") as f:
-            for line in kept_lines:
-                f.write(line + "\n")
+        _rewrite_lines(kept_lines)
     except Exception:
         return
 
@@ -100,6 +124,7 @@ def record_event(
     _ensure_parent()
     try:
         with _LOCK:
+            _reset_week_if_needed()
             _prune_if_needed()
             with EVENTS_FILE_PATH.open("a", encoding="utf-8") as f:
                 f.write(line + "\n")
@@ -127,3 +152,13 @@ def load_events() -> list[dict[str, Any]]:
     except Exception:
         return []
     return events
+
+
+def clear_events() -> None:
+    _ensure_parent()
+    try:
+        with _LOCK:
+            with EVENTS_FILE_PATH.open("w", encoding="utf-8"):
+                pass
+    except Exception:
+        return

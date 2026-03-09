@@ -3,6 +3,7 @@ from typing import Any
 
 from app.classes.logging import log_error, log_user_action
 from app.classes.logging.telegram_notifier import send_telegram_message
+from app.services.analytics_event_store import clear_events
 from app.services.analytics_service import AnalyticsService
 from app.services.google_analytics_service import get_weekly_web_stats
 
@@ -109,6 +110,7 @@ def generate_and_send_weekly_report() -> bool:
             events=stats.get("events_processed", 0),
             errors=stats.get("errors", 0),
         )
+        clear_events()
         return True
     except Exception as e:
         log_error(None, "analytics_report_failed", e)

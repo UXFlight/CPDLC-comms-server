@@ -54,6 +54,12 @@ def _build_meta(fields: dict[str, Any]) -> str:
     return "".join(chunks)
 
 
+def _telegram_error_context() -> str:
+    site_name = os.getenv("APP_SITE_NAME", "CPDLC Communications Interface").strip()
+    site_url = os.getenv("APP_SITE_URL", "http://64.176.194.195/").strip()
+    return f"source={site_name} | url={site_url}"
+
+
 def get_logger() -> logging.Logger:
     global _LOGGER
     if _LOGGER is not None:
@@ -161,6 +167,6 @@ def log_error(
     try:
         if logger.handlers and logger.handlers[0].formatter:
             log_message = logger.handlers[0].formatter.format(record)
-            send_telegram_message(log_message)
+            send_telegram_message(f"{_telegram_error_context()}\n{log_message}")
     except Exception:
         return

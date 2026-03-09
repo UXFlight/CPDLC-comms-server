@@ -21,7 +21,7 @@
   },
   {
     "Ref_Num": "DM2",
-    "Message_Intent": "Wait for a reply. Note.— The controller is informed that the request is being assessed and there will be a short-term delay (within 10 minutes). The exchange is not closed and the request will be responded to when conditions allow.",
+    "Message_Intent": "Wait for a reply. Note.-- The controller is informed that the request is being assessed and there will be a short-term delay (within 10 minutes). The exchange is not closed and the request will be responded to when conditions allow.",
     "Message_Element": "STANDBY",
     "Response_required": [
       "N"
@@ -31,7 +31,7 @@
   },
   {
     "Ref_Num": "DM3",
-    "Message_Intent": "Message received and understood. Note.— ROGER is the only correct Response_required to an uplink free text message. Under no circumstances will ROGER be used instead of AFFIRM.",
+    "Message_Intent": "Message received and understood. Note.-- ROGER is the only correct Response_required to an uplink free text message. Under no circumstances will ROGER be used instead of AFFIRM.",
     "Message_Element": "ROGER",
     "Response_required": [
       "N"
@@ -41,7 +41,7 @@
   },
   {
     "Ref_Num": "DM4",
-    "Message_Intent": "Yes. Note.— AFFIRM is an appropriate Response_required to an uplinked negotiation request message (e.g. UM 150 CAN YOU ACCEPT [level] at [time]).",
+    "Message_Intent": "Yes. Note.-- AFFIRM is an appropriate Response_required to an uplinked negotiation request message (e.g. UM 150 CAN YOU ACCEPT [level] at [time]).",
     "Message_Element": "AFFIRM",
     "Response_required": [
       "N"
@@ -51,7 +51,7 @@
   },
   {
     "Ref_Num": "DM5",
-    "Message_Intent": "No. Note.— NEGATIVE is an appropriate Response_required to an uplinked negotiation request message (e.g. UM 150 CAN YOU ACCEPT [level] at [time]).",
+    "Message_Intent": "No. Note.-- NEGATIVE is an appropriate Response_required to an uplinked negotiation request message (e.g. UM 150 CAN YOU ACCEPT [level] at [time]).",
     "Message_Element": "NEGATIVE",
     "Response_required": [
       "N"
@@ -137,7 +137,7 @@
   },
   {
     "Ref_Num": "DM7",
-    "Message_Intent": "Request to fly at a level within the specified vertical range. FANS 1/A-ATN B1.— FANS 1/A aircraft only. ATN B1 aircraft uses DM 6 REQUEST [level], where [level] is a vertical range.",
+    "Message_Intent": "Request to fly at a level within the specified vertical range. FANS 1/A-ATN B1.-- FANS 1/A aircraft only. ATN B1 aircraft uses DM 6 REQUEST [level], where [level] is a vertical range.",
     "Message_Element": "REQUEST BLOCK [level] TO [level]",
     "Response_required": [
       "Y"
@@ -147,7 +147,7 @@
   },
   {
     "Ref_Num": "DM8",
-    "Message_Intent": "Request to cruise climb to the specified level. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Request to cruise climb to the specified level. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "REQUEST CRUISE CLIMB TO [level]",
     "Response_required": [
       "Y"
@@ -541,7 +541,7 @@
   },
   {
     "Ref_Num": "DM25",
-    "Message_Intent": "Request for a clearance. Note.— Either pre-departure or route.",
+    "Message_Intent": "Request for a clearance. Note.-- Either pre-departure or route.",
     "Message_Element": "REQUEST [clearance type] CLEARANCE or REQUEST CLEARANCE",
     "Response_required": [
       "Y"
@@ -813,7 +813,7 @@
   },
   {
     "Ref_Num": "DM48",
-    "Message_Intent": "Position report. Note.— Reports the current position of the aircraft when the flight crew presses the button to send this message. ATC expects position reports based on this downlink message.",
+    "Message_Intent": "Position report. Note.-- Reports the current position of the aircraft when the flight crew presses the button to send this message. ATC expects position reports based on this downlink message.",
     "Message_Element": "POSITION REPORT [position report]",
     "Response_required": [
       "N"
@@ -833,7 +833,7 @@
   },
   {
     "Ref_Num": "DM50",
-    "Message_Intent": "Request for the earliest time at which a clearance to a speed within the specified range can be expected. Note.— This message should not be used as it is not supported by the appropriate uplink message Response_required: UM 103, UM 104 or UM 105.",
+    "Message_Intent": "Request for the earliest time at which a clearance to a speed within the specified range can be expected. Note.-- This message should not be used as it is not supported by the appropriate uplink message Response_required: UM 103, UM 104 or UM 105.",
     "Message_Element": "WHEN CAN WE EXPECT [speed] TO [speed]",
     "Response_required": [
       "Y"
@@ -887,7 +887,7 @@
   },
   {
     "Ref_Num": "DM54",
-    "Message_Intent": "Request for the earliest time at which a clearance to cruise climb to the specified level can be expected. Note.— This message should not be used as it is not supported by the appropriate uplink message Response_required: UM 11, UM 12, UM 17, or UM 18.",
+    "Message_Intent": "Request for the earliest time at which a clearance to cruise climb to the specified level can be expected. Note.-- This message should not be used as it is not supported by the appropriate uplink message Response_required: UM 11, UM 12, UM 17, or UM 18.",
     "Message_Element": "WHEN CAN WE EXPECT CRUISE CLIMB TO [level]",
     "Response_required": [
       "Y"
@@ -915,7 +915,7 @@
   },
   {
     "Ref_Num": "DM55",
-    "Message_Intent": "Urgency prefix. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
+    "Message_Intent": "Urgency prefix. FANS 1/A – ATN B1.-- Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "PAN PAN PAN",
     "Response_required": [
       "Y",
@@ -926,7 +926,7 @@
   },
   {
     "Ref_Num": "DM56",
-    "Message_Intent": "Distress prefix. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
+    "Message_Intent": "Distress prefix. FANS 1/A – ATN B1.-- Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "MAYDAY MAYDAY MAYDAY",
     "Response_required": [
       "Y",
@@ -937,7 +937,7 @@
   },
   {
     "Ref_Num": "DM57",
-    "Message_Intent": "Notification of fuel remaining and number of persons on board. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
+    "Message_Intent": "Notification of fuel remaining and number of persons on board. FANS 1/A – ATN B1.-- Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "[remaining fuel] OF FUEL REMAINING AND [persons on board] PERSONS ON BOARD or [remaining fuel] OF FUEL REMAINING AND [remaining souls] SOULS ON BOARD",
     "Response_required": [
       "Y",
@@ -948,7 +948,7 @@
   },
   {
     "Ref_Num": "DM58",
-    "Message_Intent": "Notification that the pilot wishes to cancel the emergency condition. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
+    "Message_Intent": "Notification that the pilot wishes to cancel the emergency condition. FANS 1/A – ATN B1.-- Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "CANCEL EMERGENCY",
     "Response_required": [
       "Y",
@@ -959,7 +959,7 @@
   },
   {
     "Ref_Num": "DM59",
-    "Message_Intent": "Notification that the aircraft is diverting to the specified position via the specified route due to an urgent need. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
+    "Message_Intent": "Notification that the aircraft is diverting to the specified position via the specified route due to an urgent need. FANS 1/A – ATN B1.-- Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "DIVERTING TO [position] VIA [route clearance]",
     "Response_required": [
       "Y",
@@ -970,7 +970,7 @@
   },
   {
     "Ref_Num": "DM60",
-    "Message_Intent": "Notification that the aircraft is deviating the specified distance in the specified direction off the cleared route and maintaining a parallel track due to an urgent need. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
+    "Message_Intent": "Notification that the aircraft is deviating the specified distance in the specified direction off the cleared route and maintaining a parallel track due to an urgent need. FANS 1/A – ATN B1.-- Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "OFFSETTING [specified distance] [direction] OF ROUTE",
     "Response_required": [
       "Y",
@@ -981,7 +981,7 @@
   },
   {
     "Ref_Num": "DM61",
-    "Message_Intent": "Notification that the aircraft is descending to the specified level due to an urgent need. FANS 1/A – ATN B1.— Ground system will display message to controller for FANS 1/A aircraft.",
+    "Message_Intent": "Notification that the aircraft is descending to the specified level due to an urgent need. FANS 1/A – ATN B1.-- Ground system will display message to controller for FANS 1/A aircraft.",
     "Message_Element": "DESCENDING TO [level]",
     "Response_required": [
       "Y",
@@ -1012,7 +1012,7 @@
   },
   {
     "Ref_Num": "DM64",
-    "Message_Intent": "Notification to the ground system that the specified ATSU is the current data authority. FANS 1/A – ATN B1.— FANS 1/A aircraft uses this message.",
+    "Message_Intent": "Notification to the ground system that the specified ATSU is the current data authority. FANS 1/A – ATN B1.-- FANS 1/A aircraft uses this message.",
     "Message_Element": "[facility designation]",
     "Response_required": [
       "N"
@@ -1052,7 +1052,7 @@
   },
   {
   "Ref_Num": "DM67ab",
-  "Message_Intent": "Notification that the ADS-C emergency mode was inadvertent and has been set to OFF. Note.— No equivalent in ICAO Doc 4444.",
+  "Message_Intent": "Notification that the ADS-C emergency mode was inadvertent and has been set to OFF. Note.-- No equivalent in ICAO Doc 4444.",
   "Message_Element": "ADS-C RESET",
   "Response_required": [
     "N"
@@ -1072,7 +1072,7 @@
   },
   {
     "Ref_Num": "DM69",
-    "Message_Intent": "Request that a descent be approved on a see-and-avoid basis. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Request that a descent be approved on a see-and-avoid basis. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "REQUEST VMC DESCENT",
     "Response_required": [
       "Y"
@@ -1102,7 +1102,7 @@
   },
   {
     "Ref_Num": "DM73",
-    "Message_Intent": "A system-generated message indicating the software version number. FANS 1/A – ATN B1.— FANS 1/A aircraft uses this message.",
+    "Message_Intent": "A system-generated message indicating the software version number. FANS 1/A – ATN B1.-- FANS 1/A aircraft uses this message.",
     "Message_Element": "[version number]",
     "Response_required": [
       "N"
@@ -1143,7 +1143,7 @@
   },
   {
     "Ref_Num": "DM77",
-    "Message_Intent": "Read-back of the assigned vertical range. FANS 1/A-ATN B1.— FANS 1/A aircraft only. ATN B1 aircraft uses DM 38 ASSIGNED LEVEL [level], where [level] is a vertical range.",
+    "Message_Intent": "Read-back of the assigned vertical range. FANS 1/A-ATN B1.-- FANS 1/A aircraft only. ATN B1 aircraft uses DM 38 ASSIGNED LEVEL [level], where [level] is a vertical range.",
     "Message_Element": "ASSIGNED BLOCK [level] TO [level]",
     "Response_required": [
       "N"
@@ -1173,7 +1173,7 @@
   },
   {
     "Ref_Num": "DM80",
-    "Message_Intent": "Notification that the aircraft is deviating up to the deviating distance from the cleared route in the specified direction due to an urgent need. FANS 1/A.— Notification that the aircraft is operating on an offset. The Urgency attribute for this message element is not defined.",
+    "Message_Intent": "Notification that the aircraft is deviating up to the deviating distance from the cleared route in the specified direction due to an urgent need. FANS 1/A.-- Notification that the aircraft is operating on an offset. The Urgency attribute for this message element is not defined.",
     "Message_Element": "DEVIATING UP TO [specified distance] [direction] OF ROUTE or DEVIATING [distanceoffset] [direction] OF ROUTE",
     "Response_required": [
       "Y",
@@ -1184,7 +1184,7 @@
   },
   {
     "Ref_Num": "DM81",
-    "Message_Intent": "We can accept the specified level at the specified time. FANS 1/A.— Uses preformatted free text DM 67b.",
+    "Message_Intent": "We can accept the specified level at the specified time. FANS 1/A.-- Uses preformatted free text DM 67b.",
     "Message_Element": "WE CAN ACCEPT [level] AT [time]",
     "Response_required": [
       "N"
@@ -1194,7 +1194,7 @@
   },
   {
     "Ref_Num": "DM82",
-    "Message_Intent": "We cannot accept the specified level. FANS 1/A.— Uses preformatted free text DM 67e.",
+    "Message_Intent": "We cannot accept the specified level. FANS 1/A.-- Uses preformatted free text DM 67e.",
     "Message_Element": "WE CANNOT ACCEPT [level]",
     "Response_required": [
       "N"
@@ -1204,7 +1204,7 @@
   },
   {
     "Ref_Num": "DM83",
-    "Message_Intent": "We can accept the specified speed at the specified time. FANS 1/A.— Uses preformatted free text DM 67c.",
+    "Message_Intent": "We can accept the specified speed at the specified time. FANS 1/A.-- Uses preformatted free text DM 67c.",
     "Message_Element": "WE CAN ACCEPT [speed] AT [time]",
     "Response_required": [
       "N"
@@ -1214,7 +1214,7 @@
   },
   {
     "Ref_Num": "DM84",
-    "Message_Intent": "We cannot accept the specified speed. FANS 1/A.— Uses preformatted free text DM 67f.",
+    "Message_Intent": "We cannot accept the specified speed. FANS 1/A.-- Uses preformatted free text DM 67f.",
     "Message_Element": "WE CANNOT ACCEPT [speed]",
     "Response_required": [
       "N"
@@ -1224,7 +1224,7 @@
   },
   {
     "Ref_Num": "DM85",
-    "Message_Intent": "We can accept a parallel track offset the specified distance in the specified direction at the specified time. FANS 1/A.— Uses preformatted free text DM 67d.",
+    "Message_Intent": "We can accept a parallel track offset the specified distance in the specified direction at the specified time. FANS 1/A.-- Uses preformatted free text DM 67d.",
     "Message_Element": "WE CAN ACCEPT [specified distance] [direction] AT [time]",
     "Response_required": [
       "N"
@@ -1234,7 +1234,7 @@
   },
   {
     "Ref_Num": "DM86",
-    "Message_Intent": "We cannot accept a parallel track offset the specified distance in the specified direction. FANS 1/A.— Uses preformatted free text DM 67g.",
+    "Message_Intent": "We cannot accept a parallel track offset the specified distance in the specified direction. FANS 1/A.-- Uses preformatted free text DM 67g.",
     "Message_Element": "WE CANNOT ACCEPT [specified distance] [direction]",
     "Response_required": [
       "N"
@@ -1244,7 +1244,7 @@
   },
   {
     "Ref_Num": "DM87",
-    "Message_Intent": "Request for the earliest time at which a clearance to climb to the specified level can be expected. FANS 1/A.— Uses preformatted free text DM 67h.",
+    "Message_Intent": "Request for the earliest time at which a clearance to climb to the specified level can be expected. FANS 1/A.-- Uses preformatted free text DM 67h.",
     "Message_Element": "WHEN CAN WE EXPECT CLIMB TO [level]",
     "Response_required": [
       "Y"
@@ -1254,7 +1254,7 @@
   },
   {
     "Ref_Num": "DM88",
-    "Message_Intent": "Request for the earliest time at which a clearance to descend to the specified level can be expected. FANS 1/A.— Uses preformatted free text DM 67i.",
+    "Message_Intent": "Request for the earliest time at which a clearance to descend to the specified level can be expected. FANS 1/A.-- Uses preformatted free text DM 67i.",
     "Message_Element": "WHEN CAN WE EXPECT DESCENT TO [level]",
     "Response_required": [
       "Y"
@@ -1264,7 +1264,7 @@
   },
   {
     "Ref_Num": "DM89",
-    "Message_Intent": "The specified ATS unit is being monitored on the specified frequency. FANS 1/A-ATN B1.— FANS 1/A aircraft uses DM 67aa free text. May require to be preformatted.",
+    "Message_Intent": "The specified ATS unit is being monitored on the specified frequency. FANS 1/A-ATN B1.-- FANS 1/A aircraft uses DM 67aa free text. May require to be preformatted.",
     "Message_Element": "MONITORING [unit name] [frequency]",
     "Response_required": [
       "N"
@@ -1354,7 +1354,7 @@
   },
   {
     "Ref_Num": "DM98",
-    "Message_Intent": "Normal urgency, normal alert. FANS 1/A – ATN B1.— ATN B1 aircraft only. FANS 1/A aircraft uses DM 67.",
+    "Message_Intent": "Normal urgency, normal alert. FANS 1/A – ATN B1.-- ATN B1 aircraft only. FANS 1/A aircraft uses DM 67.",
     "Message_Element": "[free text]",
     "Response_required": [
       "N"
@@ -1374,7 +1374,7 @@
   },
   {
     "Ref_Num": "DM100",
-    "Message_Intent": "Confirmation to the ground system that the aircraft system has received the message to which the logical acknowledgement refers and found it acceptable for display to the responsible person. FANS 1/A – ATN B1.— ATN B1 ground systems uses alternate means, such as MAS message assurance received from FANS 1/A aircraft, to mimic LOGICAL ACKNOWLEDGEMENT.",
+    "Message_Intent": "Confirmation to the ground system that the aircraft system has received the message to which the logical acknowledgement refers and found it acceptable for display to the responsible person. FANS 1/A – ATN B1.-- ATN B1 ground systems uses alternate means, such as MAS message assurance received from FANS 1/A aircraft, to mimic LOGICAL ACKNOWLEDGEMENT.",
     "Message_Element": "LOGICAL ACKNOWLEDGEMENT",
     "Response_required": [
       "N"
@@ -1414,7 +1414,7 @@
   },
   {
     "Ref_Num": "DM104",
-    "Message_Intent": "Notification of estimated time of arrival at the specified position. FANS 1/A.— Uses free text DM 67n. Response_required to free text UM 169d REPORT ETA [position]",
+    "Message_Intent": "Notification of estimated time of arrival at the specified position. FANS 1/A.-- Uses free text DM 67n. Response_required to free text UM 169d REPORT ETA [position]",
     "Message_Element": "ETA [position] [time] or [position] [time]",
     "Response_required": [
       "N"
@@ -1434,7 +1434,7 @@
   },
   {
     "Ref_Num": "DM106",
-    "Message_Intent": "Notification of the preferred level. FANS 1/A.— Uses DM 67m. Response_required to free text UM 169c STATE PREFERRED LEVEL. FANS 1/A – ATN B1.— FANS 1/A aircraft Response_required to UM 231 STATE PREFERRED LEVEL.",
+    "Message_Intent": "Notification of the preferred level. FANS 1/A.-- Uses DM 67m. Response_required to free text UM 169c STATE PREFERRED LEVEL. FANS 1/A – ATN B1.-- FANS 1/A aircraft Response_required to UM 231 STATE PREFERRED LEVEL.",
     "Message_Element": "PREFERRED LEVEL [level] or FL[altitude]",
     "Response_required": [
       "N"
@@ -1444,7 +1444,7 @@
   },
   {
     "Ref_Num": "DM107",
-    "Message_Intent": "A system-generated message sent to a ground system that tries to connect to an aircraft when a current data authority has not designated the ground system as the NDA. FANS 1/A – ATN B1.— ATN B1 aircraft uses this message.",
+    "Message_Intent": "A system-generated message sent to a ground system that tries to connect to an aircraft when a current data authority has not designated the ground system as the NDA. FANS 1/A – ATN B1.-- ATN B1 aircraft uses this message.",
     "Message_Element": "NOT AUTHORIZED NEXT DATA AUTHORITY",
     "Response_required": [
       "N"
@@ -1464,7 +1464,7 @@
   },
   {
     "Ref_Num": "DM109",
-    "Message_Intent": "Notification of the preferred time to commence descent for approach. FANS 1/A.— Uses DM 67v. Response_required to free text UM 169aa STATE TOP OF DESCENT. FANS 1/A – ATN B1.— FANS 1/A aircraft Response_required to UM 232 STATE TOP OF DESCENT.",
+    "Message_Intent": "Notification of the preferred time to commence descent for approach. FANS 1/A.-- Uses DM 67v. Response_required to free text UM 169aa STATE TOP OF DESCENT. FANS 1/A – ATN B1.-- FANS 1/A aircraft Response_required to UM 232 STATE TOP OF DESCENT.",
     "Message_Element": "TOP OF DESCENT [time] or TOD [time]",
     "Response_required": [
       "N"
@@ -1504,7 +1504,7 @@
   },
   {
     "Ref_Num": "DM113",
-    "Message_Intent": "Notification of the requested speed. FANS 1/A.— Uses DM 67l free text for partial intent. The flight crew notifies the controller of present ground speed, in Response_required to UM 169b, REPORT GROUND SPEED.",
+    "Message_Intent": "Notification of the requested speed. FANS 1/A.-- Uses DM 67l free text for partial intent. The flight crew notifies the controller of present ground speed, in Response_required to UM 169b, REPORT GROUND SPEED.",
     "Message_Element": "[speed type] [speed type] [speed type] SPEED [speed]",
     "Response_required": [
       "N"

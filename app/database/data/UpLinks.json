@@ -12,7 +12,7 @@
   },
   {
     "Ref_Num": "UM1",
-    "Message_Intent": "Indicates that ATC has received the message and will respond. Note.— The flight crew is informed that the request is being assessed and there will be a short-term delay (e.g. as appropriate, given the situation, but not to exceed 10 minutes). The exchange is not closed and the request will be responded to when conditions allow.",
+    "Message_Intent": "Indicates that ATC has received the message and will respond. Note.-- The flight crew is informed that the request is being assessed and there will be a short-term delay (e.g. as appropriate, given the situation, but not to exceed 10 minutes). The exchange is not closed and the request will be responded to when conditions allow.",
     "Message_Element": "STANDBY",
     "Response_required": [
       "N",
@@ -23,7 +23,7 @@
   },
   {
     "Ref_Num": "UM2",
-    "Message_Intent": "Indicates that ATC has received the request but it has been deferred until later. Note.— The flight crew is informed that the request is being assessed and a long- term delay can be expected. The exchange is not closed and the request will be responded to when conditions allow.",
+    "Message_Intent": "Indicates that ATC has received the request but it has been deferred until later. Note.-- The flight crew is informed that the request is being assessed and a long- term delay can be expected. The exchange is not closed and the request will be responded to when conditions allow.",
     "Message_Element": "REQUEST DEFERRED",
     "Response_required": [
       "N",
@@ -67,7 +67,7 @@
   },
   {
     "Ref_Num": "UM6",
-    "Message_Intent": "Notification that a level change instruction should be expected. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that a level change instruction should be expected. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "EXPECT [level]",
     "Response_required": [
       "R"
@@ -77,7 +77,7 @@
   },
   {
     "Ref_Num": "UM7",
-    "Message_Intent": "Notification that an instruction should be expected for the aircraft to commence climb at the specified time. Note.— The controller should only use this message to respond to a flight crew request (e.g. WHEN CAN WE EXPECT).",
+    "Message_Intent": "Notification that an instruction should be expected for the aircraft to commence climb at the specified time. Note.-- The controller should only use this message to respond to a flight crew request (e.g. WHEN CAN WE EXPECT).",
     "Message_Element": "EXPECT CLIMB AT [time]",
     "Response_required": [
       "R"
@@ -87,7 +87,7 @@
   },
   {
     "Ref_Num": "UM8",
-    "Message_Intent": "Notification that an instruction should be expected for the aircraft to commence climb at the specified position. Note.— The controller should only use this message to respond to a flight crew request (e.g. WHEN CAN WE EXPECT).",
+    "Message_Intent": "Notification that an instruction should be expected for the aircraft to commence climb at the specified position. Note.-- The controller should only use this message to respond to a flight crew request (e.g. WHEN CAN WE EXPECT).",
     "Message_Element": "EXPECT CLIMB AT [position]",
     "Response_required": [
       "R"
@@ -97,7 +97,7 @@
   },
   {
     "Ref_Num": "UM9",
-    "Message_Intent": "Notification that an instruction should be expected for the aircraft to commence descent at the specified time. Note.— The controller should only use this message to respond to a flight crew request (e.g. WHEN CAN WE EXPECT).",
+    "Message_Intent": "Notification that an instruction should be expected for the aircraft to commence descent at the specified time. Note.-- The controller should only use this message to respond to a flight crew request (e.g. WHEN CAN WE EXPECT).",
     "Message_Element": "EXPECT DESCENT AT [time]",
     "Response_required": [
       "R"
@@ -107,7 +107,7 @@
   },
   {
     "Ref_Num": "UM10",
-    "Message_Intent": "Notification that an instruction should be expected for the aircraft to commence descent at the specified position. Note.— The controller should only use this message to respond to a flight crew request (e.g. WHEN CAN WE EXPECT).",
+    "Message_Intent": "Notification that an instruction should be expected for the aircraft to commence descent at the specified position. Note.-- The controller should only use this message to respond to a flight crew request (e.g. WHEN CAN WE EXPECT).",
     "Message_Element": "EXPECT DESCENT AT [position]",
     "Response_required": [
       "R"
@@ -117,7 +117,7 @@
   },
   {
     "Ref_Num": "UM11",
-    "Message_Intent": "Notification that an instruction should be expected for the aircraft to commence cruise climb at the specified time. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that an instruction should be expected for the aircraft to commence cruise climb at the specified time. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "EXPECT CRUISE CLIMB AT [time]",
     "Response_required": [
       "R"
@@ -127,7 +127,7 @@
   },
   {
     "Ref_Num": "UM12",
-    "Message_Intent": "Notification that an instruction should be expected for the aircraft to commence cruise climb at the specified position. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that an instruction should be expected for the aircraft to commence cruise climb at the specified position. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "EXPECT CRUISE CLIMB AT [position]",
     "Response_required": [
       "R"
@@ -157,7 +157,7 @@
   },
   {
     "Ref_Num": "UM21",
-    "Message_Intent": "Instruction that at the specified time a climb to the specified level is to commence and once reached the specified level is to be maintained. Note 1.— Instruction that NOT BEFORE the specified time, a climb to the specified level is to commence and once reached the specified level is to be maintained. Note 2.— Precede this message element with UM 19 MAINTAIN [level], to prevent the premature execution of the instruction.",
+    "Message_Intent": "Instruction that at the specified time a climb to the specified level is to commence and once reached the specified level is to be maintained. Note 1.-- Instruction that NOT BEFORE the specified time, a climb to the specified level is to commence and once reached the specified level is to be maintained. Note 2.-- Precede this message element with UM 19 MAINTAIN [level], to prevent the premature execution of the instruction.",
     "Message_Element": "AT [time] CLIMB TO [level] or AT [time] CLIMB TO AND MAINTAIN [altitude]",
     "Response_required": [
       "W/U"
@@ -167,7 +167,7 @@
   },
   {
     "Ref_Num": "UM22",
-    "Message_Intent": "Instruction that at the specified position a climb to the specified level is to commence and once reached the specified level is to be maintained. Note 1.— Instruction that AFTER PASSING the specified position, a climb to the specified level is to commence and once reached the specified level is to be maintained. Note 2.— Precede this message element with UM 19 MAINTAIN [level], to prevent the premature execution of the instruction.",
+    "Message_Intent": "Instruction that at the specified position a climb to the specified level is to commence and once reached the specified level is to be maintained. Note 1.-- Instruction that AFTER PASSING the specified position, a climb to the specified level is to commence and once reached the specified level is to be maintained. Note 2.-- Precede this message element with UM 19 MAINTAIN [level], to prevent the premature execution of the instruction.",
     "Message_Element": "AT [position] CLIMB TO [level] or AT [position] CLIMB TO AND MAINTAIN [altitude]",
     "Response_required": [
       "W/U"
@@ -187,7 +187,7 @@
   },
   {
     "Ref_Num": "UM24",
-    "Message_Intent": "Instruction that at a specified time a descent to a specified level is to commence and once reached the specified level is to be maintained. Note 1.— Instruction that NOT BEFORE the specified time, a descent to the specified level is to commence, and once reached, the specified level is to be maintained. Note 2.— Precede this message element with UM 19 MAINTAIN [level], to prevent the premature execution of the instruction.",
+    "Message_Intent": "Instruction that at a specified time a descent to a specified level is to commence and once reached the specified level is to be maintained. Note 1.-- Instruction that NOT BEFORE the specified time, a descent to the specified level is to commence, and once reached, the specified level is to be maintained. Note 2.-- Precede this message element with UM 19 MAINTAIN [level], to prevent the premature execution of the instruction.",
     "Message_Element": "AT [time] DESCEND TO [level] or AT [time] DESCEND TO AND MAINTAIN [altitude]",
     "Response_required": [
       "W/U"
@@ -197,7 +197,7 @@
   },
   {
     "Ref_Num": "UM25",
-    "Message_Intent": "Instruction that at the specified position a descent to the specified level is to commence and once reached the specified level is to be maintained. Note 1.— Instruction that AFTER PASSING the specified position, a descent to the specified level is to commence and once reached the specified level is to be maintained. Note 2.— Precede this message element with UM 19 MAINTAIN [level], to prevent the premature execution of the instruction.",
+    "Message_Intent": "Instruction that at the specified position a descent to the specified level is to commence and once reached the specified level is to be maintained. Note 1.-- Instruction that AFTER PASSING the specified position, a descent to the specified level is to commence and once reached the specified level is to be maintained. Note 2.-- Precede this message element with UM 19 MAINTAIN [level], to prevent the premature execution of the instruction.",
     "Message_Element": "AT [position] DESCEND TO [level] or AT [position] DESCEND TO AND MAINTAIN [altitude]",
     "Response_required": [
       "W/U"
@@ -207,7 +207,7 @@
   },
   {
     "Ref_Num": "UM26",
-    "Message_Intent": "Instruction that a climb is to commence at a rate such that the specified level is reached at or before the specified time. When this message element is not concatenated with another vertical clearance, the level specified is the assigned level which is to be maintained. Note.— Instruction that a climb is to commence at a rate such that the specified level is reached NOT LATER THAN the specified time.",
+    "Message_Intent": "Instruction that a climb is to commence at a rate such that the specified level is reached at or before the specified time. When this message element is not concatenated with another vertical clearance, the level specified is the assigned level which is to be maintained. Note.-- Instruction that a climb is to commence at a rate such that the specified level is reached NOT LATER THAN the specified time.",
     "Message_Element": "CLIMB TO REACH [level] BY [time]",
     "Response_required": [
       "W/U"
@@ -217,7 +217,7 @@
   },
   {
     "Ref_Num": "UM27",
-    "Message_Intent": "Instruction that a climb is to commence at a rate such that the specified level is reached at or before the specified position. When this message element is not concatenated with another vertical clearance, the level specified is the assigned level which is to be maintained. Note.— Instruction that a climb is to commence at a rate such that the specified level is reached BEFORE PASSING the specified position.",
+    "Message_Intent": "Instruction that a climb is to commence at a rate such that the specified level is reached at or before the specified position. When this message element is not concatenated with another vertical clearance, the level specified is the assigned level which is to be maintained. Note.-- Instruction that a climb is to commence at a rate such that the specified level is reached BEFORE PASSING the specified position.",
     "Message_Element": "CLIMB TO REACH [level] BY [position]",
     "Response_required": [
       "W/U"
@@ -227,7 +227,7 @@
   },
   {
     "Ref_Num": "UM28",
-    "Message_Intent": "Instruction that a descent is to commence at a rate such that the specified level is reached at or before the specified time. When this message element is not concatenated with another vertical clearance, the level specified is the assigned level which is to be maintained. Note.— Instruction that a descent is to commence at a rate such that the specified level is reached NOT LATER THAN the specified time.",
+    "Message_Intent": "Instruction that a descent is to commence at a rate such that the specified level is reached at or before the specified time. When this message element is not concatenated with another vertical clearance, the level specified is the assigned level which is to be maintained. Note.-- Instruction that a descent is to commence at a rate such that the specified level is reached NOT LATER THAN the specified time.",
     "Message_Element": "DESCEND TO REACH [level] BY [time]",
     "Response_required": [
       "W/U"
@@ -237,7 +237,7 @@
   },
   {
     "Ref_Num": "UM29",
-    "Message_Intent": "Instruction that a descent is to commence at a rate such that the specified level is reached at or before the specified position. When this message element is not concatenated with another vertical clearance, the level specified is the assigned level which is to be maintained. Note.— Instruction that a descent is to commence at a rate such that the specified level is reached BEFORE PASSING the specified position.",
+    "Message_Intent": "Instruction that a descent is to commence at a rate such that the specified level is reached at or before the specified position. When this message element is not concatenated with another vertical clearance, the level specified is the assigned level which is to be maintained. Note.-- Instruction that a descent is to commence at a rate such that the specified level is reached BEFORE PASSING the specified position.",
     "Message_Element": "DESCEND TO REACH [level] BY [position]",
     "Response_required": [
       "W/U"
@@ -247,7 +247,7 @@
   },
   {
     "Ref_Num": "UM30",
-    "Message_Intent": "Instruction that a level within the defined vertical range specified is to be maintained. FANS 1/A-ATN B1.— FANS 1/A aircraft only. ATN B1 aircraft accepts UM 19 MAINTAIN [level], where [level] is a vertical range.",
+    "Message_Intent": "Instruction that a level within the defined vertical range specified is to be maintained. FANS 1/A-ATN B1.-- FANS 1/A aircraft only. ATN B1 aircraft accepts UM 19 MAINTAIN [level], where [level] is a vertical range.",
     "Message_Element": "MAINTAIN BLOCK [level] TO [level]",
     "Response_required": [
       "W/U"
@@ -257,7 +257,7 @@
   },
   {
     "Ref_Num": "UM31",
-    "Message_Intent": "Instruction that a climb to a level within the vertical range defined is to commence. FANS 1/A-ATN B1.— FANS 1/A aircraft only. ATN B1 aircraft accepts UM 20 CLIMB TO [level], where [level] is a vertical range.",
+    "Message_Intent": "Instruction that a climb to a level within the vertical range defined is to commence. FANS 1/A-ATN B1.-- FANS 1/A aircraft only. ATN B1 aircraft accepts UM 20 CLIMB TO [level], where [level] is a vertical range.",
     "Message_Element": "CLIMB TO AND MAINTAIN BLOCK [level] TO [level]",
     "Response_required": [
       "W/U"
@@ -267,7 +267,7 @@
   },
   {
     "Ref_Num": "UM32",
-    "Message_Intent": "Instruction that a descent to a level within the vertical range defined is to commence. FANS 1/A-ATN B1.— FANS 1/A aircraft only. ATN B1 aircraft accepts UM 23 DESCEND TO [level], where [level] is a vertical range.",
+    "Message_Intent": "Instruction that a descent to a level within the vertical range defined is to commence. FANS 1/A-ATN B1.-- FANS 1/A aircraft only. ATN B1 aircraft accepts UM 23 DESCEND TO [level], where [level] is a vertical range.",
     "Message_Element": "DESCEND TO AND MAINTAIN BLOCK [level] TO [level]",
     "Response_required": [
       "W/U"
@@ -277,7 +277,7 @@
   },
   {
     "Ref_Num": "UM34",
-    "Message_Intent": "Instruction that a cruise climb to the specified level is to commence and continue and, once reached the specified level is to be maintained. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Instruction that a cruise climb to the specified level is to commence and continue and, once reached the specified level is to be maintained. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "CRUISE CLIMB TO [level]",
     "Response_required": [
       "W/U"
@@ -287,7 +287,7 @@
   },
   {
     "Ref_Num": "UM35",
-    "Message_Intent": "Instruction to be used in conjunction with an associated level instruction indicating that a cruise climb can commence once above the specified level. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Instruction to be used in conjunction with an associated level instruction indicating that a cruise climb can commence once above the specified level. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "WHEN ABOVE [level] COMMENCE CRUISE CLIMB or CRUISE CLIMB ABOVE [level]",
     "Response_required": [
       "W/U"
@@ -727,7 +727,7 @@
   },
   {
     "Ref_Num": "UM85",
-    "Message_Intent": "Notification that a clearance to fly on the specified route may be issued. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that a clearance to fly on the specified route may be issued. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "EXPECT [route clearance]",
     "Response_required": [
       "R"
@@ -737,7 +737,7 @@
   },
   {
     "Ref_Num": "UM86",
-    "Message_Intent": "Notification that a clearance to fly on the specified route from the specified position may be issued. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that a clearance to fly on the specified route from the specified position may be issued. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "AT [position] EXPECT [route clearance]",
     "Response_required": [
       "R"
@@ -747,7 +747,7 @@
   },
   {
     "Ref_Num": "UM87",
-    "Message_Intent": "Notification that a clearance to fly directly to the specified position may be issued. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that a clearance to fly directly to the specified position may be issued. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "EXPECT DIRECT TO [position]",
     "Response_required": [
       "R"
@@ -757,7 +757,7 @@
   },
   {
     "Ref_Num": "UM88",
-    "Message_Intent": "Notification that a clearance to fly directly from the first specified position to the next specified position may be issued. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that a clearance to fly directly from the first specified position to the next specified position may be issued. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "AT [position] EXPECT DIRECT TO [position]",
     "Response_required": [
       "R"
@@ -767,7 +767,7 @@
   },
   {
     "Ref_Num": "UM89",
-    "Message_Intent": "Notification that a clearance to fly directly to the specified position commencing at the specified time may be issued. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that a clearance to fly directly to the specified position commencing at the specified time may be issued. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "AT [time] EXPECT DIRECT TO [position]",
     "Response_required": [
       "R"
@@ -777,7 +777,7 @@
   },
   {
     "Ref_Num": "UM90",
-    "Message_Intent": "Notification that a clearance to fly directly to the specified position commencing when the specified level is reached may be issued. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that a clearance to fly directly to the specified position commencing when the specified level is reached may be issued. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "AT [level] EXPECT DIRECT TO [position]",
     "Response_required": [
       "R"
@@ -897,7 +897,7 @@
   },
   {
     "Ref_Num": "UM102",
-    "Message_Intent": "Notification that a speed instruction may be issued to be effective at the specified level. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that a speed instruction may be issued to be effective at the specified level. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "AT [level] EXPECT [speed]",
     "Response_required": [
       "R"
@@ -907,7 +907,7 @@
   },
   {
     "Ref_Num": "UM103",
-    "Message_Intent": "Notification that a speed range instruction may be issued to be effective at the specified time. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that a speed range instruction may be issued to be effective at the specified time. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "AT [time] EXPECT [speed] TO [speed]",
     "Response_required": [
       "R"
@@ -917,7 +917,7 @@
   },
   {
     "Ref_Num": "UM104",
-    "Message_Intent": "Notification that a speed range instruction may be issued to be effective at the specified position. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that a speed range instruction may be issued to be effective at the specified position. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "AT [position] EXPECT [speed] TO [speed]",
     "Response_required": [
       "R"
@@ -927,7 +927,7 @@
   },
   {
     "Ref_Num": "UM105",
-    "Message_Intent": "Notification that a speed range instruction may be issued to be effective at the specified level. Note.— Avoid use of this message element due to potential misinterpretation.",
+    "Message_Intent": "Notification that a speed range instruction may be issued to be effective at the specified level. Note.-- Avoid use of this message element due to potential misinterpretation.",
     "Message_Element": "AT [level] EXPECT [speed] TO [speed]",
     "Response_required": [
       "R"
@@ -1077,7 +1077,7 @@
   },
   {
     "Ref_Num": "UM120",
-    "Message_Intent": "Instruction that the ATS unit with the specified ATS unit name is to be monitored on the specified frequency. Note.— The flight crew is not required to check in.",
+    "Message_Intent": "Instruction that the ATS unit with the specified ATS unit name is to be monitored on the specified frequency. Note.-- The flight crew is not required to check in.",
     "Message_Element": "MONITOR [unit name] [frequency]",
     "Response_required": [
       "W/U"
@@ -1087,7 +1087,7 @@
   },
   {
     "Ref_Num": "UM121",
-    "Message_Intent": "Instruction that at the specified position the ATS unit with the specified ATS unit name is to be monitored on the specified frequency. Note.— The flight crew is not required to check in.",
+    "Message_Intent": "Instruction that at the specified position the ATS unit with the specified ATS unit name is to be monitored on the specified frequency. Note.-- The flight crew is not required to check in.",
     "Message_Element": "AT [position] MONITOR [unit name] [frequency]",
     "Response_required": [
       "W/U"
@@ -1097,7 +1097,7 @@
   },
   {
     "Ref_Num": "UM122",
-    "Message_Intent": "Instruction that at the specified time the ATS unit with the specified ATS unit name is to be monitored on the specified frequency. Note.— The flight crew is not required to check in.",
+    "Message_Intent": "Instruction that at the specified time the ATS unit with the specified ATS unit name is to be monitored on the specified frequency. Note.-- The flight crew is not required to check in.",
     "Message_Element": "AT [time] MONITOR [unit name] [frequency]",
     "Response_required": [
       "W/U"
@@ -1160,7 +1160,7 @@
   },
   {
     "Ref_Num": "UM128",
-    "Message_Intent": "Instruction to report when the aircraft has vacated the specified level that has either been maintained or passed through on climb or descent. Note.— Either a level that has been maintained, or a level passed through on climb or descent.",
+    "Message_Intent": "Instruction to report when the aircraft has vacated the specified level that has either been maintained or passed through on climb or descent. Note.-- Either a level that has been maintained, or a level passed through on climb or descent.",
     "Message_Element": "REPORT LEAVING [level]",
     "Response_required": [
       "W/U",
@@ -1173,7 +1173,7 @@
   },
   {
     "Ref_Num": "UM129",
-    "Message_Intent": "Instruction to report when the aircraft is in level flight at the specified level. Note.— This message element is only to be used with single altitude clearances.",
+    "Message_Intent": "Instruction to report when the aircraft is in level flight at the specified level. Note.-- This message element is only to be used with single altitude clearances.",
     "Message_Element": "REPORT MAINTAINING [level] or REPORT LEVEL [altitude]",
     "Response_required": [
       "W/U",
@@ -1239,7 +1239,7 @@
   },
   {
     "Ref_Num": "UM134",
-    "Message_Intent": "Instruction to report the requested speed. Note.— Instruction to report the present speed. FANS 1/A.— Uses UM 169b free text for FANS 1/A aircraft when the controller is requesting the flight crew to report the present ground speed.",
+    "Message_Intent": "Instruction to report the requested speed. Note.-- Instruction to report the present speed. FANS 1/A.-- Uses UM 169b free text for FANS 1/A aircraft when the controller is requesting the flight crew to report the present ground speed.",
     "Message_Element": "REPORT [speed type] [speed type] [speed type] SPEED or CONFIRM SPEED",
     "Response_required": [
       "Y",
@@ -1412,7 +1412,7 @@
   },
   {
     "Ref_Num": "UM147",
-    "Message_Intent": "Instruction to make a position report. Note.— To be used if the controller does not receive a scheduled position report.",
+    "Message_Intent": "Instruction to make a position report. Note.-- To be used if the controller does not receive a scheduled position report.",
     "Message_Element": "REQUEST POSITION REPORT",
     "Response_required": [
       "Y",
@@ -1601,7 +1601,7 @@
   },
   {
     "Ref_Num": "UM162",
-    "Message_Intent": "Notification that the ground system does not support this message. FANS 1/A and FANS 1/A ATN B1.— Uses UM 169u free text for FANS 1/A aircraft.",
+    "Message_Intent": "Notification that the ground system does not support this message. FANS 1/A and FANS 1/A ATN B1.-- Uses UM 169u free text for FANS 1/A aircraft.",
     "Message_Element": "MESSAGE NOT SUPPORTED BY THIS ATS UNIT or SERVICE UNAVAILABLE",
     "Response_required": [
       "N",
@@ -1623,7 +1623,7 @@
   },
   {
     "Ref_Num": "UM164",
-    "Message_Intent": "The associated instruction may be complied with at any future time. Note.— See also UM 177 AT PILOTS DISCRETION.",
+    "Message_Intent": "The associated instruction may be complied with at any future time. Note.-- See also UM 177 AT PILOTS DISCRETION.",
     "Message_Element": "WHEN READY",
     "Response_required": [
       "N",
@@ -1667,7 +1667,7 @@
   },
   {
     "Ref_Num": "UM168",
-    "Message_Intent": "The indicated communication should be ignored. Note.— The previously sent uplink CPDLC message should be ignored. DISREGARD should not refer to a clearance or instruction. If DISREGARD is used, another element should be added to clarify which message is to be disregarded.",
+    "Message_Intent": "The indicated communication should be ignored. Note.-- The previously sent uplink CPDLC message should be ignored. DISREGARD should not refer to a clearance or instruction. If DISREGARD is used, another element should be added to clarify which message is to be disregarded.",
     "Message_Element": "DISREGARD",
     "Response_required": [
       "R"
@@ -1727,7 +1727,7 @@
   },
   {
     "Ref_Num": "UM177",
-    "Message_Intent": "Used in conjunction with a clearance/instruction to indicate that the pilot may execute when prepared to do so. Note 1.— When used in conjunction with altitude assignments, means that ATC has offered the pilot the option of starting climb or descent whenever he/she wishes and conducting the climb or descent at any rate he/she wishes. He/she may temporarily level off at any intermediate altitude. However, once he/she has vacated an altitude, he/she may not return to that altitude. Note 2.— There are considerable differences regarding the interpretation of “pilot’s discretion” and “when ready” and their meanings/intended uses. Note 3.— See also UM 164 WHEN READY.",
+    "Message_Intent": "Used in conjunction with a clearance/instruction to indicate that the pilot may execute when prepared to do so. Note 1.-- When used in conjunction with altitude assignments, means that ATC has offered the pilot the option of starting climb or descent whenever he/she wishes and conducting the climb or descent at any rate he/she wishes. He/she may temporarily level off at any intermediate altitude. However, once he/she has vacated an altitude, he/she may not return to that altitude. Note 2.-- There are considerable differences regarding the interpretation of “pilot’s discretion” and “when ready” and their meanings/intended uses. Note 3.-- See also UM 164 WHEN READY.",
     "Message_Element": "AT PILOTS DISCRETION",
     "Response_required": [
       "N"
@@ -1880,7 +1880,7 @@
   },
   {
     "Ref_Num": "UM211",
-    "Message_Intent": "Indicates that the ATC has received the request and has passed it to the next control authority. FANS 1/A and FANS 1/A-ATN B1.— Uses UM 169x free text for FANS 1/A aircraft.",
+    "Message_Intent": "Indicates that the ATC has received the request and has passed it to the next control authority. FANS 1/A and FANS 1/A-ATN B1.-- Uses UM 169x free text for FANS 1/A aircraft.",
     "Message_Element": "REQUEST FORWARDED",
     "Response_required": [
       "N"
@@ -1900,7 +1900,7 @@
   },
   {
     "Ref_Num": "UM213",
-    "Message_Intent": "ATS advisory that the specified altimeter setting relates to the specified facility. FANS 1/A and FANS 1/A-ATN B1.— Uses UM 169y free text for FANS 1/A aircraft.",
+    "Message_Intent": "ATS advisory that the specified altimeter setting relates to the specified facility. FANS 1/A and FANS 1/A-ATN B1.-- Uses UM 169y free text for FANS 1/A aircraft.",
     "Message_Element": "[facility designation] ALTIMETER [altimeter]",
     "Response_required": [
       "R"
@@ -1990,7 +1990,7 @@
   },
   {
     "Ref_Num": "UM222",
-    "Message_Intent": "Notification that the aircraft may keep its preferred speed without restriction. FANS 1/A and FANS 1/A-ATN B1.— Uses UM 169z free text for FANS 1/A aircraft.",
+    "Message_Intent": "Notification that the aircraft may keep its preferred speed without restriction. FANS 1/A and FANS 1/A-ATN B1.-- Uses UM 169z free text for FANS 1/A aircraft.",
     "Message_Element": "NO SPEED RESTRICTION",
     "Response_required": [
       "R"
@@ -2040,7 +2040,7 @@
   },
   {
     "Ref_Num": "UM227",
-    "Message_Intent": "Confirmation to the aircraft system that the ground system has received the message to which the logical acknowledgement refers and found it acceptable for display to the responsible person. FANS 1/A-ATN B1.— ATN B1 only. Not available for FANS 1/A.",
+    "Message_Intent": "Confirmation to the aircraft system that the ground system has received the message to which the logical acknowledgement refers and found it acceptable for display to the responsible person. FANS 1/A-ATN B1.-- ATN B1 only. Not available for FANS 1/A.",
     "Message_Element": "LOGICAL ACKNOWLEDGEMENT",
     "Response_required": [
       "N"
@@ -2050,7 +2050,7 @@
   },
   {
     "Ref_Num": "UM228",
-    "Message_Intent": "Instruction to report the estimated time of arrival at the specified position. FANS 1/A.— Uses UM 169d free text for FANS 1/A aircraft.",
+    "Message_Intent": "Instruction to report the estimated time of arrival at the specified position. FANS 1/A.-- Uses UM 169d free text for FANS 1/A aircraft.",
     "Message_Element": "REPORT ETA [position]",
     "Response_required": [
       "Y"
@@ -2086,7 +2086,7 @@
   },
   {
     "Ref_Num": "UM231",
-    "Message_Intent": "Instruction to indicate the pilot’s preferred level. FANS 1/A and FANS 1/A-ATN B1.— uses UM 169c free text for FANS 1/A aircraft.",
+    "Message_Intent": "Instruction to indicate the pilot’s preferred level. FANS 1/A and FANS 1/A-ATN B1.-- uses UM 169c free text for FANS 1/A aircraft.",
     "Message_Element": "STATE PREFERRED LEVEL",
     "Response_required": [
       "Y"
@@ -2102,7 +2102,7 @@
   },
   {
     "Ref_Num": "UM232",
-    "Message_Intent": "Instruction to indicate the pilot’s preferred time and/or position to commence descent to the aerodrome of intended arrival. FANS 1/A and FANS 1/A-ATN B1.— Uses UM 169aa free text for FANS 1/A aircraft.",
+    "Message_Intent": "Instruction to indicate the pilot’s preferred time and/or position to commence descent to the aerodrome of intended arrival. FANS 1/A and FANS 1/A-ATN B1.-- Uses UM 169aa free text for FANS 1/A aircraft.",
     "Message_Element": "STATE TOP OF DESCENT",
     "Response_required": [
       "Y"
@@ -2158,7 +2158,7 @@
   },
   {
     "Ref_Num": "UM237",
-    "Message_Intent": "Indicates that the request cannot be responded to by the current unit and that it should be requested from the next unit. FANS 1/A and FANS 1/A-ATN B1.— Uses UM 169ab free text for FANS 1/A aircraft.",
+    "Message_Intent": "Indicates that the request cannot be responded to by the current unit and that it should be requested from the next unit. FANS 1/A and FANS 1/A-ATN B1.-- Uses UM 169ab free text for FANS 1/A aircraft.",
     "Message_Element": "REQUEST AGAIN WITH NEXT UNIT",
     "Response_required": [
       "N"
@@ -2168,7 +2168,7 @@
   },
   {
     "Ref_Num": "UM238",
-    "Message_Intent": "Notification that the secondary frequency is as specified. FANS 1/A.— Uses UM 169o free text for FANS 1/A aircraft.",
+    "Message_Intent": "Notification that the secondary frequency is as specified. FANS 1/A.-- Uses UM 169o free text for FANS 1/A aircraft.",
     "Message_Element": "SECONDARY FREQUENCY [frequency]",
     "Response_required": [
       "R"
@@ -2208,7 +2208,7 @@
   },
   {
     "Ref_Num": "UM242",
-    "Message_Intent": "Instruction that the “ident” function of the ADS-B emitter is to be activated. FANS 1/A.— Uses UM 169ai free text for FANS 1/A aircraft. The free text message is considered acceptable as the intended use does not change the volume of protected airspace (i.e. not a clearance).",
+    "Message_Intent": "Instruction that the “ident” function of the ADS-B emitter is to be activated. FANS 1/A.-- Uses UM 169ai free text for FANS 1/A aircraft. The free text message is considered acceptable as the intended use does not change the volume of protected airspace (i.e. not a clearance).",
     "Message_Element": "TRANSMIT ADS-B IDENT",
     "Response_required": [
       "W/U",
@@ -2229,7 +2229,7 @@
   },
   {
     "Ref_Num": "UM244",
-    "Message_Intent": "ATS advisory that the radar and/or ADS-B service is terminated. FANS 1/A.— uses UM 169aj free text for FANS 1/A aircraft.",
+    "Message_Intent": "ATS advisory that the radar and/or ADS-B service is terminated. FANS 1/A.-- uses UM 169aj free text for FANS 1/A aircraft.",
     "Message_Element": "IDENTIFICATION TERMINATED",
     "Response_required": [
       "R"

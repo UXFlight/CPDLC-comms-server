@@ -2,7 +2,7 @@ import os
 from typing import Any
 
 from app.classes.logging import log_error, log_user_action
-from app.classes.logging.telegram_notifier import send_telegram_message
+from app.classes.logging.telegram_notifier import send_telegram_message_sync
 from app.services.analytics_event_store import clear_events
 from app.services.analytics_service import AnalyticsService
 from app.services.google_analytics_service import get_weekly_web_stats
@@ -86,6 +86,7 @@ def format_weekly_report(stats: dict[str, Any], web_stats: dict[str, int] | None
 
 
 def generate_and_send_weekly_report() -> bool:
+    log_user_action("-", "analytics_report_job_started")
     try:
         stats = AnalyticsService().compute_weekly_stats()
     except Exception as e:
@@ -93,6 +94,14 @@ def generate_and_send_weekly_report() -> bool:
         return False
 
     web_stats = get_weekly_web_stats()
+    log_user_action(
+        "-",
+        "analytics_report_computed",
+        users=stats.get("users_this_week", 0),
+        events=stats.get("events_processed", 0),
+        errors=stats.get("errors", 0),
+        has_ga=bool(web_stats),
+    )
     report_text = format_weekly_report(stats, web_stats=web_stats)
 
     token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
@@ -101,14 +110,24 @@ def generate_and_send_weekly_report() -> bool:
         log_error(None, "analytics_report_failed", "telegram_not_configured")
         return False
 
+    ok, reason = send_telegram_message_sync(report_text)
+    if not ok:
+        log_error(
+            None,
+            "analytics_report_failed",
+            reason or "telegram_send_failed",
+            channel_id=channel_id,
+        )
+        return False
+
     try:
-        send_telegram_message(report_text)
         log_user_action(
             "-",
             "analytics_report_sent",
             users=stats.get("users_this_week", 0),
             events=stats.get("events_processed", 0),
             errors=stats.get("errors", 0),
+            channel_id=channel_id,
         )
         clear_events()
         return True

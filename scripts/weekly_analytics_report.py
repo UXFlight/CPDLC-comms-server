@@ -18,9 +18,14 @@ from app.services.weekly_report_service import generate_and_send_weekly_report
 def main() -> int:
     try:
         ok = generate_and_send_weekly_report()
+        if ok:
+            print("Weekly analytics report: sent and storage cleared.")
+        else:
+            print("Weekly analytics report: failed (see logs above).")
         return 0 if ok else 1
     except Exception as e:
         log_error(None, "analytics_report_failed", e)
+        print("Weekly analytics report: failed with exception.")
         return 1
 
 

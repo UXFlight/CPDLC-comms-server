@@ -18,7 +18,7 @@ socket_log_output = os.getenv("SOCKET_LOG_OUTPUT", "false").lower() == "true"
 
 allowed_origins = [
     "http://localhost:3000",
-    "http://64.176.194.195",
+    "http://144.202.57.25",
 ]
 
 def create_app():

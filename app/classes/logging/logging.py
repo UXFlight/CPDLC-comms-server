@@ -1,5 +1,6 @@
 import logging
 import os
+from datetime import datetime
 from typing import Any
 from .telegram_notifier import send_telegram_message
 from app.services.analytics_event_store import record_event
@@ -7,6 +8,14 @@ from app.services.analytics_event_store import record_event
 USER_ACTION_LEVEL = 25
 LOGGER_NAME = "cpdlc"
 DEFAULT_CLIENT_ID = "-"
+_LABEL_OVERRIDES = {
+    "atc": "ATC",
+    "cpdlc": "CPDLC",
+    "id": "ID",
+    "ip": "IP",
+    "mongodb": "MongoDB",
+    "url": "URL",
+}
 
 logging.addLevelName(USER_ACTION_LEVEL, "USER_ACTION")
 
@@ -54,10 +63,57 @@ def _build_meta(fields: dict[str, Any]) -> str:
     return "".join(chunks)
 
 
-def _telegram_error_context() -> str:
+def _telegram_error_context() -> tuple[str, str]:
     site_name = os.getenv("APP_SITE_NAME", "CPDLC Communications Interface").strip()
     site_url = os.getenv("APP_SITE_URL", "http://64.176.194.195/").strip()
-    return f"source={site_name} | url={site_url}"
+    return site_name or "CPDLC Communications Interface", site_url or "-"
+
+
+def _humanize_label(value: Any) -> str:
+    text = _stringify(value)
+    if text == "-":
+        return text
+    words = text.replace("_", " ").replace("-", " ").split()
+    label_parts: list[str] = []
+    for word in words:
+        override = _LABEL_OVERRIDES.get(word.lower())
+        if override:
+            label_parts.append(override)
+        elif word.isupper():
+            label_parts.append(word)
+        else:
+            label_parts.append(word.capitalize())
+    return " ".join(label_parts)
+
+
+def _format_telegram_error(
+    record: logging.LogRecord,
+    client_id: str | None,
+    event: str,
+    metadata: dict[str, Any],
+) -> str:
+    site_name, site_url = _telegram_error_context()
+    reason = _humanize_label(metadata.get("reason"))
+    timestamp = datetime.fromtimestamp(record.created).strftime("%Y-%m-%d %H:%M:%S")
+    details: list[str] = []
+    for key, value in metadata.items():
+        if value is None or key == "reason":
+            continue
+        details.append(f"- {_humanize_label(key)}: {_stringify(value)}")
+
+    lines = [
+        "CPDLC Error Alert",
+        f"Source: {site_name}",
+        f"URL: {site_url}",
+        f"Time: {timestamp}",
+        f"Event: {_humanize_label(event)}",
+        f"Client: {_compact_client_id(client_id)}",
+        f"Reason: {reason}",
+    ]
+    if details:
+        lines.append("Details:")
+        lines.extend(details)
+    return "\n".join(lines)
 
 
 def get_logger() -> logging.Logger:
@@ -165,8 +221,13 @@ def log_error(
         pass
 
     try:
-        if logger.handlers and logger.handlers[0].formatter:
-            log_message = logger.handlers[0].formatter.format(record)
-            send_telegram_message(f"{_telegram_error_context()}\n{log_message}")
+        send_telegram_message(
+            _format_telegram_error(
+                record=record,
+                client_id=client_id,
+                event=event,
+                metadata=metadata,
+            )
+        )
     except Exception:
         return

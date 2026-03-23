@@ -18,8 +18,8 @@ socket_log_output = os.getenv("SOCKET_LOG_OUTPUT", "false").lower() == "true"
 
 allowed_origins = [
     "http://localhost:3000",
-    "http://155.138.147.86",
-    "http://mycpdlc.com"
+    "https://mycpdlc.com",
+    "https://www.mycpdlc.com",
 ]
 
 def create_app():

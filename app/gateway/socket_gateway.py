@@ -80,6 +80,7 @@ class SocketGateway:
         sid = request.sid
         flight = self.flight_manager.create_session(routine, sid, self.data_store, self.socket_service)
         self.socket_service.send("connected", flight.to_dict(), room=sid)
+        self.socket_service.send("supported_codes", self.data_store.supported_codes, room=sid)
         log_user_action(
             sid,
             "connect",

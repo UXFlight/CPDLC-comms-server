@@ -19,11 +19,6 @@ def formatMessage():
     return {"status": "success", "message": formatted}, 200
 
 
-@general_bp.route('/supported-codes', methods=['GET'])
-def supported_codes():
-    return {"codes": data_store.supported_codes}, 200
-    
-
 # @general_bp.route('/filterLogsArray', methods=['POST'])
 # def formatMessage():
 #     body = request.get_json()

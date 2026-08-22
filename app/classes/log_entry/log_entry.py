@@ -9,7 +9,7 @@ ACTION_REQUIRED_UM = ["Y", "W/U", "A/N", "R"]
 NO_ACTION_REQUIRED_UM = ["N", "N/E"]
 
 class LogEntry:
-    def __init__(self, ref, content, direction, status, urgency, response_required, intent=None, position=None, additional=None, mongodb=None, communication_thread=None, acceptable_responses=None, id=None, timestamp=None):
+    def __init__(self, ref, content, direction, status, urgency, response_required, intent=None, position=None, additional=None, data_store=None, communication_thread=None, acceptable_responses=None, id=None, timestamp=None):
         self.id = str(uuid.uuid4()) if id is None else id
         self.ref = ref
         self.content = content
@@ -20,7 +20,7 @@ class LogEntry:
         self.intent = intent
         self.position = position
         self.additional = additional if additional is not None else []
-        self.__mongodb = mongodb
+        self.__data_store = data_store
         self.communication_thread = communication_thread if communication_thread is not None else []
         self.response_required = response_required
         self.acceptable_responses = acceptable_responses if acceptable_responses is not None else []
@@ -51,7 +51,7 @@ class LogEntry:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any], mongodb=None) -> "LogEntry":
+    def from_dict(cls, data: Dict[str, Any], data_store=None) -> "LogEntry":
         return cls(
             ref=data.get("ref"),
             content=data.get("element"),  
@@ -60,14 +60,14 @@ class LogEntry:
             intent=data.get("intent"),
             additional=data.get("additional", []),
             urgency=data.get("urgency", "normal"),
-            mongodb=mongodb,
+            data_store=data_store,
             response_required=data.get("response_required", False),
             acceptable_responses=data.get("acceptable_responses", []),
             id=data.get("id"),
         )
 
     def is_loadable(self):
-        ref = self.__mongodb.find_UM_by_ref(self.ref)
+        ref = self.__data_store.find_uplink_by_ref(self.ref)
         if not ref:
             log_error(None, "message_lookup_missing", "UM reference not found", ref=self.ref)
             return False
@@ -76,7 +76,7 @@ class LogEntry:
         return "Route Modifications" in category
 
     def get_waypoint(self):
-        um_ref = self.__mongodb.find_datalink_by_ref(self.ref)
+        um_ref = self.__data_store.find_datalink_by_ref(self.ref)
         template = um_ref.get("Message_Element")
         message = self.content
 
@@ -116,7 +116,7 @@ class LogEntry:
         return response_required[0] in ACTION_REQUIRED_UM
 
     @staticmethod
-    def formatted_message(request_data: dict, mongodb) -> str:
+    def formatted_message(request_data: dict, data_store) -> str:
         message_ref = request_data.get("messageRef")
         arguments = request_data.get("arguments", [])
         position_arg = request_data.get("positionSelected", None)
@@ -127,7 +127,7 @@ class LogEntry:
             mm = time_arg.get("mm", "").zfill(2)
             time_arg = f"{hh}:{mm}"
 
-        d_message = mongodb.find_datalink_by_ref(message_ref)
+        d_message = data_store.find_datalink_by_ref(message_ref)
         if not d_message:
             return ""
 

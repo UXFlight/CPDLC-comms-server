@@ -1,9 +1,8 @@
 from flask import Blueprint, request
 from app.classes.log_entry.log_entry import LogEntry
-from app.database.mongo_db import mongo_db, MongoDb
+from app.database.data_store import data_store
 
 general_bp = Blueprint('general', __name__)
-mongodb = mongo_db
 
 @general_bp.route('/logs', methods=['POST'])
 def logs():
@@ -16,8 +15,13 @@ def logs():
 @general_bp.route('/formattedMessage', methods=['POST'])
 def formatMessage():
     body = request.get_json()
-    formatted = LogEntry.formatted_message(body, mongodb)
+    formatted = LogEntry.formatted_message(body, data_store)
     return {"status": "success", "message": formatted}, 200
+
+
+@general_bp.route('/supported-codes', methods=['GET'])
+def supported_codes():
+    return {"codes": data_store.supported_codes}, 200
     
 
 # @general_bp.route('/filterLogsArray', methods=['POST'])

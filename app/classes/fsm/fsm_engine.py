@@ -10,14 +10,14 @@ class FsmEngine:
     def __init__(
         self,
         socket,
-        mongodb,
+        data_store,
         room: str,
         scenario: Scenario = None,
         on_emit: Optional[Callable[[dict], None]] = None,  # <- NEW: hook (payload)
         on_end: Optional[Callable[[], None]] = None,       # <- NEW: hook fin
     ):
         self.socket = socket
-        self.mongodb = mongodb
+        self.data_store = data_store
         self.room = room
         self.scenario = scenario
 
@@ -39,7 +39,7 @@ class FsmEngine:
                 return
             
             m = choice(msgs)
-            log = LogsManager.create_log(self.mongodb, m.log_entry["ref"], m.log_entry["text"])
+            log = LogsManager.create_log(self.data_store, m.log_entry["ref"], m.log_entry["text"])
             log_entry_dict = log.to_dict()
 
             if self.thread_id is None:
@@ -77,14 +77,14 @@ class FsmEngine:
         responses = []
         if trans.branches:
             for ref in trans.branches.keys():
-                dl = self.mongodb.find_datalink_by_ref(ref)
+                dl = self.data_store.find_datalink_by_ref(ref)
                 if dl:
                     msg = dl.get("Message_Element", "")
                     if "[" in msg and "]" in msg:
                         continue
                     responses.append({"ref": ref, "text": dl.get("Message_Element")})
         elif next_trans and isinstance(next_trans.expected, str) and next_trans.expected not in ("__ANY__", ""):
-            dl = self.mongodb.find_datalink_by_ref(next_trans.expected)
+            dl = self.data_store.find_datalink_by_ref(next_trans.expected)
             if dl:
                 responses.append({"ref": next_trans.expected, "text": dl.get("Message_Element")})
         responses.extend([
@@ -110,7 +110,7 @@ class FsmEngine:
         #         if self.state_id is None: #si le scenario termine/reinitialise entre temps on sort
         #             return
         #         self._emit_atc([ #renvoi le rappel car pas recu de reponse du pilote ????
-        #             Msg(log_entry=LogsManager.create_log(self.mongodb, "UM1", "STANDBY."), role="ATC")
+        #             Msg(log_entry=LogsManager.create_log(self.data_store, "UM1", "STANDBY."), role="ATC")
         #         ])
         #         self._arm_timeout(trans) #rearmement, donc rappel periodique
 
@@ -153,7 +153,7 @@ class FsmEngine:
                     self.state_id = "pilot_entry"
                 else:
                     # self._emit_atc([
-                    #     Msg(log_entry=LogsManager.create_log(self.mongodb, "UM1", "STANDBY."), role="ATC")
+                    #     Msg(log_entry=LogsManager.create_log(self.data_store, "UM1", "STANDBY."), role="ATC")
                     # ])
                     log_error(
                         self.room,

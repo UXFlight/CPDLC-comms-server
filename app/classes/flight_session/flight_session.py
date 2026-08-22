@@ -11,16 +11,16 @@ from app.managers.reports_manager import ReportsManager
 
 
 class FlightSession:
-    def __init__(self, routine, pilot_id, atc_id, mongodb, socket):
+    def __init__(self, routine, pilot_id, atc_id, data_store, socket):
         self.flight_id = routine["flight_id"]
         self.departure = routine["departure"]
         self.arrival = routine["arrival"]
         self.pilot = Pilot(pilot_id)
         self.atc = Atc(atc_id)
-        self.status = FlightStatus(routine["route"], mongodb)
-        self.scenarios = FsmScenarioManager(socket, mongodb)     
-        self.logs = LogsManager(mongodb, socket, scenario_manager=self.scenarios)
-        self.reports = ReportsManager(mongodb,socket, self.status, pilot_id, self.logs, scenario_manager=self.scenarios)
+        self.status = FlightStatus(routine["route"])
+        self.scenarios = FsmScenarioManager(socket, data_store)
+        self.logs = LogsManager(data_store, socket, scenario_manager=self.scenarios)
+        self.reports = ReportsManager(data_store, socket, self.status, pilot_id, self.logs, scenario_manager=self.scenarios)
         self.routine = Routine(routine, socket, self.status, pilot_id, self.logs, self.reports, self.scenarios)
         self.route = routine["route"]
         self.current_data_authority = atc_id

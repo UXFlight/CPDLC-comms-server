@@ -3,8 +3,7 @@ from datetime import datetime, timezone
 from app.classes.log_entry.log_entry import LogEntry
 
 class FlightStatus:
-    def __init__(self, routine, mongodb):
-        self._mongodb = mongodb
+    def __init__(self, routine):
         self.altitude = routine[0].get("altitude_ft", 0)
         self.position = {"lat": None, "lon": None}
         self.current_distance = 0
@@ -56,7 +55,6 @@ class FlightStatus:
         }
 
     # def update_parameter(self, log: LogEntry):
-    #     datalink = self.mongodb.find_datalink_by_ref(log.ref)
     #     categoty = datalink.get("Category", "")
     #     if "Vertical" in categoty:
     #         self.update_altitude()
@@ -70,4 +68,3 @@ class FlightStatus:
 
 ######################################### ROUTINE ##########################################################
     
-

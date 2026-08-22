@@ -12,9 +12,9 @@ class ScenarioInstance:
         self.lock = threading.Lock()
 
 class FsmScenarioManager:
-    def __init__(self, socket, mongodb):
+    def __init__(self, socket, data_store):
         self.socket = socket
-        self.mongodb = mongodb
+        self.data_store = data_store
         self._by_thread: Dict[str, ScenarioInstance] = {} # thread = thread de communication
         self._lock = threading.Lock()
 
@@ -30,7 +30,7 @@ class FsmScenarioManager:
         # Crée l'engine + l'instance (non indexée tant qu'on n'a pas le thread_id)
         fsm = FsmEngine(
             socket=self.socket,
-            mongodb=self.mongodb,
+            data_store=self.data_store,
             room=room,
             scenario=scenario,
             on_emit=None,  # défini juste après pour capturer `inst`

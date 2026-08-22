@@ -8,7 +8,7 @@ from app.classes.log_entry.log_entry import LogEntry
 from app.classes.report.emergency_report import EmergencyReport
 from app.classes.report.position_report import PositionReport
 from app.classes.logging import log_error, log_user_action
-from app.database.mongo_db import mongo_db, MongoDb
+from app.database.data_store import DataStore, data_store
 from app.managers.flight_manager.flight_manager import FlightManager
 from app.database.flight_plan.flight_plan import flight_plan
 from app.database.flight_plan.routine import routine
@@ -26,7 +26,7 @@ class SocketGateway:
     def __init__(self, socket_service: Socket, flight_manager: FlightManager):
         self.socket_service = socket_service
         self.flight_manager = flight_manager
-        self.mongodb : MongoDb = mongo_db
+        self.data_store: DataStore = data_store
 
     @staticmethod
     def _request_ip() -> str | None:
@@ -78,7 +78,7 @@ class SocketGateway:
 
     def on_connect(self, auth=None):
         sid = request.sid
-        flight = self.flight_manager.create_session(routine, sid, self.mongodb, self.socket_service)
+        flight = self.flight_manager.create_session(routine, sid, self.data_store, self.socket_service)
         self.socket_service.send("connected", flight.to_dict(), room=sid)
         log_user_action(
             sid,
@@ -91,15 +91,14 @@ class SocketGateway:
     def on_logon(self, data: dict):
         sid = request.sid
         payload = data if isinstance(data, dict) else {}
-        username = (payload.get("username") or "").strip()
+        username = (payload.get("username") or "").strip().upper()
         log_user_action(sid, "authentication_attempt", target=username or "empty")
         if not username:
             self.socket_service.send("logon_failure", data={"reason": "invalid_payload"}, room=sid)
             log_user_action(sid, "authentication_failed", target="empty", reason="invalid_payload")
             return
 
-        atc_available = self.mongodb.find_available_atc(username)
-        if atc_available:
+        if self.data_store.is_supported_code(username):
             flight = self.flight_manager.get_session(sid)
             if not flight:
                 self.socket_service.send("logon_failure", data={"reason": "session_not_found"}, room=sid)
@@ -119,8 +118,8 @@ class SocketGateway:
                 arrival=flight.arrival,
             )
         else:
-            self.socket_service.send("logon_failure", data={"reason": "atc_unavailable"}, room=sid)
-            log_user_action(sid, "authentication_failed", target=username, reason="atc_unavailable")
+            self.socket_service.send("logon_failure", data={"reason": "unsupported_code"}, room=sid)
+            log_user_action(sid, "authentication_failed", target=username, reason="unsupported_code")
 
     def on_add_log(self, payload: dict):
         sid = request.sid
@@ -137,7 +136,7 @@ class SocketGateway:
             ref=entry.get("messageRef") or entry.get("ref"),
         )
         if thread_id:
-            log = LogEntry.from_dict(entry, mongodb=flight.logs._mongodb)
+            log = LogEntry.from_dict(entry, data_store=flight.logs._data_store)
             new_log = flight.logs.add_log(log, thread_id=thread_id)
         else:
             valid_log = None
@@ -149,7 +148,7 @@ class SocketGateway:
                 )
                 if scenario:
                     valid_log = log
-                    child_log = flight.logs.create_log(self.mongodb, entry.get("messageRef"), entry.get("formattedMessage"))
+                    child_log = flight.logs.create_log(self.data_store, entry.get("messageRef"), entry.get("formattedMessage"))
                     new_log = flight.logs.add_log(child_log, thread_id=valid_log.id)
                     log_user_action(
                         sid,
@@ -177,7 +176,7 @@ class SocketGateway:
                 ref=entry.get("ref"),
             )
         if flight:
-            log = LogsManager.create_log(self.mongodb, entry.get("ref"), entry.get("text"))
+            log = LogsManager.create_log(self.data_store, entry.get("ref"), entry.get("text"))
             new_log = flight.logs.add_log(log, thread_id=thread_id)
             self.socket_service.send("log_added", new_log.to_dict(), room=sid)
             parent = flight.logs.get_parent_by_child_id(thread_id)
@@ -298,7 +297,7 @@ class SocketGateway:
             position_report = position_report_build(flight.routine.routine, flight.routine.current_fix)
             flight.reports.add_position_report(position_report)
             log_requested = flight.logs.position_request_pending()
-            new_log = flight.logs.create_log(self.mongodb, data.get("ref"), data.get("message"))
+            new_log = flight.logs.create_log(self.data_store, data.get("ref"), data.get("message"))
             if log_requested:
                 log_to_be_added = flight.logs.add_log(new_log, thread_id=log_requested)
                 scenario = flight.scenarios.on_pilot_dm_by_thread(
@@ -365,7 +364,7 @@ class SocketGateway:
         sid = request.sid
         flight :FlightSession= self.flight_manager.get_session(sid)
         if flight:
-            new_log = flight.logs.create_log(self.mongodb, data.get("ref"), data.get("message"))
+            new_log = flight.logs.create_log(self.data_store, data.get("ref"), data.get("message"))
             flight.logs.add_log(new_log)
             self.socket_service.send("log_added", new_log.to_dict(), room=sid)
             flight.reports.set_monitoring_report(data.get("data"))

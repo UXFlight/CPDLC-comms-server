@@ -13,7 +13,6 @@ _LABEL_OVERRIDES = {
     "cpdlc": "CPDLC",
     "id": "ID",
     "ip": "IP",
-    "mongodb": "MongoDB",
     "url": "URL",
 }
 

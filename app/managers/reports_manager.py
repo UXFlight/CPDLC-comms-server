@@ -17,8 +17,8 @@ INDEX_RESPONSES = {
 
 
 class ReportsManager:
-    def __init__(self, mongodb, socket, status, room, logs, scenario_manager, get_snapshot: Callable[[], RoutineSnapshot] = None):
-        self.mongodb = mongodb
+    def __init__(self, data_store, socket, status, room, logs, scenario_manager, get_snapshot: Callable[[], RoutineSnapshot] = None):
+        self.data_store = data_store
         self.socket = socket
         self.status = status
         self.room = room
@@ -79,7 +79,7 @@ class ReportsManager:
             label=data.get("label"),
             status=data.get("status")
         )
-        dl = self.mongodb.find_datalink_by_ref(report.ref)
+        dl = self.data_store.find_datalink_by_ref(report.ref)
         template = dl.get("Message_Element", "")
         value = self.extract_value_from_label(report.label, template)
 
@@ -105,7 +105,7 @@ class ReportsManager:
         return label.replace(template.replace(f"[{placeholder}]", ""), "").strip()
     
     def build_response_message(self, dm_ref, value):
-        dl = self.mongodb.find_datalink_by_ref(dm_ref)
+        dl = self.data_store.find_datalink_by_ref(dm_ref)
         template = dl.get("Message_Element", "")
         placeholder = self.extract_placeholder(template)
         if not placeholder:

@@ -20,9 +20,9 @@ class DatalinkStatus(Enum):
 
 
 class LogsManager:
-    def __init__(self, mongodb, socket, scenario_manager):
+    def __init__(self, data_store, socket, scenario_manager):
         self.logs = []
-        self._mongodb = mongodb
+        self._data_store = data_store
         self.socket = socket
         self.scenario_manager = scenario_manager
 
@@ -71,7 +71,7 @@ class LogsManager:
         return sorted(self.logs, key=lambda log: log.timestamp, reverse=True)
 
     def create_add_log(self, entry, scenario: Scenario = None):
-        message = self._mongodb.find_datalink_by_ref(entry.get("messageRef"))
+        message = self._data_store.find_datalink_by_ref(entry.get("messageRef"))
         type = "downlink" if "DM" in message.get("Ref_Num") else "uplink"
 
         new_log = LogEntry(
@@ -82,7 +82,7 @@ class LogsManager:
             intent=message.get("Message_Intent"),
             additional=entry.get("additional", []), 
             urgency=entry.get("urgency", "normal"),
-            mongodb=self._mongodb,
+            data_store=self._data_store,
             response_required=LogEntry.is_response_required(message),
             acceptable_responses=message.get("Acceptable_responses", []),
             id=entry.get("id", None),
@@ -93,8 +93,8 @@ class LogsManager:
         return new_log
 
     @staticmethod
-    def create_log(mongodb, log_ref: str, content: str):
-        message = mongodb.find_datalink_by_ref(log_ref)
+    def create_log(data_store, log_ref: str, content: str):
+        message = data_store.find_datalink_by_ref(log_ref)
         type = "downlink" if "DM" in message.get("Ref_Num") else "uplink"
 
         new_log = LogEntry(
@@ -105,7 +105,7 @@ class LogsManager:
             intent=message.get("Message_Intent"),
             additional=[],
             urgency="normal",
-            mongodb=mongodb,
+            data_store=data_store,
             response_required=LogEntry.is_response_required(message),
             acceptable_responses=message.get("Acceptable_responses", []),
             id=None,

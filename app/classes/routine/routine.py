@@ -44,7 +44,6 @@ class Routine:
         self.stepping = False
         self._stop_signal = False
         self.visited_messages = []
-        self._stop_event = None
 
         distances = [fix["distance_km"] for fix in self.route]
         self.socket.send("routine_load", {
@@ -65,60 +64,57 @@ class Routine:
     def simulation_speed(self, speed: Speed):
         self.acceleration = speed.value
 
-    async def simulate_flight_progress(self):
-        self._stop_event = asyncio.Event()
+    def simulate_flight_progress(self):
         self.running = True
         self._stop_signal = False
 
-        while self.current_fix < len(self.route)-1: # self.elapsed_simulated < self.route[-1]["elapsed_time_sec"]:
-            try:
-                # attend tick_interval OU un stop (ce qui arrive en premier)
-                await asyncio.wait_for(self._stop_event.wait(), timeout=self.tick_interval)
-                # si on arrive ici sans TimeoutError, c'est que stop() a été appelé
-                break
-            except asyncio.TimeoutError:
-                pass  # pas de stop, on exécute le "tick" normal
+        try:
+            while self.current_fix < len(self.route)-1: # self.elapsed_simulated < self.route[-1]["elapsed_time_sec"]:
+                self.socket.sleep(self.tick_interval)
 
-            #await asyncio.sleep(self.tick_interval)
-
-            self.elapsed_simulated += self.tick_interval * self.acceleration
-            distance_increment = self.calculate_distance()
-            self.distance_in_segment += distance_increment
-
-            current_fix_obj = self.route[self.current_fix]
-            fix_distance = current_fix_obj["distance_km"]
-            await self.simulate_um_message()
-
-            if self.distance_in_segment >= fix_distance:
-                if self.current_fix < len(self.route) - 1:
-                    self.current_fix += 1
-                    self.update_flight_status()
-                else:
-                    self.update_flight_status(end=True)
-                    self.socket.send("plane_arrival", self.flight_status.to_dict(), room=self.room)
-                    log_user_action(
-                        self.room,
-                        "route_completed",
-                        departure=self.routine.get("departure"),
-                        arrival=self.routine.get("arrival"),
-                        route_completion_pct=100,
-                    )
+                if self._stop_signal:
                     break
-                self.socket.send("waypoint_change", {
-                    "flight": self.flight_status.to_dict(),
-                    "currentFixIndex": self.current_fix,
-                }, room=self.room)
-                self.distance_in_segment = 0
 
-                position_report = position_report_build(self.routine, self.current_fix)
-                self.reports.add_position_report(position_report)
-            else:
-                self.flight_status.update({
-                    "distance": round(self.route[self.current_fix]["total_distance"] - fix_distance + self.distance_in_segment, 2),
-                    "fix_distance": int(self.distance_in_segment),
-                    "elapsed_time_sec": int(self.elapsed_simulated),
-                })
-                self.socket.send("plane_partial_progress", self.flight_status.to_dict(), room=self.room)
+                self.elapsed_simulated += self.tick_interval * self.acceleration
+                distance_increment = self.calculate_distance()
+                self.distance_in_segment += distance_increment
+
+                current_fix_obj = self.route[self.current_fix]
+                fix_distance = current_fix_obj["distance_km"]
+                self.simulate_um_message()
+
+                if self.distance_in_segment >= fix_distance:
+                    if self.current_fix < len(self.route) - 1:
+                        self.current_fix += 1
+                        self.update_flight_status()
+                    else:
+                        self.update_flight_status(end=True)
+                        self.socket.send("plane_arrival", self.flight_status.to_dict(), room=self.room)
+                        log_user_action(
+                            self.room,
+                            "route_completed",
+                            departure=self.routine.get("departure"),
+                            arrival=self.routine.get("arrival"),
+                            route_completion_pct=100,
+                        )
+                        break
+                    self.socket.send("waypoint_change", {
+                        "flight": self.flight_status.to_dict(),
+                        "currentFixIndex": self.current_fix,
+                    }, room=self.room)
+                    self.distance_in_segment = 0
+
+                    position_report = position_report_build(self.routine, self.current_fix)
+                    self.reports.add_position_report(position_report)
+                else:
+                    self.flight_status.update({
+                        "distance": round(self.route[self.current_fix]["total_distance"] - fix_distance + self.distance_in_segment, 2),
+                        "fix_distance": int(self.distance_in_segment),
+                        "elapsed_time_sec": int(self.elapsed_simulated),
+                    })
+                    self.socket.send("plane_partial_progress", self.flight_status.to_dict(), room=self.room)
+        finally:
+            self.running = False
 
     def calculate_distance(self):
         current_speed = self.route[self.current_fix]["speed_kmh"]
@@ -159,7 +155,7 @@ class Routine:
         msgs = self.route[self.current_fix].get("atc_messages") or []
         return len(msgs) > 0
 
-    async def simulate_um_message(self):
+    def simulate_um_message(self):
         if not self.available_messages():
             return
         else:
@@ -216,21 +212,17 @@ class Routine:
         self._stop_signal = True
         self.reports.adsc_manager.stop_adsc_timer()
         self.running = False
-        if self._stop_event:
-            self._stop_event.set()
 
     def play(self):
         if not self.running:
             self._stop_signal = False
+            self.running = True
             self.reports.adsc_manager.start_adsc_timer()
-            if(self._stop_event is not None) :
-                self._stop_event.clear() 
-            self.socket.start_background_task(asyncio.run, self.simulate_flight_progress())
+            self.socket.start_background_task(self.simulate_flight_progress)
 
     def stop(self):
+        self._stop_signal = True
         self.running = False
-        if self._stop_event:
-            self._stop_event.set() 
 
     async def stop_and_wait(self, timeout: float = 2.0):
         self.stop()

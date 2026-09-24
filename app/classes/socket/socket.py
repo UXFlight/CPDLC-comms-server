@@ -10,4 +10,6 @@ class Socket:
 
     def start_background_task(self, target, *args):
         return self.socketio.start_background_task(target, *args)
-  
+
+    def sleep(self, seconds):
+        self.socketio.sleep(seconds)

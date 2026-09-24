@@ -1,4 +1,3 @@
-import asyncio
 from copy import deepcopy
 from enum import Enum
 from flask import json, request  # type: ignore
@@ -109,8 +108,7 @@ class SocketGateway:
             self.socket_service.send("logon_success", data={}, room=sid)
             self.socket_service.send("load_logs", flight.logs.get_logs(), room=sid)
             self.socket_service.send("load_adsc_reports", flight.reports.adsc_manager.adsc_to_dict(), room=sid)
-            flight.reports.adsc_manager.start_adsc_timer()
-            self.socket_service.start_background_task(flight.routine.simulate_flight_progress)
+            flight.routine.play()
             log_user_action(sid, "authentication_success", target=username)
             log_user_action(
                 sid,

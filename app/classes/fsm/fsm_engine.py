@@ -47,7 +47,7 @@ class FsmEngine:
 
             if trans:
                 next_state = trans.next_state
-                next_trans = self.scenario[next_state] if next_state else None
+                next_trans = self.scenario.get(next_state) if next_state else None
                 log_entry_dict["acceptable_responses"] = self._get_formatted_response(trans, next_trans)
                 log_entry_dict["response_required"] = "Y" if next_state and next_state != "end" else "N"
 
@@ -145,8 +145,9 @@ class FsmEngine:
                 self._emit_atc(trans.atc_opening, trans)
             self._arm_timeout(trans)
 
-    def on_pilot_dm(self, pilot_ref: str, pilot_text: str = ""):
-        """Traite le DM pilote. Branches -> expected -> réponses/avancement."""
+    def on_pilot_dm(self, pilot_ref: str, pilot_text: str = "") -> bool:
+        """Traite le DM pilote. Branches -> expected -> réponses/avancement.
+        Retourne True si le DM fait partie du scenario, False sinon (requete pilote independante)."""
         with self._lock:
             if not self.state_id or self.state_id not in self.scenario: #si state_id invalide ou vide
                 if "pilot_entry" in self.scenario: # si nouveau scenario (donc initie par le pilote), etat par defaut pilot_entry
@@ -161,58 +162,66 @@ class FsmEngine:
                         "invalid state for on_pilot_dm",
                         pilot_ref=pilot_ref,
                     )
-                    return
+                    return False
 
             trans = self.scenario[self.state_id]
             
             # branches
             if trans.branches and pilot_ref in trans.branches:
                 nxt = trans.branches[pilot_ref]
+                nxt_trans = self.scenario.get(nxt)
+                if nxt_trans is None: # branche vers un etat inexistant, on reste dans l etat courant
+                    log_error(
+                        self.room,
+                        "fsm_unknown_branch_state",
+                        "branch points to a state missing from the scenario",
+                        got=pilot_ref,
+                        state=self.state_id,
+                        target=nxt,
+                    )
+                    return False
                 self._cancel_timer() # annuler le timer courant
                 self.state_id = nxt
-                nxt_trans = self.scenario[self.state_id]
                 if nxt_trans.atc_replies:
                     self._emit_atc(nxt_trans.atc_replies, nxt_trans)
                     if nxt_trans.next_state == "end":
                         def _delayed_emit():
                             self.socket.send("thread_ending",  self.thread_id, room=self.room)
                         threading.Timer(10.0, _delayed_emit).start()
-                    return
+                    return True
                 self._arm_timeout(nxt_trans)
+                return True
 
              # branches par défaut
             if pilot_ref == "DM2":  # STANDBY
-                return
+                return True
 
             if pilot_ref == "DM0":  # WILCO
                 next_state = "end"
                 self.go_to_next_state(self.scenario[next_state])
-                return
+                return True
 
             if pilot_ref == "DM1":  # UNABLE
                 next_state = "end"
                 self.go_to_next_state(self.scenario[next_state])
-                return
+                return True
 
             # expected
             next_state = trans.next_state
-            next_trans = self.scenario[next_state] if next_state else None
+            next_trans = self.scenario.get(next_state) if next_state else None
+            if next_trans is None:
+                return False # pas prevu par l etat courant -> requete pilote independante
 
             expected = next_trans.expected
-            matched = (expected == "__ANY__") or (pilot_ref == expected)
+            # "__ANY__" vers "end" ne doit pas absorber une nouvelle requete du pilote
+            matched = (pilot_ref == expected) or (expected == "__ANY__" and next_state != "end")
             if not matched:
-                log_error(
-                    self.room,
-                    "fsm_expected_mismatch",
-                    "pilot response does not match expected value",
-                    got=pilot_ref,
-                    expected=expected,
-                )
-                return
+                return False # pas la reponse attendue -> requete pilote independante
 
             # si match on avance
             trans = next_trans
             self.go_to_next_state(trans)
+            return True
 
            
     def go_to_next_state(self, trans):

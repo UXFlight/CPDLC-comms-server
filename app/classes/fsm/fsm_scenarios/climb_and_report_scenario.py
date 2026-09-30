@@ -41,14 +41,28 @@ SCENARIO_CLIMB_AND_REPORT_MAINTAINING: Scenario = {
         atc_replies=[
             Msg(log_entry={"ref": "UM3", "text": "ROGER STANDBY"}, role="ATC"),
         ],
-        next_state="arm_report_level",  # on arme quand même la demande de report
+        branches={
+            "DM0": "ack_climb_wilco",   # WILCO après standby -> demande de report FL370
+            "DM1": "ack_climb_unable",  # UNABLE après standby -> fin
+        },
     ),
+
     "ack_climb_unable": Transition(
         expected="DM1",
         atc_replies=[
             Msg(log_entry={"ref": "UM3", "text": "ROGER UNABLE"}, role="ATC"),
         ],
         next_state="end",
+    ),
+
+    "ack_climb_roger": Transition(
+        expected="DM3",
+        atc_replies=[
+            Msg(log_entry={"ref": "UM129", "text": "REPORT MAINTAINING FL370"}, role="ATC"),
+        ],
+        branches={
+            "DM37": "resp_pil_maintaining"
+        },
     ),
 
     "resp_pil_maintaining": Transition(

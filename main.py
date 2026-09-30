@@ -30,7 +30,8 @@ def create_app():
     socketio = SocketIO(
         app,
         cors_allowed_origins=allowed_origins,
-        async_mode='eventlet',
+        #async_mode='eventlet', # faux, doit supporter plusieurs threads
+        async_mode='threading',
         logger=socket_log_output,
         engineio_logger=socket_log_output,
     )

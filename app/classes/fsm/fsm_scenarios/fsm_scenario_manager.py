@@ -80,8 +80,8 @@ class FsmScenarioManager:
         if not inst:
             return False # si thread inconnu, donc pas un scenario return
         with inst.lock:
-            inst.fsm.on_pilot_dm(pilot_ref, pilot_text) # thread trouve = scenario actif = prendre le lock de l instance pui appel de la fct
-        return True
+            # thread trouve = scenario actif; False si le DM ne fait pas partie du scenario
+            return inst.fsm.on_pilot_dm(pilot_ref, pilot_text)
 
     # (utile pour debug/observabilité)
     def get_active_threads(self):

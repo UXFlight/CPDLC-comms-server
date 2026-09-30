@@ -139,7 +139,7 @@ class SocketGateway:
             new_log = flight.logs.add_log(log, thread_id=thread_id)
         else:
             valid_log = None
-            for log in flight.logs.logs:
+            for log in list(flight.logs.logs):
                 scenario = flight.scenarios.on_pilot_dm_by_thread(
                     thread_id=log.id,
                     pilot_ref=entry.get("messageRef"),
@@ -157,8 +157,9 @@ class SocketGateway:
                         ref=entry.get("messageRef"),
                     )
                     break
-                else:
-                    new_log = flight.logs.create_add_log(entry)             
+            if valid_log is None:
+                # requete du pilote hors scenario: log independant (direction "downlink"), reste actif dans l affichage
+                new_log = flight.logs.create_add_log(entry)
         self.socket_service.send("log_added", new_log.to_dict(), room=sid)
 
     # START -  PILOT RESPONSE

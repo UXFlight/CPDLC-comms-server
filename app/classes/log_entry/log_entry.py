@@ -88,19 +88,6 @@ class LogEntry:
             return match.group("position")
         return None
     
-    def change_status_for_UM(self, ref):
-        if ref == "DM0":
-            self.status = "ACCEPTED"
-        elif ref == "DM1":
-            self.status = "REJECTED"
-        elif ref == "DM2":
-            self.status = "OPENED"
-        else :
-            self.status = "ACCEPTED"
-            return
-        self.format_simple_response(ref)    
-        return self
-    
     # def get_available_actions(self):
     #     if self.response_required:
     #         if len(self.acceptable_responses) > 0:

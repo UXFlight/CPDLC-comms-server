@@ -26,7 +26,7 @@ allowed_origins = [
 def create_app():
     app = Flask(__name__)
     CORS(app, origins=allowed_origins)
-    app.register_blueprint(general_bp)
+    app.register_blueprint(general_bp, url_prefix="/api")
     socketio = SocketIO(
         app,
         cors_allowed_origins=allowed_origins,

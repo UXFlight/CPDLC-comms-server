@@ -54,7 +54,6 @@ class SocketGateway:
         self.socket_service.listen('connect', self.on_connect)
         self.socket_service.listen('logon', self.on_logon)
         self.socket_service.listen('add_log', self.on_add_log)
-        self.socket_service.listen('change_status', self.on_change_status)
         self.socket_service.listen('is_loadable', self.on_is_loadable)
         self.socket_service.listen('load_fms', self.on_load_fms)
         self.socket_service.listen('execute_route', self.on_execute_route)
@@ -177,6 +176,7 @@ class SocketGateway:
             )
         if flight:
             log = LogsManager.create_log(self.data_store, entry.get("ref"), entry.get("text"))
+            flight.logs.apply_pilot_response(thread_id, log)
             new_log = flight.logs.add_log(log, thread_id=thread_id)
             self.socket_service.send("log_added", new_log.to_dict(), room=sid)
             parent = flight.logs.get_parent_by_child_id(thread_id)
@@ -186,16 +186,6 @@ class SocketGateway:
                         pilot_text=entry.get("text")
             )
     
-    @handle_errors(event_name="error", message="Failed to check if log is loadable")
-    def on_change_status(self, data: dict):
-        sid = request.sid
-        flight = self.flight_manager.get_session(sid)
-        if flight:
-            log_id = data.get("logId")
-            log: LogEntry = flight.logs.get_log_by_id(log_id)
-            log.change_status_for_UM(data.get("status"))
-            self.socket_service.send("status_changed", log.to_dict(), room=sid)
-
     # END - PILOT RESPONSE
 
     def on_is_loadable(self, data: dict):

@@ -17,6 +17,19 @@ class DatalinkStatus(Enum):
     ACK = "ack"
     INFO = "info"
     EXPIRED = "expired"
+    ACCEPTED = "accepted"
+    STANDBY = "standby"
+
+
+# Statut pris par un message quand le pilote y repond
+PILOT_RESPONSE_STATUS = {
+    "DM0": DatalinkStatus.ACCEPTED,  # WILCO
+    "DM3": DatalinkStatus.ACCEPTED,  # ROGER
+    "DM4": DatalinkStatus.ACCEPTED,  # AFFIRM
+    "DM1": DatalinkStatus.REJECTED,  # UNABLE
+    "DM5": DatalinkStatus.REJECTED,  # NEGATIVE
+    "DM2": DatalinkStatus.STANDBY,   # STANDBY
+}
 
 
 class LogsManager:
@@ -141,6 +154,16 @@ class LogsManager:
             self.start_scenario(type, log.ref, log.content, scenario)
         return log
             
+
+    def apply_pilot_response(self, answered_id: str, response: LogEntry):
+        status = PILOT_RESPONSE_STATUS.get(response.ref)
+        if not status:
+            return
+        # la reponse porte aussi le statut, c'est elle que le fil affiche en dernier
+        response.status = status.value
+        answered = self.get_log_by_id(answered_id)
+        if answered:
+            answered.status = status.value
 
     def handle_response(self, log: LogEntry, thread_id: str):
         parent = self.get_parent_by_child_id(thread_id)

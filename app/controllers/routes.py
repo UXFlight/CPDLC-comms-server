@@ -17,10 +17,3 @@ def formatMessage():
     body = request.get_json()
     formatted = LogEntry.formatted_message(body, data_store)
     return {"status": "success", "message": formatted}, 200
-
-
-# @general_bp.route('/filterLogsArray', methods=['POST'])
-# def formatMessage():
-#     body = request.get_json()
-#     formatted = LogsManager.filter_by(body)
-#     return {"status": "success", "message": formatted}, 200
